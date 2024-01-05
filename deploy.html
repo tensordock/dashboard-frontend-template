@@ -1,0 +1,1864 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- HEADER -->
+<header class="bg-dark pt-9 pb-9">
+    <div class="container-md">
+        <div class="row align-items-center">
+            <div class="col" style="padding: 50px">
+                <!-- Heading -->
+                <h1 class="fw-bold text-white">Deploy a new GPU virtual machine</h1>
+            </div>
+        </div>
+        <!-- / .row -->
+    </div>
+    <!-- / .container -->
+</header>
+<div class="card-body pr-4 pl-4 pb-4">
+    <div class="row">
+        <div class="col">
+            <div class="card card-border border-success shadow mb-4">
+                <div class="card-header">
+                    <!-- Heading -->
+                    <h4 class="mb-0">1. Choose a graphics card model</h4>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item">
+                            <h5 class="mb-4">
+                                ML/AI & Professional GPUs by
+                                <a
+                                        href="https://www.nvidia.com/en-us/data-center/ampere-architecture/"
+                                        target="_blank"
+                                >NVIDIA</a
+                                >
+                            </h5>
+                            <p class="small">
+                                Powerful GPUs equipped with large amounts of VRAM for the most
+                                demanding workloads. Available in secure data centers for
+                                workloads that need reliability. Scroll horizontally for more options.
+                            </p>
+                            <div style="overflow-x: scroll; flex-wrap: no-wrap; display: flex; gap: 16px;">
+                                <div class="col-auto d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 gpu-select mb-4"
+                                            id="chooseGPUA10080GBPCIE"
+                                            href="javascript:chooseGPU('A100 80GB PCIE')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>
+                                                A100 PCIE
+                                                <span class="badge bg-primary-soft">80GB</span>
+                                            </h4>
+                                            <p class="small">Our fastest, most powerful AI GPU</p>
+                                            <h4>From $1.40/hour</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-auto d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 gpu-select mb-4"
+                                            id="chooseGPUL4048GBPCIE"
+                                            href="javascript:chooseGPU('L40 48GB PCIE')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>
+                                                L40 PCIE
+                                                <span class="badge bg-primary-soft">48GB</span>
+                                            </h4>
+                                            <p class="small">
+                                                Unprecedented visual computing
+                                            </p>
+                                            <h4>From $1.05/hour</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-auto d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 gpu-select mb-4"
+                                            id="chooseGPUV10016GBPCIE"
+                                            href="javascript:chooseGPU('V100 16GB PCIE')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>
+                                                V100 PCIE
+                                                <span class="badge bg-primary-soft">16GB</span>
+                                            </h4>
+                                            <p class="small">
+                                                Industry's longtime standard AI GPU
+                                            </p>
+                                            <h4>From $0.22/hour</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-auto d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 gpu-select mb-4"
+                                            id="chooseGPURTXA600048GB"
+                                            href="javascript:chooseGPU('RTX A6000 48GB')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>
+                                                RTX A6000 / A40
+                                                <span class="badge bg-primary-soft">48GB</span>
+                                            </h4>
+                                            <p class="small">
+                                                Powerful visual computing
+                                            </p>
+                                            <h4>From $0.47/hour</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-auto d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 gpu-select mb-4"
+                                            id="chooseGPURTXA500024GB"
+                                            href="javascript:chooseGPU('RTX A5000 24GB')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>
+                                                RTX A5000
+                                                <span class="badge bg-primary-soft">24GB</span>
+                                            </h4>
+                                            <p class="small">
+                                                Strong price-to-performance
+                                            </p>
+                                            <h4>From $0.21/hour</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-auto d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 gpu-select mb-4"
+                                            id="chooseGPURTXA400016GB"
+                                            href="javascript:chooseGPU('RTX A4000 16GB')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>
+                                                RTX A4000
+                                                <span class="badge bg-primary-soft">16GB</span>
+                                            </h4>
+                                            <p class="small">
+                                                Cost-effective visual computing
+                                            </p>
+                                            <h4>From $0.13/hour</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <!--
+                                <div class="col d-md-flex emptyGPUCard"></div>
+                                <div class="col d-md-flex emptyGPUCard"></div>
+                                -->
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <h5 class="mb-4">
+                                General Purpose GPUs by
+                                <a
+                                        href="https://www.nvidia.com/en-us/design-visualization/rtx/"
+                                        target="_blank"
+                                >NVIDIA</a
+                                >
+                            </h5>
+                            <p class="small">
+                                Cost-effective, efficient GPUs available in large quantities
+                                for distributed & batch computing, cloud gaming. Scroll horizontally for more options.
+                            </p>
+                            <div style="overflow-x: scroll; flex-wrap: no-wrap; display: flex; gap: 16px;">
+                                <div class="col-auto d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 gpu-select mb-4"
+                                            id="chooseGPUGeForceRTX409024GB"
+                                            href="javascript:chooseGPU('GeForce RTX 4090 24GB')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>
+                                                GeForce RTX 4090
+                                                <span class="badge bg-primary-soft">24GB</span>
+                                            </h4>
+                                            <p class="small">
+                                                Newest, most powerful RTX GPU
+                                            </p>
+                                            <h4>From $0.37/hour</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-auto d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 gpu-select mb-4"
+                                            id="chooseGPUGeForceRTX309024GB"
+                                            href="javascript:chooseGPU('GeForce RTX 3090 24GB')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>
+                                                GeForce RTX 3090
+                                                <span class="badge bg-primary-soft">24GB</span>
+                                            </h4>
+                                            <p class="small">
+                                                Most affordable 24GB GPU
+                                            </p>
+                                            <h4>From $0.22/hour</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-auto d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 gpu-select mb-4"
+                                            id="chooseGPUGeForceRTX3080Ti12GB"
+                                            href="javascript:chooseGPU('GeForce RTX 3080 Ti 12GB')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>
+                                                GeForce RTX 3080 Ti
+                                                <span class="badge bg-primary-soft">12GB</span>
+                                            </h4>
+                                            <p class="small">
+                                                Like a 3090 with less VRAM
+                                            </p>
+                                            <h4>From $0.17/hour</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-auto d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 gpu-select mb-4"
+                                            id="chooseGPUGeForceRTX308010GB"
+                                            href="javascript:chooseGPU('GeForce RTX 3080 10GB')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>
+                                                GeForce RTX 3080
+                                                <span class="badge bg-primary-soft">10GB</span>
+                                            </h4>
+                                            <p class="small">
+                                                Cost-effective yet powerful
+                                            </p>
+                                            <h4>From $0.17/hour</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-auto d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 gpu-select mb-4"
+                                            id="chooseGPUGeForceRTX3070Ti8GB"
+                                            href="javascript:chooseGPU('GeForce RTX 3070 Ti 8GB')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>
+                                                GeForce RTX 3070 Ti
+                                                <span class="badge bg-primary-soft">8GB</span>
+                                            </h4>
+                                            <p class="small">
+                                                Affordable yet powerful
+                                            </p>
+                                            <h4>From $0.14/hour</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-auto d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 gpu-select mb-4"
+                                            id="chooseGPUGeForceRTX3060Ti8GB"
+                                            href="javascript:chooseGPU('GeForce RTX 3060 Ti 8GB')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>
+                                                GeForce RTX 3060 Ti 8GB
+                                                <span class="badge bg-primary-soft">8GB</span>
+                                            </h4>
+                                            <p class="small">
+                                                Solid general purpose computing
+                                            </p>
+                                            <h4>From $0.10/hour</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-auto d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 gpu-select mb-4"
+                                            id="chooseGPUGeForceRTX306012GB"
+                                            href="javascript:chooseGPU('GeForce RTX 3060 12GB')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>
+                                                GeForce RTX 3060
+                                                <span class="badge bg-primary-soft">12GB</span>
+                                            </h4>
+                                            <p class="small">
+                                                Light and cost-effective
+                                            </p>
+                                            <h4>From $0.10/hour</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-auto d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 gpu-select mb-4"
+                                            id="chooseGPUGeForceGTX10708GB"
+                                            href="javascript:chooseGPU('GeForce GTX 1070 8GB')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>
+                                                GeForce GTX 1070
+                                                <span class="badge bg-primary-soft">8GB</span>
+                                            </h4>
+                                            <p class="small">
+                                                Most cost effective for light workloads
+                                            </p>
+                                            <h4>From $0.05/hour</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-auto d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 gpu-select mb-4"
+                                            id="chooseGPUQuadroRTX40008GB"
+                                            href="javascript:chooseGPU('Quadro RTX 4000 8GB')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>
+                                                Quadro RTX 4000
+                                                <span class="badge bg-primary-soft">8GB</span>
+                                            </h4>
+                                            <p class="small">
+                                                High stock throughout the US
+                                            </p>
+                                            <h4>From $0.27/hour</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-6">
+                <div class="d-flex col">
+                    <div class="card card-border border-success shadow mb-4">
+                        <div class="card-header">
+                            <!-- Heading -->
+                            <h4 class="mb-0">2. Customize GPU count</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item">
+                                    <div class="form-group">
+                                        <select
+                                                class="form-control form-control-sm"
+                                                data-style="btn btn-link"
+                                                id="selectGPUCount"
+                                        >
+                                            <option id="gpuCountOption1">1</option>
+                                            <option id="gpuCountOption2">2</option>
+                                            <option id="gpuCountOption3">3</option>
+                                            <option id="gpuCountOption4">4</option>
+                                            <option id="gpuCountOption5">5</option>
+                                            <option id="gpuCountOption6">6</option>
+                                            <option id="gpuCountOption7">7</option>
+                                            <option id="gpuCountOption8">8</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex col">
+                    <div class="card card-border border-success shadow mb-4">
+                        <div class="card-header">
+                            <!-- Heading -->
+                            <h4 class="mb-0">3. Customize RAM amount</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item">
+                                    <div class="form-group">
+                                        <select
+                                                class="form-control form-control-sm"
+                                                data-style="btn btn-link"
+                                                id="selectRAM"
+                                        >
+                                            <option>4</option>
+                                            <option>8</option>
+                                            <option>10</option>
+                                            <option>12</option>
+                                            <option>16</option>
+                                            <option>20</option>
+                                            <option>24</option>
+                                            <option>30</option>
+                                            <option>32</option>
+                                            <option>61</option>
+                                            <option>64</option>
+                                            <option>100</option>
+                                            <option>112</option>
+                                            <option>120</option>
+                                            <option>128</option>
+                                            <option>150</option>
+                                            <option>240</option>
+                                            <option>256</option>
+                                            <option>300</option>
+                                            <option>366</option>
+                                            <option>384</option>
+                                            <option>492</option>
+                                            <option>496</option>
+                                            <option>741</option>
+                                            <option>960</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex col">
+                    <div class="card card-border border-success shadow mb-4">
+                        <div class="card-header">
+                            <!-- Heading -->
+                            <h4 class="mb-0">4. Customize vCPU count</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item">
+                                    <div class="form-group">
+                                        <select
+                                                class="form-control form-control-sm"
+                                                data-style="btn btn-link"
+                                                id="selectvCPU"
+                                        >
+                                            <option>2</option>
+                                            <option>4</option>
+                                            <option>6</option>
+                                            <option>8</option>
+                                            <option>10</option>
+                                            <option>12</option>
+                                            <option>14</option>
+                                            <option>16</option>
+                                            <option>20</option>
+                                            <option>24</option>
+                                            <option>28</option>
+                                            <option>32</option>
+                                            <option>36</option>
+                                            <option>40</option>
+                                            <option>44</option>
+                                            <option>46</option>
+                                            <option>60</option>
+                                            <option>94</option>
+                                            <option>128</option>
+                                            <option>254</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex col">
+                    <div class="card card-border border-success shadow mb-4">
+                        <div class="card-header">
+                            <!-- Heading -->
+                            <h4 class="mb-0">5. Customize storage</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item">
+                                    <div class="form-group">
+                                        <select
+                                                class="form-control form-control-sm"
+                                                data-style="btn btn-link"
+                                                id="selectStorageSpace"
+                                        >
+                                            <option value="20">20 GB</option>
+                                            <option value="30">30 GB</option>
+                                            <option value="40">40 GB</option>
+                                            <option value="50">50 GB</option>
+                                            <option value="60">60 GB</option>
+                                            <option value="70">70 GB</option>
+                                            <option value="80">80 GB</option>
+                                            <option value="90">90 GB</option>
+                                            <option value="100">100 GB</option>
+                                            <option value="150">150 GB</option>
+                                            <option value="200">200 GB</option>
+                                            <option value="300">300 GB</option>
+                                            <option value="400">400 GB</option>
+                                            <option value="500">500 GB</option>
+                                            <option value="600">600 GB</option>
+                                            <option value="700">700 GB</option>
+                                            <option value="800">800 GB</option>
+                                            <option value="900">900 GB</option>
+                                            <option value="1000">1 TB</option>
+                                            <option value="1200">1.2 TB</option>
+                                            <option value="1400">1.4 TB</option>
+                                            <option value="1600">1.6 TB</option>
+                                            <option value="1800">1.8 TB</option>
+                                            <option value="2000">2 TB</option>
+                                            <option value="2500">2.5 TB</option>
+                                            <option value="3000">3 TB</option>
+                                            <option value="3500">3.5 TB</option>
+                                            <option value="4000">4 TB</option>
+                                            <option value="4500">4.5 TB</option>
+                                            <option value="5000">5 TB</option>
+                                            <option value="5500">5.5 TB</option>
+                                            <option value="6000">6 TB</option>
+                                            <option value="6500">6.5 TB</option>
+                                            <option value="7000">7 TB</option>
+                                            <option value="7500">7.5 TB</option>
+                                            <option value="8000">8 TB</option>
+                                            <option value="8500">8.5 TB</option>
+                                            <option value="9000">9 TB</option>
+                                            <option value="9500">9.5 TB</option>
+                                            <option value="10000">10 TB</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-border border-success shadow mb-4">
+                <div class="card-header">
+                    <!-- Heading -->
+                    <h4 class="mb-0">6. Select a location</h4>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item">
+                            <div class="row px-4">
+                                <div
+                                        class="col-xxl border border-primary mb-4 px-4 pt-4 rounded-left"
+                                >
+                                    <h3>
+                                        Our available
+                                        <span id="locationSelectHeader"></span> servers
+                                    </h3>
+                                    <div class="row" id="hostnodeOptionsRow"></div>
+                                    <div
+                                            id="hostnodeOptionsRowLoading"
+                                            class="d-flex justify-content-center w-100 pt-6 pb-6"
+                                    >
+                                        <div class="spinner-border text-secondary" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                        class="col-xxl border mb-4 pt-4 px-4 rounded-right"
+                                        style="overflow: scroll"
+                                >
+                                    <h3>Alternative in-stock GPUs</h3>
+                                    <p>Scroll to view more...</p>
+                                    <div class="row" id="hostnodeOptionsRowSuggestions"></div>
+                                    <div
+                                            id="hostnodeOptionsRowSuggestionsLoading"
+                                            class="d-flex justify-content-center w-100 pt-3 pb-6"
+                                    >
+                                        <div class="spinner-border text-secondary" role="status">
+                                            <span class="sr-only">Loading</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-border border-success shadow mb-4">
+                <div class="card-header">
+                    <!-- Heading -->
+                    <h4 class="mb-0">7. Select an operating system</h4>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item">
+                            <p class="small">
+                                Operating system templates updated on July 7, 2023. Check out
+                                our
+                                <a
+                                        href="https://docs.tensordock.com/cloud-gaming/gaming-via-parsec"
+                                        target="_blank"
+                                >Windows 10 Parsec cloud gaming article</a
+                                >
+                                if this will apply for you.
+                            </p>
+                            <div class="row">
+                                <div class="col d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 os-select mb-4"
+                                            id="chooseOSTensorML20.04LTSTensorFlow"
+                                            href="javascript:chooseOS('TensorML 20.04 LTS TensorFlow')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>
+                                                TensorML 20 TensorFlow
+                                                <i class="fab fa-ubuntu"></i>&nbsp;<span
+                                                    class="badge bg-primary-soft"
+                                            >ML / AI</span
+                                            >
+                                            </h4>
+                                            <p class="small">
+                                                Jupyter, TensorFlow, Keras, CUDA, 30GB size<br /><em
+                                            >Requires 40GB+ disk</em
+                                            >
+                                            </p>
+                                            <h4>Included</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 os-select mb-4"
+                                            id="chooseOSTensorML20.04LTSPyTorch"
+                                            href="javascript:chooseOS('TensorML 20.04 LTS PyTorch')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>
+                                                TensorML 20 PyTorch
+                                                <i class="fab fa-ubuntu"></i>&nbsp;<span
+                                                    class="badge bg-primary-soft"
+                                            >ML / AI</span
+                                            >
+                                            </h4>
+                                            <p class="small">
+                                                Jupyter, PyTorch, CUDA, 30GB size<br />
+                                                <em>Requires 40GB+ disk</em>
+                                            </p>
+                                            <h4>Included</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 os-select mb-4"
+                                            id="chooseOSTensorML20.04LTSEverything"
+                                            href="javascript:chooseOS('TensorML 20.04 LTS Everything')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>
+                                                TensorML 20 Everything
+                                                <i class="fab fa-ubuntu"></i>&nbsp;<span
+                                                    class="badge bg-primary-soft"
+                                            >ML / AI</span
+                                            >
+                                            </h4>
+                                            <p class="small">
+                                                Jupyter, RAPIDS, TensorFlow, PyTorch, Keras, fastai,
+                                                CUDA, 53GB size<br /><em>Requires 60GB+ disk</em>
+                                            </p>
+                                            <h4>Included</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="w-100"></div>
+                                <div class="col d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 os-select mb-4"
+                                            id="chooseOSUbuntu20.04LTS"
+                                            href="javascript:chooseOS('Ubuntu 20.04 LTS')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>Ubuntu 20.04 LTS <i class="fab fa-ubuntu"></i></h4>
+                                            <p class="small">
+                                                NVIDIA drivers preinstalled, 5GB size<br /><em
+                                            >Requires 20GB+ disk</em
+                                            >
+                                            </p>
+                                            <h4>Included</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 os-select mb-4"
+                                            id="chooseOSUbuntu22.04LTS"
+                                            href="javascript:chooseOS('Ubuntu 22.04 LTS')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>Ubuntu 22.04 LTS <i class="fab fa-ubuntu"></i></h4>
+                                            <p class="small">
+                                                NVIDIA drivers preinstalled, 5GB size<br /><em
+                                            >Requires 20GB+ disk</em
+                                            >
+                                            </p>
+                                            <h4>Included</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col d-flex">
+                                    <a
+                                            class="card shadow bg-light text-dark w-100 os-select mb-4"
+                                            id="chooseOSWindows10"
+                                            href="javascript:chooseOS('Windows 10')"
+                                    >
+                                        <div class="card-body">
+                                            <h4>Windows 10 <i class="fab fa-windows"></i></h4>
+                                            <p class="small">
+                                                NVIDIA drivers preinstalled, 30GB size<br /><em
+                                            >Requires 90GB+ disk</em
+                                            >
+                                            </p>
+                                            <h4>Bring Your Own License</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-border border-success shadow mb-4">
+                <div class="card-header">
+                    <!-- Heading -->
+                    <h4 class="mb-0">8. Configure details</h4>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item">
+                            <p class="small">
+                                Network-based servers cannot configure port forwards or deploy
+                                as an interruptible instance.
+                            </p>
+                            <div class="form-group">
+                                <label for="admin_user">Administrator username</label>
+                                <input
+                                        class="form-control"
+                                        type="text"
+                                        id="submitAdminUser"
+                                        name="admin_user"
+                                        required
+                                        value="user"
+                                        disabled
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="admin_pass">Administrator password</label>
+                                <p class="small mt-4">At least 8 characters long and
+                                    contains at least 1 uppercase letter, symbol, or
+                                    number. If you've set an SSH public key in your organization settings,
+                                    leave this field blank to use SSH authentication. You can set an SSH public key
+                                    <a data-toggle="modal" data-target="#sshPublicKeyModal" href="#">here</a>.
+                                </p>
+                                <div class="modal fade" id="sshPublicKeyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h3 class="modal-title" id="exampleModalLabel">Update SSH Public Key</h3>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Set an SSH public key. You will no longer need to set a password when deploying a server.</p>
+                                                <input
+                                                        class="form-control"
+                                                        id="sshKeys"
+                                                        name="sshKeys"
+                                                        placeholder="SSH public key"
+                                                />
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <button type="button" class="btn btn-primary" onclick="updateSSHKeys()">Update</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input
+                                        class="form-control"
+                                        type="password"
+                                        id="submitAdminPass"
+                                        name="admin_pass"
+                                        required
+                                        placeholder="Remember to change your password when you log into your machine!"
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="admin_pass">Name</label>
+                                <input
+                                        class="form-control"
+                                        type="text"
+                                        id="submitHostname"
+                                        name="hostname"
+                                        required
+                                        placeholder="e.g. TensorServer"
+                                />
+                            </div>
+                            <hr />
+                            <div class="form-group" id="configure-ports">
+                                <p>Configure port forwards</p>
+                                <p>
+                                    <small
+                                    >You may forward up to <span id="ports-max">0</span> ports.
+                                        The external port is where requests will enter; the internal
+                                        port is where you set the requests to be forwarded to.
+                                        Please remember to include an SSH port (<u
+                                        >a port forwarded to port 22</u
+                                        >) or an RDP port (<u>a port forwarded to port 3389</u>) so
+                                        that you will be able to access your instance once created.
+                                    </small>
+                                </p>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p>External port</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p>Internal port</p>
+                                    </div>
+                                </div>
+                                <div id="ports" class="checkbox"></div>
+                                <div class="row mt-2">
+                                    <div class="input-group btn-group w-100">
+                                        <div class="input-group-prepend">
+                      <span
+                              class="p-2 d-flex align-items-center justify-content-center input-group-text h-100 search-select btn btn-primary-soft"
+                      >
+                        <i class="fas fa-plus fa-xs" aria-hidden="true"></i>
+                      </span>
+                                        </div>
+                                        <select
+                                                class="search-select form-select py-0"
+                                                id="port-selector"
+                                                data-live-search="true"
+                                                data-size="5"
+                                                data-width="100%"
+                                                title="Add a new port..."
+                                        ></select>
+                                    </div>
+                                    <div class="col-6"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a
+                            data-toggle="collapse"
+                            href="#advancedOptionsCollapse"
+                            role="button"
+                            aria-expanded="false"
+                            aria-controls="advancedOptionsCollapse"
+                    >
+                        Click for more advanced options
+                    </a>
+                    <div class="collapse" id="advancedOptionsCollapse">
+                        <br />
+                        <div class="form-group">
+                            <label for="cloudinit">Cloudinit Script</label>
+                            <textarea
+                                    class="form-control"
+                                    id="submitCloudinit"
+                                    name="cloudinit"
+                                    value=""
+                                    placeholder="write_files:&#10;  - path: /home/user/cloudinit_website/index.html&#10;    permissions: '0777'&#10;    content: |&#10;      Woohoo! This site is working!&#10;    owner: user:user &#10;runcmd:&#10;  - docker run -d --restart unless-stopped --stop-timeout 300 -v /home/user/cloudinit_website:/usr/share/nginx/html:ro -p 80:80 --name default_container nginx"
+                            ></textarea>
+                        </div>
+                        <br />
+                        <div id="configure-bidding">
+                            <p>
+                                Interruptible instance (<a
+                                    href="https://docs.tensordock.com/marketplace/interruptible-instances"
+                                    target="_blank"
+                            >documentation</a
+                            >)
+                            </p>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="input-group mb-2 mr-sm-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">$</div>
+                                        </div>
+                                        <input
+                                                type="number"
+                                                class="form-control"
+                                                id="bid-input"
+                                                placeholder="Hourly Rate"
+                                                value="0.10"
+                                                step="0.01"
+                                                min="0.05"
+                                        />
+                                        <div class="input-group-postpend">
+                                            <div class="input-group-text">/hr</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <a
+                                            class="btn btn-primary-soft w-100 lift"
+                                            id="bidapply-button"
+                                            href="javascript:handleBid()"
+                                    >
+                                        Apply Bid
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto pr-4 pb-5">
+            <div class="sticky-top">
+                <div class="card shadow p-5 text-dark" id="cart">
+                    <h3>Your Server</h3>
+                    <p id="price-summary-text" class="small">
+                        Pricing details will appear once you select a <br />
+                        location.
+                    </p>
+                    <div id="price-summary" class="d-none">
+                        <p class="small">
+                            Your actual charge will be pro-rated to the <br />
+                            millisecond.
+                        </p>
+                        <div class="row">
+                            <div class="col-7">
+                                <p>
+                                    <b>
+                                        <span id="summaryGPUCount"></span>x
+                                        <span id="summaryGPUModel"></span>
+                                    </b>
+                                </p>
+                            </div>
+                            <div class="col-5">
+                                <p>$<span id="summaryGPUTotalPrice"></span>/hr</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-7">
+                                <p>
+                                    <b><span id="summaryRAM"></span> GB</b> RAM
+                                </p>
+                            </div>
+                            <div class="col-5">
+                                <p>$<span id="summaryRAMPrice"></span>/hr</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-7">
+                                <p>
+                                    <b><span id="summaryvCPU"></span></b> vCPUs
+                                </p>
+                            </div>
+                            <div class="col-5">
+                                <p>$<span id="summaryvCPUPrice"></span>/hr</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-7">
+                                <p>
+                                    <b><span id="summaryStorageSpace"></span> GB</b>
+                                    <span id="summaryStorageClass">NVMe SSD</span>
+                                </p>
+                            </div>
+                            <div class="col-5">
+                                <p>$<span id="summaryStoragePrice"></span>/hr</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <p>
+                                    <b><span id="summaryOS"></span></b>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <p>
+                                    <b><span id="summaryLocation"></span></b>
+                                </p>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-7">
+                                <p class="h4">Running Cost</p>
+                            </div>
+                            <div class="col-5">
+                                <p class="h4">$<span id="summaryTotalPrice"></span>/hr</p>
+                            </div>
+                        </div>
+                        <p class="small">Cost per hour when the VM is running.</p>
+                        <div class="row">
+                            <div class="col-7">
+                                <p class="h4">Stopped Cost</p>
+                            </div>
+                            <div class="col-5">
+                                <p class="h4">$<span id="summaryOffPrice"></span>/hr</p>
+                            </div>
+                        </div>
+                        <p class="small">Cost per hour when the VM is stopped.</p>
+                    </div>
+                    <hr />
+                    <p class="small">
+                        Email us at
+                        <a href="mailto:sales@tensordock.com">sales@tensordock.com</a> if
+                        you will be <br />
+                        spending over $10k/month and are interested in<br />
+                        a long term contract. Save up to 60% when you<br />
+                        prepay on a long term commitment. <br />
+                    </p>
+                    <br />
+                    {{#if isLoggedIn}}
+                      <div id="deployBtnParent" class="w-100">
+                        <a class="btn btn-primary w-100 lift btn-lg" href="javascript:deployServer(true, null)">
+                          Deploy Server
+                        </a>
+                      </div>
+                    {{else}}
+                    <div id="redirectBtnParent" class="w-100">
+                      <a href="/login" class="btn btn-primary w-100 lift btn-lg">
+                        Login to Deploy Server
+                      </a>
+                    </div>
+                    {{/if}}
+
+                </div>
+                <hr />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  // State variables
+  let selectedGPU = "";
+  let selectedGPUCount = 1;
+  let selectedRAMAmount = 4;
+  let selectedVCPUAmount = 2;
+  let selectedStorageSpaceAmount = 20;
+  let selectedLocation = "";
+  let selectedOS = "TensorML 20.04 LTS TensorFlow";
+  let selectedHostnode = {};
+  let selectedBid = 0;
+
+  let displayedLocations = {};
+  let displayedLocationsSuggestions = {};
+
+  let totalPriceGPU = 0;
+  let totalPriceRAM = 0;
+  let totalPriceVCPU = 0;
+  let totalPriceStorage = 0;
+  let totalPriceOS = 0;
+
+  // Queue for server queries
+  class QueryQueue {
+    constructor() {
+      this.queue = [];
+      this.runningJob = null;
+    }
+
+    async addJob(job) {
+      this.queue.push(job);
+
+      await this.processQueue();
+    }
+
+    async processQueue() {
+      if (!this.runningJob && this.queue.length) {
+        this.runningJob = this.queue[0];
+        this.queue.shift();
+
+        await this.runningJob();
+        this.runningJob = null;
+
+        await this.processQueue();
+      }
+    }
+  }
+
+  // Constants
+  const gpuMappings = {
+    "A100 80GB PCIE": "a100-pcie-80gb",
+    "A100 40GB PCIE": "a100-pcie-40gb",
+    "A100 40GB NVLink": "a100-nvlink-40gb",
+    "L40 48GB PCIE": "l40-pcie-48gb",
+    "V100 16GB PCIE": "v100-pcie-16gb",
+    "V100 16GB NVLink": "v100-nvlink-16gb",
+    "RTX A6000 48GB": "rtxa6000-pcie-48gb",
+    "RTX A5000 24GB": "rtxa5000-pcie-24gb",
+    "RTX A4000 16GB": "rtxa4000-pcie-16gb",
+    "GeForce RTX 4090 24GB": "geforcertx4090-pcie-24gb",
+    "GeForce RTX 3090 24GB": "geforcertx3090-pcie-24gb",
+    "GeForce RTX 3080 Ti 12GB": "geforcertx3080ti-pcie-12gb",
+    "GeForce RTX 3080 10GB": "geforcertx3080-pcie-10gb",
+    "GeForce RTX 3070 Ti 8GB": "geforcertx3070ti-pcie-8gb",
+    "GeForce RTX 3060 12GB": "geforcertx3060-pcie-12gb",
+    "GeForce RTX 3060 Ti 8GB": "geforcertx3060ti-pcie-8gb",
+    "GeForce GTX 1070 8GB": "geforcegtx1070-pcie-8gb",
+    "Quadro RTX 4000 8GB": "quadrortx4000-pcie-8gb",
+    "Quadro RTX 5000 16GB": "quadrortx5000-pcie-16gb",
+  };
+
+  const osMappings = {
+    "Ubuntu 20.04 LTS": "Ubuntu 20.04 LTS",
+    "Ubuntu 22.04 LTS": "Ubuntu 22.04 LTS",
+    "TensorML 20.04 LTS TensorFlow": "TensorML 20 TensorFlow",
+    "TensorML 20.04 LTS PyTorch": "TensorML 20 PyTorch",
+    "TensorML 20.04 LTS Everything": "TensorML 20 Everything",
+    "TensorML 20.04 LTS RAPIDS": "TensorML 20 RAPIDS",
+    "Windows 10": "Windows 10",
+  };
+
+  // Constants
+  const networkServersPriceGPU = {
+    "A100 80GB PCIE": 2.43,
+    "A100 40GB NVLink": 2.27,
+    "A100 40GB PCIE": 2.27,
+    "V100 16GB NVLink": 0.88,
+    "V100 16GB PCIE": 0.52,
+    "RTX A6000 48GB": 1.41,
+    "RTX A5000 24GB": 0.85,
+    "RTX A4000 16GB": 0.68,
+    "Quadro RTX 4000 8GB": 0.27,
+    "Quadro RTX 5000 16GB": 0.63,
+  };
+  const networkServersPriceCPU = 0.01;
+  const networkServersPriceRAM = 0.005;
+  const networkServersPriceStorage = 0.0001;
+
+  // Utility functions
+  function formatGPU(gpu) {
+    return gpu
+      .replaceAll("-", " ")
+      .replace("pcie", "PCIE")
+      .replace("geforce", "GeForce")
+      .replace("gtx", " GTX ")
+      .replace("rtx", " RTX ")
+      .replace("ti", " Ti")
+      .replace("gb", " GB")
+      .replace("a", "A")
+      .replace("l", "L")
+      .replace("v", "V")
+      .replace("sxm2", "SXM2");
+  }
+
+  function roundValue(value) {
+    return Math.round(value * 1000) / 1000;
+  }
+
+  function formatLineItem(value) {
+    return roundValue(value).toFixed(4);
+  }
+
+  function checkPassword(password) {
+    // Password has to be at least 8 characters with at least 1 uppercase letter, symbol, or number.
+    return (
+      password.length >= 8 &&
+      (/[A-Z]/.test(password) || /[\W_]/.test(password) || /\d/.test(password))
+    );
+  }
+
+  // DOM functions
+  function toggleButtonStyles(buttonClassNames, selectedButtonId) {
+    const buttons = document.getElementsByClassName(buttonClassNames);
+
+    // Clear styles for all buttons
+    for (let i = 0; i < buttons.length; i++) {
+      buttons[i].classList.replace("bg-dark", "bg-light");
+      buttons[i].classList.replace("text-light", "text-dark");
+    }
+
+    // Darken selected button
+    document
+      .getElementById(selectedButtonId)
+      .classList.replace("bg-light", "bg-dark");
+    document
+      .getElementById(selectedButtonId)
+      .classList.replace("text-dark", "text-light");
+    document.getElementById(selectedButtonId).blur();
+  }
+
+  function createLocationCard(locations, locationId, parentElementId) {
+    const locationInfo = locations[locationId];
+    const locationCard = document.createElement("div");
+
+    if (locationInfo.type === "network") {
+      locationCard.innerHTML =
+        `
+      <a class="card shadow bg-light text-dark w-100 location-select mb-4" id="chooseLocation${locationId}" href="javascript:chooseLocation('${locationId}')"><div class="card-body">` +
+        "<h4>" +
+        locationInfo.location +
+        " - $" +
+        locationInfo.price +
+        "/hr " +
+        "</h4>" +
+        '<span class="mb-2 badge bg-secondary-soft" style="margin-right: 0.4em">Network-based storage</span>' +
+        '<span class="mb-2 badge bg-primary-soft" style="margin-right: 0.4em">' +
+        locationInfo.availability +
+        "</span>" +
+        "<p><small>" +
+        selectedGPUCount +
+        "x " +
+        selectedGPU +
+        ", " +
+        selectedVCPUAmount +
+        "x vCPUs, " +
+        selectedRAMAmount +
+        " GB RAM, " +
+        selectedStorageSpaceAmount +
+        " GB NVMe SSD" +
+        "</small></p></div></a>";
+    } else {
+      const reservedHostnode = locationInfo.hostnodes.find(
+        (hostnode) => hostnode.reserved
+      );
+      const defaultHostnode = reservedHostnode || locationInfo.hostnodes[0];
+      const uptime = (defaultHostnode.uptime * 100).toFixed(2);
+      const lowUptime = uptime < 99.5;
+      const { cpu, gpu, ram, storage } = defaultHostnode.specs;
+
+      const reservedBadge = `<span class="mb-2 badge bg-warning text-dark">Reserved for you</span>`;
+      const lowUptimeBadge = `<span class="mb-2 badge bg-warning" style="margin-right: 0.4em">Low Uptime</span>`;
+
+      locationCard.innerHTML =
+        `<a class="card shadow bg-light text-dark w-100 location-select mb-4" id="chooseLocation${locationId}" href="javascript:chooseLocation('${locationId}')"><div class="card-body">` +
+        "<h4>" +
+        locationInfo.location +
+        " - $" +
+        locationInfo.price +
+        "/hr " +
+        "</h4>" +
+        (lowUptime ? lowUptimeBadge : "") +
+        '<span class="mb-2 badge bg-secondary-soft" style="margin-right: 0.4em">Local-based storage</span>' +
+        '<span class="mb-2 badge bg-primary-soft" style="margin-right: 0.4em">' +
+        locationInfo.availability +
+        "</span>" +
+        (reservedHostnode ? reservedBadge : "") +
+        "<p><small>" +
+        gpu[locationInfo.gpuType].amount +
+        "x " +
+        formatGPU(locationInfo.gpuType) +
+        ", " +
+        cpu.amount +
+        "x " +
+        locationInfo.cpuType +
+        " vCPUs, " +
+        ram.amount +
+        " GB RAM, " +
+        storage.amount +
+        " GB NVMe SSD, " +
+        `${uptime}% Uptime` +
+        "</small></p></div></a>";
+    }
+
+    document.getElementById(parentElementId).appendChild(locationCard);
+  }
+
+  function formatLocationAvailability(stock) {
+    if (stock >= 8) return "High Stock";
+    if (stock >= 4 && stock < 8) return "Medium Stock";
+    return "Low Stock";
+  }
+
+  function handleBid() {
+    if (!selectedHostnode) return showError("Please select a location.");
+
+    // Toggle button if bid already selected
+    if (selectedBid) {
+      selectedBid = 0;
+
+      document
+        .getElementById("bidapply-button")
+        .classList.replace("btn-secondary-soft", "btn-primary-soft");
+      document.getElementById("bidapply-button").innerHTML = "Apply Bid";
+
+      return;
+    }
+
+    const bidPrice = Number(document.getElementById("bid-input").value);
+
+    const apiRoute = "/api/session/vm/new_bid_validate";
+
+    const body = JSON.stringify({
+      compute_price: bidPrice,
+      ram: selectedRAMAmount,
+      vcpus: selectedVCPUAmount,
+      storage: selectedStorageSpaceAmount,
+      gpu_model: gpuMappings[selectedGPU],
+      gpu_count: selectedGPUCount,
+      hostnode: selectedHostnode.id,
+    });
+
+    fetch(apiRoute, {
+      method: "POST",
+      body,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.success) {
+          selectedBid = bidPrice;
+
+          showSuccess(
+            "This bid is high enough that if you were to deploy a spot instance with this, then it would succeed."
+          );
+
+          document
+            .getElementById("bidapply-button")
+            .classList.replace("btn-primary-soft", "btn-secondary-soft");
+          document.getElementById("bidapply-button").innerHTML = "Remove Bid";
+        } else if (result.min_bid) {
+          showError(
+            "This bid is not high enough because the host's minimum bid rules are not fulfilled. The minimum compute bid for your requested hardware configuration is " +
+            result.min_bid +
+            "."
+          );
+        } else {
+          showError(
+            "This bid is not high enough. You need a higher bid to outbid your competitors for your server to be created."
+          );
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+
+  function removePort(port) {
+    // Remove port configuration
+    document.getElementById(`port-${port}-row`).remove();
+
+    // Make port option selectable
+    document
+      .getElementById(`port-selector-${port}`)
+      .removeAttribute("disabled");
+  }
+
+  function addPort(port, defaultOutput = "") {
+    // Disable port selection
+    document.getElementById(`port-selector-${port}`).disabled = true;
+
+    // Add port to list
+    const portConfiguration = document.createElement("div");
+
+    portConfiguration.innerHTML = `
+      <div class="row mt-2 port-checkbox" id="port-${port}-row" data-port="${port}">
+        <div class="col-6">
+          <div class="btn-group">
+            <button
+              type="button"
+              id="port-${port}"
+              aria-label="Close"
+              class="btn btn-danger-soft px-2 py-0 port-close"
+              value="${port}"
+              onclick="removePort(${port})"
+            >
+              <i class="fas fa-times fa-xs" aria-hidden="true"></i>
+            </button>
+            <button class="btn py-0" type="button" disabled>
+              ${port}
+            </button></button>
+          </div>
+        </div>
+        <div class="col-6">
+          <input
+            type="number"
+            class="col-6 form-control port-forward py-0"
+            max="65535"
+            min="1"
+            id="outputport-${port}"
+            value="${defaultOutput}"
+          />
+        </div>
+      </div>`;
+
+    document.getElementById("ports").appendChild(portConfiguration);
+  }
+
+  function calculateTotalPrice(specs) {
+    const { gpuTotal, ramTotal, cpuTotal, storageTotal, total } =
+      calculateVMPrice(specs);
+
+    totalPriceGPU = formatLineItem(gpuTotal);
+    totalPriceRAM = formatLineItem(ramTotal);
+    totalPriceVCPU = formatLineItem(cpuTotal);
+    totalPriceStorage = formatLineItem(storageTotal);
+
+    const totalPrice = formatLineItem(total);
+
+    // Set subtotals
+    document.getElementById("summaryGPUTotalPrice").innerHTML = totalPriceGPU;
+    document.getElementById("summaryRAMPrice").innerHTML = totalPriceRAM;
+    document.getElementById("summaryvCPUPrice").innerHTML = totalPriceVCPU;
+    document.getElementById("summaryStoragePrice").innerHTML =
+      totalPriceStorage;
+
+    document.getElementById("summaryTotalPrice").innerHTML = totalPrice;
+    document.getElementById("summaryOffPrice").innerHTML = totalPriceStorage;
+  }
+
+  async function chooseGPU(gpu) {
+    selectedGPU = gpu;
+
+    document.getElementById("summaryGPUModel").innerHTML = selectedGPU;
+    document.getElementById("locationSelectHeader").innerHTML = selectedGPU;
+
+    toggleButtonStyles(
+      "gpu-select",
+      "chooseGPU" + selectedGPU.replaceAll(" ", "")
+    );
+
+    await updateAvailableLocations();
+  }
+
+  function customizeServer(value, fieldId) {
+    document.getElementById(fieldId).innerHTML = value.toString();
+
+    updateAvailableLocations();
+  }
+
+  function chooseOS(os) {
+    selectedOS = os;
+
+    document.getElementById("summaryOS").innerHTML = selectedOS.includes(
+      "TensorML 20.04 LTS"
+    )
+      ? "TensorML 20.04 LTS"
+      : selectedOS;
+
+    toggleButtonStyles("os-select", "chooseOS" + os.replaceAll(" ", ""));
+  }
+
+  function calculateVMPrice(specs) {
+    const { gpuPrice, ramPrice, cpuPrice, storagePrice } = specs;
+
+    const resourcePrices = {
+      gpuTotal: gpuPrice * selectedGPUCount,
+      ramTotal: ramPrice * selectedRAMAmount,
+      cpuTotal: cpuPrice * selectedVCPUAmount,
+      storageTotal: storagePrice * selectedStorageSpaceAmount,
+    };
+
+    // TODO: Increase granularity of rounding for merging purposes
+    const total = Object.values(resourcePrices)
+      .reduce((acc, curr) => acc + roundValue(curr), 0)
+      .toFixed(4);
+
+    return {
+      gpuTotal: resourcePrices.gpuTotal,
+      ramTotal: resourcePrices.ramTotal,
+      cpuTotal: resourcePrices.cpuTotal,
+      storageTotal: resourcePrices.storageTotal,
+      total,
+    };
+  }
+
+  function sortLocations(locations) {
+    return Object.fromEntries(
+      Object.entries(locations).sort((a, b) => {
+        const [, locationA] = a;
+        const [, locationB] = b;
+
+        return (
+          !!locationB.hostnodes?.find((node) => node.reserved) -
+          !!locationA.hostnodes?.find((node) => node.reserved) ||
+          locationA.price - locationB.price
+        );
+      })
+    );
+  }
+
+  const queryQueue = new QueryQueue();
+
+  async function updateAvailableLocations() {
+    async function queryJob() {
+      // Clear location and hostnode
+      selectedLocation = "";
+      selectedHostnode = {};
+
+      // Clear location matches and location suggestions
+      displayedLocations = {};
+      displayedLocationsSuggestions = {};
+
+      document.getElementById("hostnodeOptionsRow").innerHTML = "";
+      document.getElementById("hostnodeOptionsRowSuggestions").innerHTML = "";
+
+      // Hide price summary
+      document.getElementById("price-summary-text").classList.remove("d-none");
+      document.getElementById("price-summary").classList.add("d-none");
+
+      // Add loading spinners
+      document.getElementById("hostnodeOptionsRowLoading").innerHTML = `
+        <div class="spinner-border text-secondary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+    `;
+
+      document.getElementById(
+        "hostnodeOptionsRowSuggestionsLoading"
+      ).innerHTML = `
+        <div class="spinner-border text-secondary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+    `;
+
+      // Fetch local hostnodes
+      const localServersApiRoute = "http://localhost:5000/api/v0/client/deploy/hostnodes";
+
+      const localServersRequestParams = new URLSearchParams({
+        minGPUCount: selectedGPUCount,
+        minRAM: selectedRAMAmount,
+        minvCPUs: selectedVCPUAmount,
+        minStorage: selectedStorageSpaceAmount,
+        minVRAM: Number(selectedGPU.match(/(\d+)\s*GB/)[1]),
+        requiresRTX: selectedGPU.includes("RTX"),
+      });
+
+      const request = await fetch(
+        `${localServersApiRoute}?${localServersRequestParams}`,
+      );
+      const { hostnodes } = await request.json();
+
+      for (const hostnode in hostnodes) {
+        const hostnodeProperties = hostnodes[hostnode];
+
+        for (const hostnodeGPU in hostnodeProperties.specs.gpu) {
+          const vmPrice = calculateVMPrice({
+            gpuPrice: hostnodeProperties.specs.gpu[hostnodeGPU].price,
+            ramPrice: hostnodeProperties.specs.ram.price,
+            cpuPrice: hostnodeProperties.specs.cpu.price,
+            storagePrice: hostnodeProperties.specs.storage.price,
+          }).total;
+
+          const listToUpdate =
+            gpuMappings[selectedGPU] === hostnodeGPU
+              ? displayedLocations
+              : displayedLocationsSuggestions;
+
+          const currentLocationId =
+            hostnodeProperties.location.id + vmPrice.toString();
+
+          // Validate each GPU individually, as the returned hostnodes may have GPUs not matching the criteria
+          if (
+            hostnodeProperties.specs.gpu[hostnodeGPU].amount <
+            selectedGPUCount ||
+            hostnodeProperties.specs.gpu[hostnodeGPU].vram <
+            Number(
+              selectedGPU
+                .split(" ")
+                [selectedGPU.split(" ").length - 1].replace("GB", "")
+            ) ||
+            (selectedGPU.includes("RTX") &&
+              !hostnodeProperties.specs.gpu[hostnodeGPU].rtx)
+          )
+            continue;
+
+          if (listToUpdate[currentLocationId]) {
+            // If there are two or more hostnodes, we automatically say there is medium availability, even if there is only 1 GPU on each
+            // If there are more than 8 GPUs, we say there is high availability... 8 unrented GPUs in one location is a lot!
+            listToUpdate[currentLocationId].stock +=
+              hostnodeProperties.specs.gpu[hostnodeGPU].amount;
+            listToUpdate[currentLocationId].availability =
+              formatLocationAvailability(listToUpdate[currentLocationId].stock);
+
+            if (
+              !listToUpdate[currentLocationId].hostnodes.find(
+                (node) => node.id === hostnode
+              )
+            ) {
+              listToUpdate[currentLocationId].hostnodes.push({
+                id: hostnode,
+                ports: hostnodeProperties.networking.ports,
+                specs: hostnodeProperties.specs,
+                reserved: hostnodeProperties.status.reserved,
+                uptime: hostnodeProperties.status.uptime,
+              });
+            }
+          } else {
+            listToUpdate[currentLocationId] = {
+              type: "local",
+              availability: formatLocationAvailability(
+                hostnodeProperties.specs.gpu[hostnodeGPU].amount
+              ),
+              location:
+                hostnodeProperties.location.city +
+                ", " +
+                hostnodeProperties.location.region +
+                ", " +
+                hostnodeProperties.location.country,
+              price: vmPrice,
+              gpuType: hostnodeGPU,
+              stock: hostnodeProperties.specs.gpu[hostnodeGPU].amount,
+              cpuType: hostnodeProperties.specs.cpu.type,
+              hostnodes: [
+                {
+                  id: hostnode,
+                  ports: hostnodeProperties.networking.ports,
+                  specs: hostnodeProperties.specs,
+                  reserved: hostnodeProperties.status.reserved,
+                  uptime: hostnodeProperties.status.uptime,
+                },
+              ],
+            };
+          }
+        }
+      }
+
+      document.getElementById(
+        "hostnodeOptionsRowSuggestionsLoading"
+      ).innerHTML = "";
+
+      for (const location in sortLocations(displayedLocations)) {
+        createLocationCard(displayedLocations, location, "hostnodeOptionsRow");
+      }
+
+      for (const locationSuggestion in sortLocations(
+        displayedLocationsSuggestions
+      )) {
+        createLocationCard(
+          displayedLocationsSuggestions,
+          locationSuggestion,
+          "hostnodeOptionsRowSuggestions"
+        );
+      }
+
+      document.getElementById("hostnodeOptionsRowSuggestions").style.height =
+        "280px";
+      document.getElementById("hostnodeOptionsRowLoading").innerHTML = "";
+    }
+
+    await queryQueue.addJob(queryJob);
+  }
+
+  function updatePorts(hostnode) {
+    // Clear ports
+    document.getElementById("ports").innerHTML = "";
+    document.getElementById("port-selector").innerHTML = "";
+
+    // Set maximum ports
+    const { ports } = hostnode;
+    document.getElementById("ports-max").innerHTML = ports.length;
+
+    ports.forEach((port, index) => {
+      // Add port selection options
+      const portOption = document.createElement("option");
+
+      portOption.setAttribute("id", `port-selector-${port}`);
+      portOption.setAttribute("value", port);
+      portOption.innerHTML = port;
+
+      // Add port configuration elements
+      document.getElementById("port-selector").appendChild(portOption);
+
+      const defaultOutputPort = [22, 3389, 8888][index];
+
+      if (index < 3) addPort(port, defaultOutputPort);
+    });
+  }
+
+  async function chooseLocation(location) {
+    const locationInfo = {
+      ...displayedLocations,
+      ...displayedLocationsSuggestions,
+    }[location];
+
+    // Only update GPU if it is not an exact match, only applies to local products
+    if (displayedLocationsSuggestions[location]) {
+      const formattedGPU = Object.keys(gpuMappings).find(
+        (gpuName) => gpuMappings[gpuName] === locationInfo.gpuType
+      );
+
+      await chooseGPU(formattedGPU);
+    }
+
+    selectedLocation = locationInfo;
+
+    if (locationInfo.type === "local") {
+      // Set hostnode
+      const reservedHostnode = locationInfo.hostnodes.find(
+        (hostnode) => hostnode.reserved
+      );
+      selectedHostnode = reservedHostnode || selectedLocation.hostnodes[0];
+
+      updatePorts(selectedHostnode);
+
+      calculateTotalPrice({
+        gpuPrice: selectedHostnode.specs.gpu[selectedLocation.gpuType].price,
+        ramPrice: selectedHostnode.specs.ram.price,
+        cpuPrice: selectedHostnode.specs.cpu.price,
+        storagePrice: selectedHostnode.specs.storage.price,
+      });
+    }
+
+    if (locationInfo.type === "network") {
+      calculateTotalPrice({
+        gpuPrice: networkServersPriceGPU[selectedGPU],
+        ramPrice: networkServersPriceRAM,
+        cpuPrice: networkServersPriceCPU,
+        storagePrice: networkServersPriceStorage,
+      });
+    }
+
+    // Toggle visibility of ports/bidding depending on network/local
+    const configurePortsElement = document.getElementById("configure-ports");
+    const configureBiddingElement =
+      document.getElementById("configure-bidding");
+
+    if (locationInfo.type === "network") {
+      configurePortsElement.classList.add("d-none");
+      configureBiddingElement.classList.add("d-none");
+    } else {
+      configurePortsElement.classList.remove("d-none");
+      configureBiddingElement.classList.remove("d-none");
+    }
+
+    // Toggle visibility of price summary
+    document.getElementById("price-summary-text").classList.add("d-none");
+    document.getElementById("price-summary").classList.remove("d-none");
+
+    document.getElementById("summaryLocation").innerHTML =
+      locationInfo.location;
+    toggleButtonStyles("location-select", "chooseLocation" + location);
+  }
+
+  async function deployServer(redirected, split_url) {
+    let sendAdminUser;
+    let sendAdminPass;
+    let sendHostname;
+    let sendCloudinit;
+    let externalPorts = [];
+    let internalPorts = [];
+
+    Array.from(document.getElementsByClassName("port-checkbox")).forEach((element) => {
+      const externalPort = parseInt(element.getAttribute("data-port"));
+
+      externalPorts.push(externalPort);
+
+      const internalPort = parseInt(
+        document.getElementById(`outputport-${externalPort}`).value
+      );
+      internalPorts.push(internalPort);
+    });
+
+    sendAdminUser = document.getElementById("submitAdminUser").value;
+    sendAdminPass = document.getElementById("submitAdminPass").value;
+    sendHostname = document.getElementById("submitHostname").value;
+    sendCloudinit = document.getElementById("submitCloudinit").value;
+
+    const apiRoute = "http://localhost:5000/api/v0/client/deploy/single";
+
+    const body = {
+      deployment_type: selectedLocation.type,
+      ...(sendAdminPass && { password: sendAdminPass }),
+      name: sendHostname,
+      vcpus: selectedVCPUAmount,
+      storage: selectedStorageSpaceAmount,
+      ram: selectedRAMAmount,
+      country: "United States",
+      gpu_count: selectedGPUCount,
+      gpu_model: gpuMappings[selectedGPU],
+      operating_system: osMappings[selectedOS],
+      ...(selectedLocation.type === "local" && {
+        hostnode: selectedHostnode.id,
+        external_ports: `[${externalPorts.join(', ')}]`,
+        internal_ports: `[${internalPorts.join(', ')}]`,
+      }),
+      ...(selectedLocation.type === "network" && {
+        location: selectedLocation.location,
+      }),
+      ...(sendCloudinit && {
+        cloudinit_script: sendCloudinit,
+      }),
+      ...(selectedBid && {
+        price_type: "spot",
+        price: selectedBid,
+      }),
+    };
+
+    const formData = new FormData();
+
+    Object.keys(body).forEach((key) => {
+      const value = body[key];
+      console.log(key, value);
+      formData.append(key, value);
+    });
+
+    const request = await fetch(apiRoute, {
+      method: "POST",
+      body: formData,
+      credentials: "include",
+      headers: {
+        'Cookie': document.cookie.split(';').find((elem) => elem.includes('whitelabelToken')).trim(),
+      },
+    });
+
+    console.log(request);
+
+    const response = await request.json();
+    console.log(response);
+    const selection_id = Date.now();
+
+    document.getElementById("slider").style.display = "block";
+
+    if (response.success) {
+      window.location.href =
+        selectedLocation.type === "local"
+          ? `deploy_wait/${response.execution_id}/${response.server}`
+          : `/manage/${response.server}`;
+    } else {
+      showAlert(
+        `${response.error} Have another question? Email us at support@tensordock.com for assistance.`
+      );
+
+      document.getElementById("deployBtnParent").innerHTML =
+        '<a class="btn btn-primary w-100 lift btn-lg" href="javascript:deployServer(true, null)">Deploy Server</a>';
+
+      document.getElementById("redirectBtnParent").innerHTML =
+        '<a href="/login" class="btn btn-primary w-100 lift btn-lg"> Login to Deploy Server </a>';
+    }
+  }
+
+  async function updateSSHKeys() {
+    const sshKeys = document.getElementById("sshKeys").value;
+    const apiRoute = "/ssh_public_keys";
+    const body = { ssh_keys: sshKeys };
+
+    const request = await fetch(apiRoute, {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    const response = await request.json();
+
+    if (response.status === 'success') showSuccess("Updated SSH public keys successfully.");
+    else showError("Failed to update SSH public keys. Try logging in again.");
+  }
+
+  $("#selectGPUCount").on("change", (e) => {
+    selectedGPUCount = e.target.value;
+    return customizeServer(selectedGPUCount, "summaryGPUCount");
+  });
+
+  $("#selectRAM").on("change", (e) => {
+    selectedRAMAmount = e.target.value;
+    return customizeServer(selectedRAMAmount, "summaryRAM");
+  });
+
+  $("#selectvCPU").on("change", (e) => {
+    selectedVCPUAmount = e.target.value;
+    return customizeServer(selectedVCPUAmount, "summaryvCPU");
+  });
+
+  $("#selectStorageSpace").on("change", (e) => {
+    selectedStorageSpaceAmount = e.target.value;
+    return customizeServer(selectedStorageSpaceAmount, "summaryStorageSpace");
+  });
+
+  $("#port-selector").on("change", (e) => addPort(e.target.value));
+
+  document.getElementById("summaryGPUCount").innerHTML =
+    selectedGPUCount.toString();
+  document.getElementById("summaryRAM").innerHTML =
+    selectedRAMAmount.toString();
+  document.getElementById("summaryvCPU").innerHTML =
+    selectedVCPUAmount.toString();
+  document.getElementById("summaryStorageSpace").innerHTML =
+    selectedStorageSpaceAmount.toString();
+
+  document.getElementById("summaryOS").innerHTML = selectedOS.includes(
+    "TensorML 20.04 LTS"
+  )
+    ? "TensorML 20.04 LTS"
+    : selectedOS;
+  toggleButtonStyles("os-select", "chooseOS" + selectedOS.replaceAll(" ", ""));
+
+  chooseGPU(selectedGPU);
+</script>
+

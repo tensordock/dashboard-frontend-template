@@ -1,0 +1,144 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<!-- HEADER -->
+<header class="bg-dark py-9">
+    <div class="container-md">
+        <div class="row align-items-center">
+            <div class="col">
+
+                <!-- Heading -->
+                <h1 class="fw-bold text-white mb-2">
+                    Your TensorDock Servers
+                </h1>
+                <p class="text-light">Utilize the full potential of your allocated resources. CPU 100%? GPU 100%? No
+                    problem. We're not your typical WordPress hosting provider with resource limits. <b>We're
+                        your HPC provider.</b>
+                </p>
+
+            </div>
+        </div>
+        <!-- / .row -->
+    </div>
+    <!-- / .container -->
+</header>
+<nav class="mb-3 bg-gray-200" aria-label="breadcrumb">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a class="text-gray-700" href="/home">
+                            Home
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active text-gray-700" aria-current="page">
+                        Your Servers
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<section class="p-5 container w-100">
+    <div class="col">
+        <div class="card shadow mb-6">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col">
+                        <h4 class="mb-0">
+                            Servers List
+                        </h4>
+                    </div>
+                    <div class="col-auto">
+                        <h4 class="mb-0">
+                            External IPv4 Address / Hostname
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" style="padding: 0rem">
+                <div class="list-group list-group-flush" class="searchableSpace">
+                    <a class="searchable list-group-item"
+                       style="padding-left: 48px!important; padding-right: 48px!important; padding-top: 24px!important; padding-bottom: 24px!important;"
+                    >
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <small style="font-size: 0.5em" class="badge badge-sm badge-rounded-circle bg-success">
+                                    <i class="fe fe-circle text-success"></i>
+                                </small>
+                                <span style="font-size: 2.1em" class="text-dark">
+                                    <i class="fab fa-docker" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                            <div class="col">
+                                <p class="mb-0 text-dark">
+                                </p>
+                                <small class="text-gray-700">
+
+                                </small>
+                            </div>
+                            <div class="col-auto">
+                                <p class="mb-0 text-dark">
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                    <a class="searchable list-group-item"
+                       style="padding-left: 48px!important; padding-right: 48px!important; padding-top: 24px!important; padding-bottom: 24px!important;"
+                    >
+                        <div class="row align-items-center">
+                            {{#if success}}
+                            {{#each virtualmachines}}
+                            <div class="vm-container">
+                                <h2>{{this.name}}</h2>
+                                <p><strong>Hostname:</strong> {{this.hostname}}</p>
+                                <p><strong>Status:</strong> {{this.status}}</p>
+                                <p><strong>Operating System:</strong> {{this.operating_system}}</p>
+                                <p><strong>Specifications:</strong></p>
+                                <ul>
+                                    <li><strong>GPU:</strong> {{this.specs.gpu.type}} ({{this.specs.gpu.amount}})</li>
+                                    <li><strong>RAM:</strong> {{this.specs.ram}} GB</li>
+                                    <li><strong>Storage:</strong> {{this.specs.storage}} GB</li>
+                                    <li><strong>vCPUs:</strong> {{this.specs.vcpus}}</li>
+                                </ul>
+                                <p><strong>Port Forwards:</strong></p>
+                                <ul>
+                                    {{#each this.port_forwards}}
+                                    <li><strong>{{@key}}:</strong> {{this}}</li>
+                                    {{/each}}
+                                </ul>
+                                <p><strong>Created On:</strong> {{this.timestamp_creation}}</p>
+                            </div>
+                            {{/each}}
+                            {{else}}
+                            <p>No virtual machines found.</p>
+                            {{/if}}
+
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+  async function retrieveServers() {
+    const apiRoute = 'http://localhost:5000/api/v0/client/list';
+    const request = await fetch(apiRoute, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        'Cookie': document.cookie.split(';').find((elem) => elem.includes('whitelabelToken')).trim(),
+      },
+    });
+
+    const response = await request.json();
+
+    console.log(response);
+  }
+
+  retrieveServers();
+</script>
+</div>
+
