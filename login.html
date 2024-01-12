@@ -4,63 +4,46 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login Page</title>
+  <link rel="stylesheet" href="./static/css/libs.bundle.css" />
+  <link rel="stylesheet" href="./static/css/theme.bundle.css" />
+  <link rel="stylesheet" href="./static/css/custom.css" />
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
+    body, html {
       margin: 0;
       padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      background-color: #f4f4f4;
-    }
-
-    .login-container {
-      text-align: center;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 16px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-
-    button {
-      background-color: #3498db;
+      height: 100%;
+      font-family: 'Arial', sans-serif;
+      background: rgb(40, 43, 85); 
       color: #fff;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+    }
+    .form-control {
+    background-color: rgba(255, 255, 255, 0.1); 
+    border: 1px solid rgba(255, 255, 255, 0.3); 
+    color: #fff; 
     }
 
-    button:hover {
-      background-color: #2980b9;
+    .form-control::placeholder { 
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .form-control:focus {
+      background-color: rgba(255, 255, 255, 0.2);
+      border-color: #fff;
+      color: #fff;
     }
   </style>
+  <script src="./static/js/vendor.bundle.js"></script>
+  <script src="./static/js/theme.bundle.js"></script>
   <script>
     function submitForm() {
-      const url = 'http://localhost:5000/api/v0/client/whitelabel/login';
-      //const url = 'http://127.0.0.1:5000/api/v0/client/whitelabel/login'
+      //const url = 'http://localhost:5000/api/v0/client/whitelabel/login';
+      const url = 'http://127.0.0.1:5000/api/v0/client/whitelabel/login'
 
       let formData = new FormData();
       formData.append('email', document.getElementById('email').value);
       formData.append('password', document.getElementById('password').value);
+      formData.append('subdomain', window.location.hostname.split('.')[0]);
 
-      // Submit the form using fetch
       fetch(url, {
         method: 'POST',
         body: formData
@@ -68,27 +51,104 @@
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        document.cookie = `whitelabelToken=${data.token}`;
-        window.location.href = '/deploy';
+
+        if (data === undefined || data.token === undefined) {
+          showMessage('Login failed');
+        } else {
+          document.cookie = `whitelabelToken=${data.token}`;
+          window.location.href = '/deploy';
+        }
       })
-      .catch(error => console.error('Error:', error));
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Login failed');
+      });
     }
+    const showMessage = (message, isError = true) => {
+        const messageBox = document.getElementById('messageBox');
+        messageBox.style.display = 'block';
+        messageBox.textContent = message;
+        messageBox.className = isError ? 'alert alert-danger' : 'alert alert-success';
+    };
   </script>
 </head>
 <body>
 
-<div class="login-container">
-  <h2>Login</h2>
-  <form id="loginForm" method="post">
-    <label for="email">Email:</label>
-    <input type="text" id="email" name="email" required>
+  <nav class="navbar py-3 navbar-expand-lg navbar-light bg-blue fixed-top" style="background-color: rgb(40, 43, 85);">
+    <div class="container">
+      <!-- Brand -->
+      <a class="navbar-brand" href="./home.html">
+        <img src="./assets/img/brand.svg" style="width: 180px" class="navbar-brand-img" alt="...">
+      </a>
+  
+      <!-- Toggler -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <!-- Collapse -->
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+  
+        <!-- Toggler -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+          aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="fe fe-x"></i>
+        </button>
+  
+        <!-- Navigation -->
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDeploy" data-bs-toggle="dropdown" href="./deploy.html"
+              aria-haspopup="true" aria-expanded="false">
+              Deploy Cloud GPU
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarList" data-bs-toggle="dropdown" href="./list.html"
+              aria-haspopup="true" aria-expanded="false">
+              Manage Machines
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="navbarAccount" href="./account.html">
+              Account
+            </a>
+          </li> 
+        </ul>
+      </div>
+  
+    </div>
+  </nav>
+  <div style="height: 80px;">
+  </div>
+  <div id="messageBox" class="alert" role="alert" style="display: none;"></div>
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-
-    <button type="button" onclick="submitForm()">Submit</button>
-  </form>
-</div>
+  <div class="container" style="padding-top: 100px;">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-4">
+        <div class="login-container">
+          <h2 class="text-center">Login</h2> 
+          <form id="loginForm" method="post" class="mt-4">
+            <div class="form-group mb-3"> 
+              <label for="email" class="form-label">Email:</label>
+              <input type="text" id="email" name="email" class="form-control" required> 
+            </div>
+  
+            <div class="form-group mb-4">
+              <label for="password" class="form-label">Password:</label>
+              <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+  
+            <div class="d-flex justify-content-center">
+              <button type="button" onclick="submitForm()" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 
 </body>
 </html>

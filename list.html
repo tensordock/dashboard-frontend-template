@@ -1,144 +1,273 @@
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-<!-- HEADER -->
-<header class="bg-dark py-9">
-    <div class="container-md">
-        <div class="row align-items-center">
-            <div class="col">
-
-                <!-- Heading -->
-                <h1 class="fw-bold text-white mb-2">
-                    Your TensorDock Servers
-                </h1>
-                <p class="text-light">Utilize the full potential of your allocated resources. CPU 100%? GPU 100%? No
-                    problem. We're not your typical WordPress hosting provider with resource limits. <b>We're
-                        your HPC provider.</b>
-                </p>
-
-            </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Servers</title>
+    <link rel="stylesheet" href="./static/css/libs.bundle.css" />
+    <link rel="stylesheet" href="./static/css/theme.bundle.css" />
+    <link rel="stylesheet" href="./static/css/custom.css" />
+    <script src="./static/js/vendor.bundle.js"></script>
+    <script src="./static/js/theme.bundle.js"></script>
+    <style>
+        body, html {
+          margin: 0;
+          padding: 0;
+          height: 100%;
+          font-family: 'Arial', sans-serif;
+          background: rgb(40, 43, 85); 
+          color: #fff;
+        }
+      </style>
+</head>
+<body>
+    <nav class="navbar py-3 navbar-expand-lg navbar-light bg-blue fixed-top" style="background-color: rgb(40, 43, 85);">
+        <div class="container">
+          <!-- Brand -->
+          <a class="navbar-brand" href="./home.html">
+            <img src="./assets/img/brand.svg" style="width: 180px" class="navbar-brand-img" alt="...">
+          </a>
+      
+          <!-- Toggler -->
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+      
+          <!-- Collapse -->
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+      
+            <!-- Toggler -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+              aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+              <i class="fe fe-x"></i>
+            </button>
+      
+            <!-- Navigation -->
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDeploy" data-bs-toggle="dropdown" href="./deploy.html"
+                  aria-haspopup="true" aria-expanded="false">
+                  Deploy Cloud GPU
+                </a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarList" data-bs-toggle="dropdown" href="./list.html"
+                  aria-haspopup="true" aria-expanded="false">
+                  Manage Machines
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="navbarAccount" href="./account.html">
+                  Account
+                </a>
+              </li> 
+            </ul>
+          </div>
+      
         </div>
-        <!-- / .row -->
+      </nav>
+      <div style="height: 80px;">
     </div>
-    <!-- / .container -->
-</header>
-<nav class="mb-3 bg-gray-200" aria-label="breadcrumb">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a class="text-gray-700" href="/home">
-                            Home
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item active text-gray-700" aria-current="page">
-                        Your Servers
-                    </li>
-                </ol>
-            </div>
-        </div>
-    </div>
-</nav>
+    <h2 class="text-center">Manage Machines</h2> 
 
-<section class="p-5 container w-100">
-    <div class="col">
-        <div class="card shadow mb-6">
-            <div class="card-header">
-                <div class="row">
-                    <div class="col">
-                        <h4 class="mb-0">
-                            Servers List
-                        </h4>
-                    </div>
-                    <div class="col-auto">
-                        <h4 class="mb-0">
-                            External IPv4 Address / Hostname
-                        </h4>
+    <section class="p-5 container w-100">
+        <div class="col">
+            <div class="card shadow mb-6">
+                <div class="card-header">
+                    <h4 class="mb-0">Servers List</h4>
+                </div>
+                <div class="card-body" style="padding: 0rem">
+                    <div class="list-group list-group-flush" id="serverList">
+                        <!-- list will be populated here -->
                     </div>
                 </div>
             </div>
-            <div class="card-body" style="padding: 0rem">
-                <div class="list-group list-group-flush" class="searchableSpace">
-                    <a class="searchable list-group-item"
-                       style="padding-left: 48px!important; padding-right: 48px!important; padding-top: 24px!important; padding-bottom: 24px!important;"
-                    >
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <small style="font-size: 0.5em" class="badge badge-sm badge-rounded-circle bg-success">
-                                    <i class="fe fe-circle text-success"></i>
-                                </small>
-                                <span style="font-size: 2.1em" class="text-dark">
-                                    <i class="fab fa-docker" aria-hidden="true"></i>
-                                </span>
-                            </div>
-                            <div class="col">
-                                <p class="mb-0 text-dark">
-                                </p>
-                                <small class="text-gray-700">
+        </div>
+    </section>
 
-                                </small>
-                            </div>
-                            <div class="col-auto">
-                                <p class="mb-0 text-dark">
-                                </p>
+    <script>
+        //const whitelabelToken = document.cookie.split('; ').find(row => row.startsWith('whitelabelToken='));
+        const whitelabelToken = "=033ee005-4469-4f37-907c-71c50447455f"
+        const baseUrl = 'http://127.0.0.1:5000';
+        async function retrieveServers() {
+            console.log("RAN RETRIEVE SERVERS!")
+            const apiRoute = `${baseUrl}/api/v0/client/list`;
+            const request = await fetch(apiRoute, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    'Authorization': whitelabelToken.split('=')[1],
+                },
+            });
+
+            const response = await request.json();
+            console.log("response ", response);
+            populateServers(response);
+        }
+
+        function populateServers(data) {
+            console.log("RAN POPULATE SERVERS!")
+            const serverList = document.getElementById('serverList');
+            if (data.success && data.virtualmachines) {
+                Object.entries(data.virtualmachines).forEach(([machineId, vm], index) => {
+                    // Determine the status and available actions based on the VM's status
+                    let statusDisplay = vm.status;
+                    let actionButtons = '';
+                    const sshPortKey = Object.keys(vm.port_forwards).find(key => vm.port_forwards[key] === '22');
+                    const sshPort = sshPortKey ? sshPortKey : 'Error retrieving SSH port';
+                    const rdpPortKey = Object.keys(vm.port_forwards).find(key => vm.port_forwards[key] === '3389');
+                    const isWindows = vm.operating_system.toLowerCase().includes('windows');
+                    const accessPort = isWindows ? rdpPortKey : sshPortKey;
+                    const accessInstruction = isWindows
+                        ? `hostname:${accessPort}`
+                        : `ssh -p ${accessPort} user@${vm.hostname}`;
+
+                    switch(vm.status.toLowerCase()) {
+                        case 'running':
+                            statusDisplay = 'Running';
+                            actionButtons = `
+                                <button type="button" class="btn btn-outline-primary" onclick="stopVM('${machineId}', false)">Stop VM & reserve GPU</button>
+                                <p class="text-muted mt-1">Stop your virtual machine while keeping its GPU reserved; pay full price.</p>
+                                <button type="button" class="btn btn-outline-primary" onclick="stopVM('${machineId}', true)">Stop VM & release GPU</button>
+                                <p class="text-muted mt-1">Stop your virtual machine while releasing its GPU for others; only pay for storage.</p>
+                            `;
+                            break;
+                        case 'stoppeddisassociated':
+                            statusDisplay = 'Stopped with resources disassociated';
+                            actionButtons = `
+                                <button type="button" class="btn btn-outline-success" onclick="startVM('${machineId}')">Start VM</button>
+                                <p class="text-muted mt-1">Start your virtual machine.</p>
+                            `;
+                            break;
+                        default:
+                            statusDisplay = 'Stopped';
+                            actionButtons = `
+                                <button type="button" class="btn btn-outline-success" onclick="startVM('${machineId}')">Start VM</button>
+                                <p class="text-muted mt-1">Start your virtual machine.</p>
+                            `;
+                    }
+
+                    serverList.innerHTML += `
+                        <div class="row align-items-center">
+                            <div class="col" data-bs-toggle="collapse" href="#collapseInfo${index}" role="button" aria-expanded="false" aria-controls="collapseInfo${index}" style="cursor: pointer;">
+                                <h2>${vm.name}</h2>
+                                <p><strong>Machine ID:</strong> ${machineId}</p>
+                                <p><strong>Operating System:</strong> ${vm.operating_system}</p>
                             </div>
                         </div>
-                    </a>
-                    <a class="searchable list-group-item"
-                       style="padding-left: 48px!important; padding-right: 48px!important; padding-top: 24px!important; padding-bottom: 24px!important;"
-                    >
-                        <div class="row align-items-center">
-                            {{#if success}}
-                            {{#each virtualmachines}}
-                            <div class="vm-container">
-                                <h2>{{this.name}}</h2>
-                                <p><strong>Hostname:</strong> {{this.hostname}}</p>
-                                <p><strong>Status:</strong> {{this.status}}</p>
-                                <p><strong>Operating System:</strong> {{this.operating_system}}</p>
+                        <div class="collapse" id="collapseInfo${index}">
+                            <div class="card card-body">
+                                <p><strong>Hostname:</strong> ${vm.hostname}</p>
+                                <p><strong>Status:</strong> ${statusDisplay}</p>
                                 <p><strong>Specifications:</strong></p>
                                 <ul>
-                                    <li><strong>GPU:</strong> {{this.specs.gpu.type}} ({{this.specs.gpu.amount}})</li>
-                                    <li><strong>RAM:</strong> {{this.specs.ram}} GB</li>
-                                    <li><strong>Storage:</strong> {{this.specs.storage}} GB</li>
-                                    <li><strong>vCPUs:</strong> {{this.specs.vcpus}}</li>
+                                    <li><strong>GPU:</strong> ${vm.specs.gpu.type} (${vm.specs.gpu.amount})</li>
+                                    <li><strong>RAM:</strong> ${vm.specs.ram} GB</li>
+                                    <li><strong>Storage:</strong> ${vm.specs.storage} GB</li>
+                                    <li><strong>vCPUs:</strong> ${vm.specs.vcpus}</li>
                                 </ul>
+                                <p><strong>Storage Price:</strong> $${vm.storage_price}</p>
+                                <p><strong>Compute Price:</strong> $${vm.compute_price}</p>
+                                <p><strong>Total Price:</strong> $${vm.total_price}</p>
                                 <p><strong>Port Forwards:</strong></p>
                                 <ul>
-                                    {{#each this.port_forwards}}
-                                    <li><strong>{{@key}}:</strong> {{this}}</li>
-                                    {{/each}}
+                                    ${Object.entries(vm.port_forwards).map(([key, value]) => `<li>${key} to ${value}</li>`).join('')}
                                 </ul>
-                                <p><strong>Created On:</strong> {{this.timestamp_creation}}</p>
+                                <p><strong>Created On:</strong> ${vm.timestamp_creation}</p>
+                                <div class="btn-group-vertical w-100" role="group" aria-label="VM Controls">
+                                    ${actionButtons}
+                                    <button type="button" class="btn btn-outline-danger" onclick="deleteVM('${machineId}')">Delete Virtual Machine</button>
+                                    <p class="text-muted mt-1">Be careful. Once you press "delete," the VM will be instantly destroyed. All data will be lost.</p>
+                                </div>
+                                <p>Use the following commands to access your VM:</p>
+                                <pre><code>ssh -p ${sshPort} user@${vm.hostname}</code></pre>
+                                <p>If you are using key-based authentication, make sure to specify your keyfile with <code>-i &lt;identity_file&gt;</code></p>
+
+                                <p>Use the following IPv4 to access your VM with RDP:</p>
+                                <pre><code>${accessInstruction}</code></pre>
+                                ${!isWindows ? `
+                                <p>If you are using key-based authentication, make sure to specify your keyfile with <code>-i &lt;identity_file&gt;</code></p>
+                                ` : ''}
                             </div>
-                            {{/each}}
-                            {{else}}
-                            <p>No virtual machines found.</p>
-                            {{/if}}
-
                         </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+                    `;
+                });
+            } else {
+                serverList.innerHTML = '<p>No virtual machines found.</p>';
+            }
+        }
 
-<script>
-  async function retrieveServers() {
-    const apiRoute = 'http://localhost:5000/api/v0/client/list';
-    const request = await fetch(apiRoute, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        'Cookie': document.cookie.split(';').find((elem) => elem.includes('whitelabelToken')).trim(),
-      },
-    });
 
-    const response = await request.json();
+        const stopVM = async (machineId, releaseGPU) => {
+            console.log('Stopping VM:', machineId, 'Release GPU:', releaseGPU);
+            const apiRoute = `${baseUrl}/api/v0/client/stop/single`;
+            const formData = new FormData();
+            formData.append("server", machineId);
+            formData.append("disassociate_resources", releaseGPU);
+            const response = await fetch(apiRoute, {
+                method: "POST",
+                body: formData,
+                credentials: "include",
+                headers: {
+                    'Authorization': whitelabelToken.split('=')[1],
+                },
+            });
+            if (response.ok){
+                console.log("Success!");
+            }else{
+                console.log("response success: ", response.success);
+                console.log("ERROR!");
+            }
+        }
 
-    console.log(response);
-  }
+        const startVM = async (machineId) => {
+            console.log('Starting VM:', machineId);
+            const apiRoute = `${baseUrl}/api/v0/client/start/single`;
+            const formData = new FormData();
+            formData.append("server", machineId);
+            const response = await fetch(apiRoute, {
+                method: "POST",
+                body: formData,
+                credentials: "include",
+                headers: {
+                    'Authorization': whitelabelToken.split('=')[1],
+                },
+            });
+            if (response.ok){
+                console.log("Success!");
+            }else{
+                console.log("response success: ", response.success);
+                console.log("ERROR!");
+            }
+        }
 
-  retrieveServers();
-</script>
-</div>
+        const deleteVM = async (machineId) => {
+            console.log('Deleting VM:', machineId);
+            const apiRoute = `${baseUrl}/api/v0/client/delete/single`;
+            const formData = new FormData();
+            formData.append("server", machineId);
+            const response = await fetch(apiRoute, {
+                method: "POST",
+                body: formData,
+                credentials: "include",
+                headers: {
+                    'Authorization': whitelabelToken.split('=')[1],
+                },
+            });
+            if (response.ok){
+                console.log("Success!");
+            }else{
+                console.log("response success: ", response.success);
+                console.log("ERROR!");
+            }
+            
+        }
 
+
+
+
+
+        retrieveServers();
+    </script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Account - Cloud GPU Deployments</title>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script src="./static/js/vendor.bundle.js"></script>
+  <script src="./static/js/theme.bundle.js"></script>
+  <script>
+    const stripe = Stripe('pk_live_51JqNQYHSshR0IOtvfpFJ335VCKxHeyzKzGT8XaWMNvt5ye74VXApsofamVwZN3Ec2H9Y9Ap5WsVlVwxgnEL1Ys7R00rbTg3ky9');
+  </script>
+  <!-- Include the necessary scripts and styles -->
+  <link rel="stylesheet" href="./static/css/libs.bundle.css" />
+  <link rel="stylesheet" href="./static/css/theme.bundle.css" />
+  <link rel="stylesheet" href="./static/css/custom.css" />
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Arial', sans-serif;
+      background: rgb(40, 43, 85); /* Adjust the background color if needed */
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+    <nav class="navbar py-3 navbar-expand-lg navbar-light bg-blue fixed-top" style="background-color: rgb(40, 43, 85);">
+        <div class="container">
+          <!-- Brand -->
+          <a class="navbar-brand" href="./home.html">
+            <img src="./assets/img/brand.svg" style="width: 180px" class="navbar-brand-img" alt="...">
+          </a>
+      
+          <!-- Toggler -->
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+      
+          <!-- Collapse -->
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+      
+            <!-- Toggler -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+              aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+              <i class="fe fe-x"></i>
+            </button>
+      
+            <!-- Navigation -->
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDeploy" data-bs-toggle="dropdown" href="./deploy.html"
+                  aria-haspopup="true" aria-expanded="false">
+                  Deploy Cloud GPU
+                </a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarList" data-bs-toggle="dropdown" href="./list.html"
+                  aria-haspopup="true" aria-expanded="false">
+                  Manage Machines
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="navbarAccount" href="./account.html">
+                  Account
+                </a>
+              </li> 
+            </ul>
+          </div>
+      
+        </div>
+      </nav>
+
+  <div style="height: 80px;">
+  </div>
+  <div id="messageBox" class="alert" role="alert" style="display: none;"></div>
+
+  <div class="container-fluid pt-5 px-0">
+    <section class="pt-5">
+      <h2 class="display-3 text-center mt-10">Your Account</h2>
+      <div class="row justify-content-center mt-4">
+        <div class="col-md-4">
+          <div class="card text-center">
+            <div class="card-body" id="account-info-card">
+              <h5 class="card-title">Account Information</h5>
+              <p>User ID: <span id="user-id"></span></p>
+              <p>Email: <span id="user-email"></span></p>
+              <p>Account Funds: $<span id="account-funds"></span></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-center">
+            <div class="card-body" id="organization-card">
+              <h5 class="card-title">Organization</h5>
+              <p>Organization ID: <span id="organization-id"></span></p>
+              <p>Organization Name: <span id="organization-name"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    </div>
+    <div class="row justify-content-center mt-4">
+        <div class="col text-center">
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#depositModal">Deposit Funds</button>
+        </div>
+    </div>
+
+    <div class="modal fade" id="depositModal" tabindex="-1" aria-labelledby="depositModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content modal-content-black-text">
+            <div class="modal-header">
+            <h5 class="modal-title" id="depositModalLabel">Deposit Funds</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <label for="modalDepositAmount" class="form-label">Enter deposit amount:</label>
+            <div class="input-group mb-3">
+                <span class="input-group-text">$</span>
+                <input type="number" class="form-control" id="modalDepositAmount" placeholder="Amount">
+            </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="confirmDepositButton">Confirm Deposit</button>
+            </div>
+        </div>
+        </div>
+    </div>
+  
+  
+
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async function() {
+        await getAccountInfo();
+
+
+
+    });
+   const baseUrl = 'http://127.0.0.1:5000';
+   //const whitelabelToken = document.cookie.split('; ').find(row => row.startsWith('whitelabelToken='));
+   const whitelabelToken = "=033ee005-4469-4f37-907c-71c50447455f"
+   const getAccountInfo = async () => {
+    console.log("THIS RAN!")
+      try {
+        const response = await fetch(`${baseUrl}/api/vO/client/whitelabel/getUserInfo`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': whitelabelToken.split('=')[1]
+          },
+          //body: JSON.stringify({ whitelabelToken: whitelabelToken.split('=')[1] })
+        });
+
+        if (response.ok) {
+          const userInquiryResponse = await response.json();
+          console.log("RESPONSE WAS OK!")
+          document.getElementById('account-funds').textContent = userInquiryResponse.balance;
+          document.getElementById('user-id').textContent = userInquiryResponse.uuid;
+          document.getElementById('user-email').textContent = userInquiryResponse.email;
+          document.getElementById('organization-id').textContent = userInquiryResponse.organization;
+          document.getElementById('organization-name').textContent = userInquiryResponse.organization_name;
+
+        }
+      } catch (error) {
+
+        console.error("Error verifying token:", error);
+        showMessage("Error retrieving account information", true);
+        return "Error getting information";
+      }
+    };
+    const showMessage = (message, isError = true) => {
+        const messageBox = document.getElementById('messageBox');
+        messageBox.style.display = 'block';
+        messageBox.textContent = message;
+        messageBox.className = isError ? 'alert alert-danger' : 'alert alert-success';
+    };
+
+    const depositFunds = () => {
+    const depositAmount = document.getElementById('modalDepositAmount').value;
+    if (depositAmount !== null && Number(depositAmount) >= 0) {
+        fetch(`http://localhost:5000/createDepositFundsSession/${depositAmount}`, {
+        method: 'POST',
+        headers: {
+            'Authorization': document.cookie.split(';').find((elem) => elem.includes('whitelabelToken')).trim().split('=')[1],
+        },
+        })
+        .then((response) => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+        })
+        .then((session) => stripe.redirectToCheckout({ sessionId: session.id }))
+        .catch(function (error) {
+        console.error("Error:", error);
+        showMessage("Error: unable to open session");
+        });
+    } else {
+        showMessage("Invalid deposit amount");
+    }
+    }
+
+        document.getElementById('confirmDepositButton').addEventListener('click', function() {
+        depositFunds();
+        $('#depositModal').modal('hide');
+        });
+  </script>
+</body>
+</html>
