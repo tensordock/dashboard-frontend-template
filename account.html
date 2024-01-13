@@ -24,6 +24,9 @@
       background: rgb(40, 43, 85); /* Adjust the background color if needed */
       color: #fff;
     }
+    div{
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -78,59 +81,138 @@
   </div>
   <div id="messageBox" class="alert" role="alert" style="display: none;"></div>
 
-  <div class="container-fluid pt-5 px-0">
-    <section class="pt-5">
-      <h2 class="display-3 text-center mt-10">Your Account</h2>
-      <div class="row justify-content-center mt-4">
-        <div class="col-md-4">
-          <div class="card text-center">
-            <div class="card-body" id="account-info-card">
-              <h5 class="card-title">Account Information</h5>
-              <p>User ID: <span id="user-id"></span></p>
-              <p>Email: <span id="user-email"></span></p>
-              <p>Account Funds: $<span id="account-funds"></span></p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card text-center">
-            <div class="card-body" id="organization-card">
-              <h5 class="card-title">Organization</h5>
-              <p>Organization ID: <span id="organization-id"></span></p>
-              <p>Organization Name: <span id="organization-name"></span></p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    </div>
-    <div class="row justify-content-center mt-4">
-        <div class="col text-center">
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#depositModal">Deposit Funds</button>
-        </div>
-    </div>
+  <section class="p-5 container w-100">
+    <div class="row">
+        <div class="col ">
+            <div class="card shadow mb-6">
+                <div class="card-header">
 
-    <div class="modal fade" id="depositModal" tabindex="-1" aria-labelledby="depositModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-        <div class="modal-content modal-content-black-text">
-            <div class="modal-header">
-            <h5 class="modal-title" id="depositModalLabel">Deposit Funds</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <!-- Heading -->
+                    <h4 class="mb-0">
+                        Your Profile
+                    </h4>
+
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <!-- Avatar -->
+                            <div class="avatar avatar-xxl">
+                                <img class="avatar-img rounded-circle" src="https://i2.wp.com/console.tensordock.com/static/img/avatar.png" alt="...">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- <p class="mb-0 text-light">
+                                Your avatar
+                            </p> -->
+                            <small>
+                                <p class="text-light">
+                                    Your user ID: <p class="bg-gray-500 text-light" id="user-id"></p>
+                                </p>
+                            </small>
+                            <small>
+                              <p class="text-light">
+                                  Your email: <p class="bg-gray-500 text-light" id="user-email"></p>
+                              </p>
+                          </small>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-            <label for="modalDepositAmount" class="form-label">Enter deposit amount:</label>
-            <div class="input-group mb-3">
-                <span class="input-group-text">$</span>
-                <input type="number" class="form-control" id="modalDepositAmount" placeholder="Amount">
-            </div>
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id="confirmDepositButton">Confirm Deposit</button>
+            <div class="card shadow mb-6">
+                <div class="card-header">
+
+                    <!-- Heading -->
+                    <h4 class="mb-0">
+                        Your Organization
+                    </h4>
+
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <p class="mb-0 text-light">
+                                <span id="organization-name"> </span>, <span id="organization-type"> </span>
+                            </p>
+                            <small class="text-light">
+                                <p>
+                                    ID: <kbd class="bg-gray-500 text-light" id="organization-id"> </kbd><br><br>
+                                    Organization Members:
+                                </p>
+                                <ul>
+                                  <ul id="organization-members-list">
+                                    </ul>
+                                </ul>
+                            </small>
+                            <a href="/organization" class="btn btn-primary-soft lift my-2">Manage Organization</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="col">
+            <div class="card shadow mb-6" id="orgBilling">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        Organization Billing Overview
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">
+                      <span id="account-funds"></span> U.S. Dollars
+                    </p>
+                  
+                    <small>
+                        <p>If your organization runs out of account balance, your organization's servers will
+                            automatically be deleted!
+                        </p>
+                    </small>
+                    <a type="button" class="btn btn-primary lift mb-2" data-bs-toggle="modal"
+                        data-bs-target="#depositModal" role="button" id="depositButton">
+                        Deposit Funds
+                    </a>
+                </div>
+            </div>
+            <div class="modal fade" id="depositModal" tabindex="-1" aria-labelledby="depositModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+              <div class="modal-content modal-content-black-text">
+                  <div class="modal-header">
+                  <h5 class="modal-title" id="depositModalLabel">Deposit Funds</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                  <label for="modalDepositAmount" class="form-label">Enter deposit amount:</label>
+                  <div class="input-group mb-3">
+                      <span class="input-group-text">$</span>
+                      <input type="number" class="form-control" id="modalDepositAmount" placeholder="Amount">
+                  </div>
+                  </div>
+                  <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" id="confirmDepositButton">Confirm Deposit</button>
+                  </div>
+              </div>
+              </div>
+          </div>
+            <div class="card shadow mb-6">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        API
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <small>
+                        <p>Use code to spin up servers, start/stop machines, and delete them! All through a granular,
+                            organization-based API. </p>
+                    </small><a href="https://documenter.getpostman.com/view/20973002/2s8YzMYRDc"
+                        class="btn btn-primary lift mb-2">Documentation</a>
+
+                    <a href="/api" class="btn btn-primary-soft lift mb-2">Key/Token Management</a>
+                </div>
+            </div>
         </div>
     </div>
+</section>
   
   
 
@@ -161,11 +243,27 @@
         if (response.ok) {
           const userInquiryResponse = await response.json();
           console.log("RESPONSE WAS OK!")
+          console.log("RESPONSE: ", userInquiryResponse)
           document.getElementById('account-funds').textContent = userInquiryResponse.balance;
           document.getElementById('user-id').textContent = userInquiryResponse.uuid;
           document.getElementById('user-email').textContent = userInquiryResponse.email;
           document.getElementById('organization-id').textContent = userInquiryResponse.organization;
           document.getElementById('organization-name').textContent = userInquiryResponse.organization_name;
+          document.getElementById('organization-type').textContent = userInquiryResponse.organization_type;
+          const membersList = document.getElementById('organization-members-list');
+          const members = userInquiryResponse.members; 
+
+          members.forEach(member => {
+              const listItem = document.createElement('li');
+              listItem.textContent = member; 
+
+              if (member === userInquiryResponse.email) { 
+                  listItem.textContent += " (you)";
+              }
+
+              membersList.appendChild(listItem);
+          });
+          console.log("org name: ", userInquiryResponse.organization_name)
 
         }
       } catch (error) {
@@ -188,7 +286,7 @@
         fetch(`http://localhost:5000/createDepositFundsSession/${depositAmount}`, {
         method: 'POST',
         headers: {
-            'Authorization': document.cookie.split(';').find((elem) => elem.includes('whitelabelToken')).trim().split('=')[1],
+            'Authorization': whitelabelToken.split('=')[1],
         },
         })
         .then((response) => {
