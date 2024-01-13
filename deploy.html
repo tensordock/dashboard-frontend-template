@@ -19,7 +19,7 @@
       }
       .form-control, .form-control:disabled  {
       background-color: rgba(255, 255, 255, 0.1); 
-      border: 1px solid rgba(255, 255, 255, 0.3); 
+      border: 1px solid rgba(255, 255, 255, 0.3);
       color: #fff; 
       }
       .form-select{
@@ -46,6 +46,26 @@
   <script>
     const stripe = Stripe('pk_live_51JqNQYHSshR0IOtvfpFJ335VCKxHeyzKzGT8XaWMNvt5ye74VXApsofamVwZN3Ec2H9Y9Ap5WsVlVwxgnEL1Ys7R00rbTg3ky9');
   </script>
+
+<body>
+<div class="modal fade" id="sshPublicKeyModal" tabindex="-1" aria-labelledby="sshPublicKeyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark" id="sshPublicKeyModalLabel">Update SSH Public Key</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-dark">Set an SSH public key. You will no longer need to set a password when deploying a server.</p>
+                <input class="form-control" id="sshKeys" name="sshKeys" placeholder="SSH public key" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="updateSSHKeys()">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- HEADER -->
 <nav class="navbar py-3 navbar-expand-lg navbar-light bg-blue fixed-top" style="background-color: rgb(40, 43, 85);">
   <div class="container">
@@ -841,24 +861,6 @@
                                     leave this field blank to use SSH authentication. You can set an SSH public key
                                     <a data-bs-toggle="modal" data-bs-target="#sshPublicKeyModal" href="javascript:void(0);">here</a>.
                                 </p>
-                                <div class="modal fade" id="sshPublicKeyModal" tabindex="-1" aria-labelledby="sshPublicKeyModalLabel" aria-hidden="true">
-                                  <div class="modal-dialog">
-                                      <div class="modal-content modal-content-black-text">
-                                          <div class="modal-header">
-                                              <h5 class="modal-title" id="sshPublicKeyModalLabel">Update SSH Public Key</h5>
-                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                          </div>
-                                          <div class="modal-body">
-                                              <p>Set an SSH public key. You will no longer need to set a password when deploying a server.</p>
-                                              <input class="form-control" id="sshKeys" name="sshKeys" placeholder="SSH public key" />
-                                          </div>
-                                          <div class="modal-footer">
-                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                              <button type="button" class="btn btn-primary" onclick="updateSSHKeys()">Update</button>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
                               
                                 <input
                                         class="form-control"
@@ -2155,5 +2157,5 @@ document.addEventListener('click', function(event) {
 </script>
 <script src="./static/js/vendor.bundle.js"></script>
 <script src="./static/js/theme.bundle.js"></script>
-
+</body>
 </html>
