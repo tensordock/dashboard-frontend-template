@@ -23,6 +23,9 @@
             border: none;
             padding-bottom: 0; 
         }
+        .vmInfo:hover{
+            background-color: rgba(0, 0, 0, 0.1);
+        }
         /* .card:hover {
             background-color: rgb(22, 25, 65) !important;
         } */
@@ -108,10 +111,36 @@
     </section>
 
     <script>
+        const baseUrl = 'http://127.0.0.1:5000';
         //const whitelabelToken = document.cookie.split('; ').find(row => row.startsWith('whitelabelToken='));
         const whitelabelToken = "=033ee005-4469-4f37-907c-71c50447455f"
-        console.log("HELLO!")
-        const baseUrl = 'http://127.0.0.1:5000';
+        document.addEventListener("DOMContentLoaded", async () => {
+        let loggedIn = false;
+        const userInfo = { email: '', orgName: '' };
+        if (whitelabelToken) {
+            try {
+            console.log("THIS RAN!")
+            const response = await fetch(`${baseUrl}/api/v0/client/whitelabel/token_verify`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                'Authorization': whitelabelToken.split('=')[1]
+                },
+                //body: JSON.stringify({ whitelabelToken: whitelabelToken.split('=')[1] })
+            });
+
+            if (response.ok) {
+                const tokenVerifyResponse = await response.json();
+                loggedIn = true;
+                userInfo.email = tokenVerifyResponse.email;
+                userInfo.orgName = tokenVerifyResponse.org_name;
+            }
+            } catch (error) {
+            window.location.href = './login.html';
+            }
+        }
+        })
+
         async function retrieveServers() {
             console.log("RAN RETRIEVE SERVERS!")
             const apiRoute = `${baseUrl}/api/v0/client/list`;
@@ -124,158 +153,157 @@
             });
 
             const response = await request.json();
-            console.log("response ", response);
             populateServers(response);
         }
 
         function populateServers(data) {
-    console.log("RAN POPULATE SERVERS!");
-    const serverList = document.getElementById('serverList');
-    if (data.success && data.virtualmachines) {
-        let htmlContent = '';
+            console.log("RAN POPULATE SERVERS!");
+            const serverList = document.getElementById('serverList');
+            if (data.success && data.virtualmachines) {
+                let htmlContent = '';
 
-        Object.entries(data.virtualmachines).forEach(([machineId, vm]) => {
-            const isRunning = vm.status === 'Running' || vm.status === 'Active';
-            const isWindows = vm.operating_system.toLowerCase().includes('windows');
-            const vmIcon = isWindows ? '<i class="fab fa-windows"></i>' : '<i class="fab fa-ubuntu"></i>';
-            const vmStatusClass = isRunning ? 'success' : 'danger';
-            const vmStatusIcon = `<i class="fe fe-circle text-${vmStatusClass}"></i>`;
+                Object.entries(data.virtualmachines).forEach(([machineId, vm]) => {
+                    const isRunning = vm.status === 'Running' || vm.status === 'Active';
+                    const isWindows = vm.operating_system.toLowerCase().includes('windows');
+                    const vmIcon = isWindows ? '<i class="fab fa-windows"></i>' : '<i class="fab fa-ubuntu"></i>';
+                    const vmStatusClass = isRunning ? 'success' : 'danger';
+                    const vmStatusIcon = `<i class="fe fe-circle text-${vmStatusClass}"></i>`;
 
-            const sshPort = vm.port_forwards['22'] || 'Error retrieving SSH port';
-            const accessInstruction = isWindows ? `hostname:${sshPort}` : `ssh -p ${sshPort} user@${vm.hostname}`;
+                    const sshPort = vm.port_forwards['22'] || 'Error retrieving SSH port';
+                    const accessInstruction = isWindows ? `hostname:${sshPort}` : `ssh -p ${sshPort} user@${vm.hostname}`;
 
-            let gpuDisplay = '';
-            let statusDisplay = vm.status;
-            let actionButtons = '';
-            if (vm.specs.gpu.type && vm.specs.gpu.amount > 0) {
-                const gpuType = vm.specs.gpu.type.replace(/geforce/g, "GeForce ")
-                    .replace(/gtx/g, "GTX ")
-                    .replace(/ti/g, " Ti")
-                    .replace(/ada/g, "ADA ")
-                    .replace(/a/g, "A")
-                    .replace(/rtx/g, "RTX ")
-                    .replace(/super/g, " Super")
-                    .replace(/lhr/g, " LHR")
-                    .replace(/-sxm4-/g, " SXM4 ")
-                    .replace(/-pcie-/g, " ")
-                    .replace(/p/g, "P")
-                    .replace(/tesla/g, "Tesla ")
-                    .replace(/quadro/g, "Quadro ")
-                    .replace(/v/g, "V")
-                    .replace(/gb/g, " GB");
+                    let gpuDisplay = '';
+                    let statusDisplay = vm.status;
+                    let actionButtons = '';
+                    if (vm.specs.gpu.type && vm.specs.gpu.amount > 0) {
+                        const gpuType = vm.specs.gpu.type.replace(/geforce/g, "GeForce ")
+                            .replace(/gtx/g, "GTX ")
+                            .replace(/ti/g, " Ti")
+                            .replace(/ada/g, "ADA ")
+                            .replace(/a/g, "A")
+                            .replace(/rtx/g, "RTX ")
+                            .replace(/super/g, " Super")
+                            .replace(/lhr/g, " LHR")
+                            .replace(/-sxm4-/g, " SXM4 ")
+                            .replace(/-pcie-/g, " ")
+                            .replace(/p/g, "P")
+                            .replace(/tesla/g, "Tesla ")
+                            .replace(/quadro/g, "Quadro ")
+                            .replace(/v/g, "V")
+                            .replace(/gb/g, " GB");
 
-                gpuDisplay = `${vm.specs.gpu.amount}x ${gpuType}, `;
-            }
+                        gpuDisplay = `${vm.specs.gpu.amount}x ${gpuType}, `;
+                    }
 
-            console.log("GPU DISPLAY: " + gpuDisplay);
-            console.log("GPU type: " + vm.specs.gpu.type);
-            console.log("GPU amount: " + vm.specs.gpu.amount);
-            console.log("GPU ZEROth: " + vm.specs.gpu.amount[0]);
-            switch(vm.status.toLowerCase()) {
-                case 'running':
-                    statusDisplay = 'Running';
-                    actionButtons = `
-                        <button type="button" class="btn btn-outline-primary" onclick="stopVM('${machineId}', false)">Stop VM & reserve GPU</button>
-                        <p class="text-muted mt-1">Stop your virtual machine while keeping its GPU reserved; pay full price.</p>
-                        <button type="button" class="btn btn-outline-primary" onclick="stopVM('${machineId}', true)">Stop VM & release GPU</button>
-                        <p class="text-muted mt-1">Stop your virtual machine while releasing its GPU for others; only pay for storage.</p>
-                    `;
-                    break;
-                case 'stoppeddisassociated':
-                    statusDisplay = 'Stopped with resources disassociated';
-                    actionButtons = `
-                        <button type="button" class="btn btn-outline-success" onclick="startVM('${machineId}')">Start VM</button>
-                        <p class="text-muted mt-1">Start your virtual machine.</p>
-                    `;
-                    break;
-                default:
-                    statusDisplay = 'Stopped';
-                    actionButtons = `
-                        <button type="button" class="btn btn-outline-success" onclick="startVM('${machineId}')">Start VM</button>
-                        <p class="text-muted mt-1">Start your virtual machine.</p>
-                    `;
-            }
-            
-            htmlContent += `
-            <div class="row align-items-center">
-            <div class="col" data-bs-toggle="collapse" href="#collapseInfo${machineId}" role="button" aria-expanded="false" aria-controls="collapseInfo${machineId}" style="cursor: pointer;">
-                <!-- <a class="searchable list-group-item card shadow mb-6" href="/manage/${vm.uuid}" data-td-server-id="${vm.uuid}"> -->
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <small class="badge badge-sm badge-rounded-circle bg-${vmStatusClass}">
-                                ${vmStatusIcon}
-                            </small>
-                            <span style="font-size: 2em" class="text-light">
-                                ${vmIcon}
-                            </span>
-                        </div>
-                        <div class="col">
-                            <p class="mb-0 text-light">
-                                ${vm.name}
-                                ${vm.type === 'spot' ? `<span class="badge bg-secondary-soft">Interruptible Instance — ${vm.name}</span>` : ''}
-                            </p>
-                            <small class="text-gray-500">
-                                ${vm.city}, ${vm.state}, ${vm.country}: ${gpuDisplay}
-                                ${vm.specs.vcpus} vCPUs,
-                                ${vm.specs.ram} GB RAM,
-                                ${vm.specs.storage} GB Storage,
-                                $${vm.total_price}/hour
-                            </small>
-                        </div>
-                        <div class="col-auto">
-                            <p class="mb-0 text-light">
-                                ${vm.ip_address || ''}
-                                ${vm.coreweave_ip_address || ''}
-                            </p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            </div>
-            <div class="collapse" id="collapseInfo${machineId}">
-                            <div class="card card-body">
-                                <p><strong>Hostname:</strong> ${vm.hostname}</p>
-                                <p><strong>Status:</strong> ${statusDisplay}</p>
-                                <p><strong>Specifications:</strong></p>
-                                <ul>
-                                    <li><strong>GPU:</strong> ${vm.specs.gpu.type} (${vm.specs.gpu.amount})</li>
-                                    <li><strong>RAM:</strong> ${vm.specs.ram} GB</li>
-                                    <li><strong>Storage:</strong> ${vm.specs.storage} GB</li>
-                                    <li><strong>vCPUs:</strong> ${vm.specs.vcpus}</li>
-                                </ul>
-                                <p><strong>Storage Price:</strong> $${vm.storage_price}</p>
-                                <p><strong>Compute Price:</strong> $${vm.compute_price}</p>
-                                <p><strong>Total Price:</strong> $${vm.total_price}</p>
-                                <p><strong>Port Forwards:</strong></p>
-                                <ul>
-                                    ${Object.entries(vm.port_forwards).map(([key, value]) => `<li>${key} to ${value}</li>`).join('')}
-                                </ul>
-                                <p><strong>Created On:</strong> ${vm.timestamp_creation}</p>
-                                <div class="btn-group-vertical w-100" role="group" aria-label="VM Controls">
-                                    ${actionButtons}
-                                    <button type="button" class="btn btn-outline-danger" onclick="deleteVM('${machineId}')">Delete Virtual Machine</button>
-                                    <p class="text-muted mt-1">Be careful. Once you press "delete," the VM will be instantly destroyed. All data will be lost.</p>
+                    console.log("GPU DISPLAY: " + gpuDisplay);
+                    console.log("GPU type: " + vm.specs.gpu.type);
+                    console.log("GPU amount: " + vm.specs.gpu.amount);
+                    console.log("GPU ZEROth: " + vm.specs.gpu.amount[0]);
+                    switch(vm.status.toLowerCase()) {
+                        case 'running':
+                            statusDisplay = 'Running';
+                            actionButtons = `
+                                <button type="button" class="btn btn-outline-primary" onclick="stopVM('${machineId}', false)">Stop VM & reserve GPU</button>
+                                <p class="text-muted mt-1">Stop your virtual machine while keeping its GPU reserved; pay full price.</p>
+                                <button type="button" class="btn btn-outline-primary" onclick="stopVM('${machineId}', true)">Stop VM & release GPU</button>
+                                <p class="text-muted mt-1">Stop your virtual machine while releasing its GPU for others; only pay for storage.</p>
+                            `;
+                            break;
+                        case 'stoppeddisassociated':
+                            statusDisplay = 'Stopped with resources disassociated';
+                            actionButtons = `
+                                <button type="button" class="btn btn-outline-success" onclick="startVM('${machineId}')">Start VM</button>
+                                <p class="text-muted mt-1">Start your virtual machine.</p>
+                            `;
+                            break;
+                        default:
+                            statusDisplay = 'Stopped';
+                            actionButtons = `
+                                <button type="button" class="btn btn-outline-success" onclick="startVM('${machineId}')">Start VM</button>
+                                <p class="text-muted mt-1">Start your virtual machine.</p>
+                            `;
+                    }
+                    
+                    htmlContent += `
+                    <div class="row align-items-center vmInfo">
+                    <div class="col" data-bs-toggle="collapse" href="#collapseInfo${machineId}" role="button" aria-expanded="false" aria-controls="collapseInfo${machineId}" style="cursor: pointer;">
+                        <!-- <a class="searchable list-group-item card shadow mb-6" href="/manage/${vm.uuid}" data-td-server-id="${vm.uuid}"> -->
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <small class="badge badge-sm badge-rounded-circle bg-${vmStatusClass}">
+                                        ${vmStatusIcon}
+                                    </small>
+                                    <span style="font-size: 2em" class="text-light">
+                                        ${vmIcon}
+                                    </span>
                                 </div>
-                                <p>Use the following commands to access your VM:</p>
-                                <pre><code>ssh -p ${sshPort} user@${vm.hostname}</code></pre>
-                                <p>If you are using key-based authentication, make sure to specify your keyfile with <code>-i &lt;identity_file&gt;</code></p>
-
-                                <p>Use the following IPv4 to access your VM with RDP:</p>
-                                <pre><code>${accessInstruction}</code></pre>
-                                ${!isWindows ? `
-                                <p>If you are using key-based authentication, make sure to specify your keyfile with <code>-i &lt;identity_file&gt;</code></p>
-                                ` : ''}
+                                <div class="col">
+                                    <p class="mb-0 text-light">
+                                        ${vm.name}
+                                        ${vm.type === 'spot' ? `<span class="badge bg-secondary-soft">Interruptible Instance — ${vm.name}</span>` : ''}
+                                    </p>
+                                    <small class="text-gray-500">
+                                        ${vm.city}, ${vm.state}, ${vm.country}: ${gpuDisplay}
+                                        ${vm.specs.vcpus} vCPUs,
+                                        ${vm.specs.ram} GB RAM,
+                                        ${vm.specs.storage} GB Storage,
+                                        $${vm.total_price}/hour
+                                    </small>
+                                </div>
+                                <div class="col-auto">
+                                    <p class="mb-0 text-light">
+                                        ${vm.ip_address || ''}
+                                        ${vm.coreweave_ip_address || ''}
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-            `;
-        });
+                        </a>
+                    </div>
+                    </div>
+                    <div class="collapse" id="collapseInfo${machineId}">
+                                    <div class="card card-body">
+                                        <p><strong>Hostname:</strong> ${vm.hostname}</p>
+                                        <p><strong>Status:</strong> ${statusDisplay}</p>
+                                        <p><strong>Specifications:</strong></p>
+                                        <ul>
+                                            <li><strong>GPU:</strong> ${vm.specs.gpu.type} (${vm.specs.gpu.amount})</li>
+                                            <li><strong>RAM:</strong> ${vm.specs.ram} GB</li>
+                                            <li><strong>Storage:</strong> ${vm.specs.storage} GB</li>
+                                            <li><strong>vCPUs:</strong> ${vm.specs.vcpus}</li>
+                                        </ul>
+                                        <p><strong>Storage Price:</strong> $${vm.storage_price}</p>
+                                        <p><strong>Compute Price:</strong> $${vm.compute_price}</p>
+                                        <p><strong>Total Price:</strong> $${vm.total_price}</p>
+                                        <p><strong>Port Forwards:</strong></p>
+                                        <ul>
+                                            ${Object.entries(vm.port_forwards).map(([key, value]) => `<li>${key} to ${value}</li>`).join('')}
+                                        </ul>
+                                        <p><strong>Created On:</strong> ${vm.timestamp_creation}</p>
+                                        <div class="btn-group-vertical w-100" role="group" aria-label="VM Controls">
+                                            ${actionButtons}
+                                            <button type="button" class="btn btn-outline-danger" onclick="deleteVM('${machineId}')">Delete Virtual Machine</button>
+                                            <p class="text-muted mt-1">Be careful. Once you press "delete," the VM will be instantly destroyed. All data will be lost.</p>
+                                        </div>
+                                        <p>Use the following commands to access your VM:</p>
+                                        <pre><code>ssh -p ${sshPort} user@${vm.hostname}</code></pre>
+                                        <p>If you are using key-based authentication, make sure to specify your keyfile with <code>-i &lt;identity_file&gt;</code></p>
 
-        serverList.innerHTML = htmlContent;
-        console.log("HTML CONTENT: ", htmlContent)
-    } else {
-        serverList.innerHTML = '<p>No virtual machines found.</p>';
-    }
-}
+                                        <p>Use the following IPv4 to access your VM with RDP:</p>
+                                        <pre><code>${accessInstruction}</code></pre>
+                                        ${!isWindows ? `
+                                        <p>If you are using key-based authentication, make sure to specify your keyfile with <code>-i &lt;identity_file&gt;</code></p>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                    `;
+                });
+
+                serverList.innerHTML = htmlContent;
+                console.log("HTML CONTENT: ", htmlContent)
+            } else {
+                serverList.innerHTML = '<p>No virtual machines found.</p>';
+            }
+        }
 
 
 
@@ -293,8 +321,10 @@
                     'Authorization': whitelabelToken.split('=')[1],
                 },
             });
+            console.log("RESPONSE: ", await response.json());
             if (response.ok){
                 console.log("Success!");
+                window.location.reload()
             }else{
                 console.log("response success: ", response.success);
                 console.log("ERROR!");
@@ -314,8 +344,10 @@
                     'Authorization': whitelabelToken.split('=')[1],
                 },
             });
+            console.log("RESPONSE: ", await response.json());
             if (response.ok){
                 console.log("Success!");
+                window.location.reload()
             }else{
                 console.log("response success: ", response.success);
                 console.log("ERROR!");
@@ -334,9 +366,11 @@
                 headers: {
                     'Authorization': whitelabelToken.split('=')[1],
                 },
-            });
+            });x
+            console.log("RESPONSE: ", await response.json());
             if (response.ok){
                 console.log("Success!");
+                window.location.reload()
             }else{
                 console.log("response success: ", response.success);
                 console.log("ERROR!");

@@ -205,6 +205,34 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", async function() {
+      const baseUrl = 'http://127.0.0.1:5000';
+      let loggedIn = false;
+      const userInfo = { email: '', orgName: '' };
+
+      //const whitelabelToken = document.cookie.split('; ').find(row => row.startsWith('whitelabelToken='));
+      const whitelabelToken = "=033ee005-4469-4f37-907c-71c50447455f"
+      if (whitelabelToken) {
+        try {
+          console.log("THIS RAN!")
+          const response = await fetch(`${baseUrl}/api/v0/client/whitelabel/token_verify`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': whitelabelToken.split('=')[1]
+            },
+            //body: JSON.stringify({ whitelabelToken: whitelabelToken.split('=')[1] })
+          });
+
+          if (response.ok) {
+            const tokenVerifyResponse = await response.json();
+            loggedIn = true;
+            userInfo.email = tokenVerifyResponse.email;
+            userInfo.orgName = tokenVerifyResponse.org_name;
+          }
+        } catch (error) {
+          window.location.href = './login.html';
+        }
+      }
         await getAccountInfo();
 
 

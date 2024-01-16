@@ -1591,10 +1591,16 @@
         requiresRTX: selectedGPU.includes("RTX"),
       });
 
+for (const [key, value] of localServersRequestParams.entries()) {
+  console.log(`${key}: ${value}`);
+}
+
       const request = await fetch(
         `${localServersApiRoute}?${localServersRequestParams}`,
       );
+console.log(`${localServersApiRoute}?${localServersRequestParams}`);
       const { hostnodes } = await request.json();
+console.log('hostnodes:', hostnodes);
 
       for (const hostnode in hostnodes) {
         const hostnodeProperties = hostnodes[hostnode];
@@ -1935,7 +1941,7 @@
     console.log(request);
 
     const response = await request.json();
-    console.log(response);
+    console.log("THE RESPONSE: ", response);
     const selection_id = Date.now();
 
     //document.getElementById("slider").style.display = "block";
