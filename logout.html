@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en-US" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Log Out GPUfleet</title>
+        <script src="./static/js/config.js"></script>
+        <script src="./static/js/simplebar.min.js"></script>
+        <link rel="stylesheet" href="./static/css/swiper.css" />
+        <link
+            rel="preconnect" href="https://fonts.gstatic.com">
+        <link
+            href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap"
+            rel="stylesheet">
+        <link rel="stylesheet" href="./static/css/theme.css" />
+        <link rel="stylesheet" href="./static/css/custom.css" />
+        <script>
+            // Clear all cookies, logging out the user
+            var Cookies = document.cookie.split(';');
+            for (var i = 0; i < Cookies.length; i++) {
+                document.cookie = Cookies[i] + "=; expires="+ new Date(0).toUTCString();
+            }
+        </script>
+    </head>
+    <body>
+        <!-- ===============================================-->
+        <!--    Main Content-->
+        <!-- ===============================================-->
+        <main class="main" id="top">
+            <div class="container-fluid">
+                <div class="row min-vh-100 flex-center g-0">
+                    <div class="col-lg-8 col-xxl-5 py-3 position-relative">
+                        <div class="card overflow-hidden z-1">
+                            <div class="card-body p-0">
+                                <div class="row g-0 h-100">
+                                    <div
+                                        class="col-md-5 text-center bg-card-gradient">
+                                        <div
+                                            class="position-relative p-4 pt-md-5 pb-md-7"
+                                            data-bs-theme="light">
+                                            <div
+                                                class="z-1 position-relative"><a
+                                                    class="link-light mb-4 font-sans-serif fs-5 d-inline-block fw-bolder"
+                                                    href="/index.html">GPUfleet</a>
+                                                <p
+                                                    class="opacity-75 text-white">GPUfleet
+                                                    operates an NVIDIA GPU
+                                                    cloud, at scale, to help
+                                                    customers serve
+                                                    uncompromisingly demanding
+                                                    workloads</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7 d-flex flex-center">
+                                        <div class="p-4 p-md-5 flex-grow-1">
+                                            <div class="text-center">
+                                                <h3>See you again!</h3>
+                                                <p>Thanks for using GPUfleet.
+                                                    You
+                                                    are <br />now successfully
+                                                    signed out.</p><a
+                                                    class="btn btn-primary btn-sm mt-3"
+                                                    href="/login.html"><span
+                                                        class="fas fa-chevron-left me-1"
+                                                        data-fa-transform="shrink-4 down-1"></span>Return
+                                                    to Login</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- ===============================================-->
+        <!--    JavaScripts-->
+        <!-- ===============================================-->
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+        <script src="./static/js/anchor.min.js"></script>
+        <script src="./static/js/is.min.js"></script>
+        <script src="./static/js/swiper-bundle.min.js"></script>
+        <script src="./static/js/typed.js"></script>
+        <script src="./static/js/fa.min.js"></script>
+        <script src="./static/js/lodash.min.js"></script>
+        <script src="./static/js/list.min.js"></script>
+        <script src="./static/js/theme.js"></script>
+    </body>
+</html>

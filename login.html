@@ -1,158 +1,907 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login Page</title>
-  <link rel="stylesheet" href="./static/css/libs.bundle.css" />
-  <link rel="stylesheet" href="./static/css/theme.bundle.css" />
-  <link rel="stylesheet" href="./static/css/custom.css" />
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: 'Arial', sans-serif;
-      background: rgb(40, 43, 85); 
-      color: #fff;
-    }
-    .form-control {
-    background-color: rgba(255, 255, 255, 0.1); 
-    border: 1px solid rgba(255, 255, 255, 0.3); 
-    color: #fff; 
-    }
-
-    .form-control::placeholder { 
-      color: rgba(255, 255, 255, 0.6);
-    }
-
-    .form-control:focus {
-      background-color: rgba(255, 255, 255, 0.2);
-      border-color: #fff;
-      color: #fff;
-    }
-  </style>
-  <script src="./static/js/vendor.bundle.js"></script>
-  <script src="./static/js/theme.bundle.js"></script>
-  <script>
-    function submitForm() {
-      //const url = 'http://localhost:5000/api/v0/client/whitelabel/login';
-      const url = 'http://127.0.0.1:5000/api/v0/client/whitelabel/login'
-
-      let formData = new FormData();
-      formData.append('email', document.getElementById('email').value);
-      formData.append('password', document.getElementById('password').value);
-      formData.append('subdomain', window.location.hostname.split('.')[0]);
-
-      fetch(url, {
-        method: 'POST',
-        body: formData
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-
-        if (data === undefined || data.token === undefined) {
-          showMessage('Login failed');
-        } else {
-          document.cookie = `whitelabelToken=${data.token}`;
-          window.location.href = '/deploy';
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('Login failed');
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup to GPUfleet</title>
+    <script src="./static/js/config.js"></script>
+    <script src="./static/js/simplebar.min.js"></script>
+    <link rel="stylesheet" href="./static/css/swiper.css" />
+    <link
+      rel="preconnect" href="https://fonts.gstatic.com">
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap"
+      rel="stylesheet">
+    <link rel="stylesheet" href="./static/css/theme.css" />
+    <link rel="stylesheet" href="./static/css/custom.css" />
+    <script>
+      // If the user is already logged in, redirect
+      const baseUrl = 'https://marketplace.tensordock.com';
+      const whitelabelToken = document.cookie.split('; ').find(row => row.startsWith('whitelabelToken='));
+      document.addEventListener("DOMContentLoaded", async () => {
+      let loggedIn = false;
+      const userInfo = { email: '', orgName: '' };
+      console.log(whitelabelToken)
+      if (whitelabelToken) {
+          const response = await fetch(`${baseUrl}/api/v0/client/whitelabel/token_verify`, {
+              method: 'POST',
+              headers: {
+              'Content-Type': 'application/json',
+              'Authorization': whitelabelToken.split('=')[1]
+              },
+          });
+          if (response.ok) {
+              const tokenVerifyResponse = await response.json();
+              loggedIn = true;
+              userInfo.email = tokenVerifyResponse.email;
+              userInfo.orgName = tokenVerifyResponse.org_name;
+              window.location = '/list.html';
+          } 
+      }
       });
-    }
-    const showMessage = (message, isError = true) => {
-        const messageBox = document.getElementById('messageBox');
-        messageBox.style.display = 'block';
-        messageBox.textContent = message;
-        messageBox.className = isError ? 'alert alert-danger' : 'alert alert-success';
-    };
+
+      function submitForm() {
+        let formData = new FormData();
+        formData.append('email', document.getElementById('email').value);
+        formData.append('password', document.getElementById('password').value);
+        formData.append('subdomain', window.location.hostname.split('.')[0]);
+
+        fetch(`${baseUrl}/api/v0/client/whitelabel/login`, {
+          method: 'POST',
+          body: formData
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          if(data.error) {
+            alert(data.error);
+            return;
+          }
+          document.cookie = `whitelabelToken=${data.token}`;
+          window.location.href = '/list.html';
+        })
+        .catch(error => console.error('Error:', error));
+      }
   </script>
-</head>
-<body>
-
-  <nav class="navbar py-3 navbar-expand-lg navbar-light bg-blue fixed-top" style="background-color: rgb(40, 43, 85);">
-    <div class="container">
-      <!-- Brand -->
-      <a class="navbar-brand" href="./home.html">
-        <img src="./assets/img/brand.svg" style="width: 180px" class="navbar-brand-img" alt="...">
-      </a>
-  
-      <!-- Toggler -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-  
-      <!-- Collapse -->
-      <div class="collapse navbar-collapse" id="navbarCollapse">
-  
-        <!-- Toggler -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-          aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-          <i class="fe fe-x"></i>
-        </button>
-  
-        <!-- Navigation -->
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="navbarDeploy" data-bs-toggle="dropdown" href="./deploy.html"
-              aria-haspopup="true" aria-expanded="false">
-              Deploy Cloud GPU
-            </a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="navbarList" data-bs-toggle="dropdown" href="./list.html"
-              aria-haspopup="true" aria-expanded="false">
-              Manage Machines
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" id="navbarAccount" href="./account.html">
-              Account
-            </a>
-          </li> 
-        </ul>
-      </div>
-  
-    </div>
-  </nav>
-  <div style="height: 80px;">
-  </div>
-  <div id="messageBox" class="alert" role="alert" style="display: none;"></div>
-
-  <div class="container" style="padding-top: 100px;">
-    <div class="row justify-content-center">
-      <div class="col-md-6 col-lg-4">
-        <div class="login-container">
-          <h2 class="text-center">Login</h2> 
-          <form id="loginForm" method="post" class="mt-4">
-            <div class="form-group mb-3"> 
-              <label for="email" class="form-label">Email:</label>
-              <input type="text" id="email" name="email" class="form-control" required> 
-            </div>
-  
-            <div class="form-group mb-4">
-              <label for="password" class="form-label">Password:</label>
-              <input type="password" id="password" name="password" class="form-control" required>
-            </div>
-  
-            <div class="d-flex justify-content-center">
-              <button type="button" onclick="submitForm()" class="btn btn-primary">Submit</button>
-            </div>
-          </form>
-          <div class="text-center mt-3">
-            <p>Don't have an account? <a href="./signup.html">Register here</a></p>
+  </head>
+  <body>
+    <main class="main" id="top">
+      <nav class="navbar navbar-standard navbar-expand-lg fixed-top navbar-dark"
+        data-navbar-darken-on-scroll="data-navbar-darken-on-scroll">
+        <div class="container"><a class="navbar-brand"
+            href="/"><span
+              class="text-white dark__text-white">GPUfleet</span></a>
+          <button class="navbar-toggler collapsed" type="button"
+            data-bs-toggle="collapse" data-bs-target="#navbarStandard"
+            aria-controls="navbarStandard" aria-expanded="false"
+            aria-label="Toggle navigation"><span
+              class="navbar-toggler-icon"></span></button>
+          <div class="collapse navbar-collapse scrollbar" id="navbarStandard">
+            <ul class="navbar-nav"
+              data-top-nav-dropdowns="data-top-nav-dropdowns">
+              <li class="nav-item dropdown"><a class="nav-link dropdown-toggle"
+                  href="#" role="button" data-bs-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false"
+                  id="dashboards">Dashboard</a>
+                <div
+                  class="dropdown-menu dropdown-caret dropdown-menu-card border-0 mt-0"
+                  aria-labelledby="dashboards">
+                  <div class="bg-white dark__bg-1000 rounded-3 py-2"><a
+                      class="dropdown-item link-600 fw-medium"
+                      href="../index.html">Default</a><a
+                      class="dropdown-item link-600 fw-medium"
+                      href="../dashboard/analytics.html">Analytics</a><a
+                      class="dropdown-item link-600 fw-medium"
+                      href="../dashboard/crm.html">CRM</a><a
+                      class="dropdown-item link-600 fw-medium"
+                      href="../dashboard/e-commerce.html">E commerce</a><a
+                      class="dropdown-item link-600 fw-medium"
+                      href="../dashboard/lms.html">LMS<span
+                        class="badge rounded-pill ms-2 badge-subtle-success">New</span></a><a
+                      class="dropdown-item link-600 fw-medium"
+                      href="../dashboard/project-management.html">Management</a><a
+                      class="dropdown-item link-600 fw-medium"
+                      href="../dashboard/saas.html">SaaS</a><a
+                      class="dropdown-item link-600 fw-medium"
+                      href="../dashboard/support-desk.html">Support desk<span
+                        class="badge rounded-pill ms-2 badge-subtle-success">New</span></a>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown"><a class="nav-link dropdown-toggle"
+                  href="#" role="button" data-bs-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false" id="apps">App</a>
+                <div
+                  class="dropdown-menu dropdown-caret dropdown-menu-card border-0 mt-0"
+                  aria-labelledby="apps">
+                  <div class="card navbar-card-app shadow-none dark__bg-1000">
+                    <div class="card-body scrollbar max-h-dropdown"><img
+                        class="img-dropdown"
+                        src="https://marketplace.tensordock.com/static/img/logo.png"
+                        width="130" alt />
+                      <div class="row">
+                        <div class="col-6 col-md-4">
+                          <div class="nav flex-column"><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/calendar.html">Calendar</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/chat.html">Chat</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/kanban.html">Kanban</a>
+                            <p
+                              class="nav-link text-700 mb-0 fw-bold">Social</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/social/feed.html">Feed</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/social/activity-log.html">Activity
+                              log</a><a class="nav-link py-1 link-600 fw-medium"
+                              href="../app/social/notifications.html">Notifications</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/social/followers.html">Followers</a>
+                            <p class="nav-link text-700 mb-0 fw-bold">Support
+                              Desk</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/support-desk/table-view.html">Table
+                              view</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/support-desk/card-view.html">Card
+                              view</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/support-desk/contacts.html">Contacts</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/support-desk/contact-details.html">Contact
+                              details</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/support-desk/tickets-preview.html">Tickets
+                              preview</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/support-desk/quick-links.html">Quick
+                              links</a>
+                          </div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                          <div class="nav flex-column">
+                            <p
+                              class="nav-link text-700 mb-0 fw-bold">E-Learning</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/e-learning/course/course-list.html">Course
+                              list</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/e-learning/course/course-grid.html">Course
+                              grid</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/e-learning/course/course-details.html">Course
+                              details</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/e-learning/course/create-a-course.html">Create
+                              a course</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/e-learning/student-overview.html">Student
+                              overview</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/e-learning/trainer-profile.html">Trainer
+                              profile</a>
+                            <p
+                              class="nav-link text-700 mb-0 fw-bold">Events</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/events/create-an-event.html">Create
+                              an event</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/events/event-detail.html">Event
+                              detail</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/events/event-list.html">Event
+                              list</a>
+                            <p
+                              class="nav-link text-700 mb-0 fw-bold">Email</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/email/inbox.html">Inbox</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/email/email-detail.html">Email
+                              detail</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/email/compose.html">Compose</a>
+                          </div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                          <div class="nav flex-column">
+                            <p
+                              class="nav-link text-700 mb-0 fw-bold">E-Commerce</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/e-commerce/product/product-list.html">Product
+                              list</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/e-commerce/product/product-grid.html">Product
+                              grid</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/e-commerce/product/product-details.html">Product
+                              details</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/e-commerce/product/add-product.html">Add
+                              product</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/e-commerce/orders/order-list.html">Order
+                              list</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/e-commerce/orders/order-details.html">Order
+                              details</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/e-commerce/customers.html">Customers</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/e-commerce/customer-details.html">Customer
+                              details</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/e-commerce/shopping-cart.html">Shopping
+                              cart</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/e-commerce/checkout.html">Checkout</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/e-commerce/billing.html">Billing</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../app/e-commerce/invoice.html">Invoice</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown"><a class="nav-link dropdown-toggle"
+                  href="#" role="button" data-bs-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false"
+                  id="pagess">Pages</a>
+                <div
+                  class="dropdown-menu dropdown-caret dropdown-menu-card border-0 mt-0"
+                  aria-labelledby="pagess">
+                  <div class="card navbar-card-pages shadow-none dark__bg-1000">
+                    <div class="card-body scrollbar max-h-dropdown"><img
+                        class="img-dropdown"
+                        src="https://marketplace.tensordock.com/static/img/logo.png"
+                        width="130" alt />
+                      <div class="row">
+                        <div class="col-6 col-xxl-3">
+                          <div class="nav flex-column">
+                            <p class="nav-link text-700 mb-0 fw-bold">Simple
+                              Auth</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/simple/login.html">Login</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/simple/logout.html">Logout</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/simple/register.html">Register</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/simple/forgot-password.html">Forgot
+                              password</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/simple/confirm-mail.html">Confirm
+                              mail</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/simple/reset-password.html">Reset
+                              password</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/simple/lock-screen.html">Lock
+                              screen</a>
+                          </div>
+                        </div>
+                        <div class="col-6 col-xxl-3">
+                          <div class="nav flex-column">
+                            <p class="nav-link text-700 mb-0 fw-bold">Card
+                              Auth</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/card/login.html">Login</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/card/logout.html">Logout</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/card/register.html">Register</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/card/forgot-password.html">Forgot
+                              password</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/card/confirm-mail.html">Confirm
+                              mail</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/card/reset-password.html">Reset
+                              password</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/card/lock-screen.html">Lock
+                              screen</a>
+                          </div>
+                        </div>
+                        <div class="col-6 col-xxl-3">
+                          <div class="nav flex-column">
+                            <p class="nav-link text-700 mb-0 fw-bold">Split
+                              Auth</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/split/login.html">Login</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/split/logout.html">Logout</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/split/register.html">Register</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/split/forgot-password.html">Forgot
+                              password</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/split/confirm-mail.html">Confirm
+                              mail</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/split/reset-password.html">Reset
+                              password</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/split/lock-screen.html">Lock
+                              screen</a>
+                          </div>
+                        </div>
+                        <div class="col-6 col-xxl-3">
+                          <div class="nav flex-column">
+                            <p
+                              class="nav-link text-700 mb-0 fw-bold">Layouts</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../demo/navbar-vertical.html">Navbar
+                              vertical</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../demo/navbar-top.html">Top nav</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../demo/navbar-double-top.html">Double
+                              top<span
+                                class="badge rounded-pill ms-2 badge-subtle-success">New</span></a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../demo/combo-nav.html">Combo nav</a>
+                            <p
+                              class="nav-link text-700 mb-0 fw-bold">Others</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/starter.html">Starter</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/landing.html">Landing</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-6 col-xxl-3">
+                          <div class="nav flex-column">
+                            <p class="nav-link text-700 mb-0 fw-bold">User</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/user/profile.html">Profile</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/user/settings.html">Settings</a>
+                          </div>
+                        </div>
+                        <div class="col-6 col-xxl-3">
+                          <div class="nav flex-column">
+                            <p
+                              class="nav-link text-700 mb-0 fw-bold">Pricing</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/pricing/pricing-default.html">Pricing
+                              default</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/pricing/pricing-alt.html">Pricing
+                              alt</a>
+                          </div>
+                        </div>
+                        <div class="col-6 col-xxl-3">
+                          <div class="nav flex-column">
+                            <p
+                              class="nav-link text-700 mb-0 fw-bold">Errors</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/errors/404.html">404</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/errors/500.html">500</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-6 col-xxl-3">
+                          <div class="nav flex-column">
+                            <p
+                              class="nav-link text-700 mb-0 fw-bold">Miscellaneous</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/miscellaneous/associations.html">Associations</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/miscellaneous/invite-people.html">Invite
+                              people</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/miscellaneous/privacy-policy.html">Privacy
+                              policy</a>
+                          </div>
+                        </div>
+                        <div class="col-6 col-xxl-3">
+                          <div class="nav flex-column">
+                            <p class="nav-link text-700 mb-0 fw-bold">FAQ</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/faq/faq-basic.html">Faq basic</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/faq/faq-alt.html">Faq alt</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/faq/faq-accordion.html">Faq
+                              accordion</a>
+                          </div>
+                        </div>
+                        <div class="col-6 col-xxl-3">
+                          <div class="nav flex-column">
+                            <p class="nav-link text-700 mb-0 fw-bold">Other
+                              Auth</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../pages/authentication/wizard.html">Wizard</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../#authentication-modal"
+                              data-bs-toggle="modal">Modal</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown"><a class="nav-link dropdown-toggle"
+                  href="#" role="button" data-bs-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false"
+                  id="moduless">Modules</a>
+                <div
+                  class="dropdown-menu dropdown-caret dropdown-menu-card border-0 mt-0"
+                  aria-labelledby="moduless">
+                  <div
+                    class="card navbar-card-components shadow-none dark__bg-1000">
+                    <div class="card-body scrollbar max-h-dropdown"><img
+                        class="img-dropdown"
+                        src="https://marketplace.tensordock.com/static/img/logo.png"
+                        width="130" alt />
+                      <div class="row">
+                        <div class="col-6 col-xxl-3">
+                          <div class="nav flex-column">
+                            <p
+                              class="nav-link text-700 mb-0 fw-bold">Components</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/accordion.html">Accordion</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/alerts.html">Alerts</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/anchor.html">Anchor</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/animated-icons.html">Animated
+                              icons</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/background.html">Background</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/badges.html">Badges</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/bottom-bar.html">Bottom
+                              bar<span
+                                class="badge rounded-pill ms-2 badge-subtle-success">New</span></a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/breadcrumbs.html">Breadcrumbs</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/buttons.html">Buttons</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/calendar.html">Calendar</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/cards.html">Cards</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/carousel/bootstrap.html">Bootstrap
+                              carousel</a>
+                          </div>
+                        </div>
+                        <div class="col-6 col-xxl-3">
+                          <div class="nav flex-column mt-md-4 pt-md-1"><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/carousel/swiper.html">Swiper</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/collapse.html">Collapse</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/cookie-notice.html">Cookie
+                              notice</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/countup.html">Countup</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/draggable.html">Draggable</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/dropdowns.html">Dropdowns</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/jquery-components.html">Jquery<span
+                                class="badge rounded-pill ms-2 badge-subtle-success">New</span></a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/list-group.html">List
+                              group</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/modals.html">Modals</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/navs-and-tabs/navs.html">Navs</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/navs-and-tabs/navbar.html">Navbar</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/navs-and-tabs/vertical-navbar.html">Navbar
+                              vertical</a>
+                          </div>
+                        </div>
+                        <div class="col-6 col-xxl-3">
+                          <div class="nav flex-column mt-xxl-4 pt-xxl-1"><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/navs-and-tabs/top-navbar.html">Top
+                              nav</a><a class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/navs-and-tabs/double-top-navbar.html">Double
+                              top<span
+                                class="badge rounded-pill ms-2 badge-subtle-success">New</span></a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/navs-and-tabs/combo-navbar.html">Combo
+                              nav</a><a class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/navs-and-tabs/tabs.html">Tabs</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/offcanvas.html">Offcanvas</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/pictures/avatar.html">Avatar</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/pictures/images.html">Images</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/pictures/figures.html">Figures</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/pictures/hoverbox.html">Hoverbox</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/pictures/lightbox.html">Lightbox</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/progress-bar.html">Progress
+                              bar</a><a class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/placeholder.html">Placeholder</a>
+                          </div>
+                        </div>
+                        <div class="col-6 col-xxl-3">
+                          <div class="nav flex-column mt-xxl-4 pt-xxl-1"><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/pagination.html">Pagination</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/popovers.html">Popovers</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/scrollspy.html">Scrollspy</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/search.html">Search</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/spinners.html">Spinners</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/timeline.html">Timeline</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/toasts.html">Toasts</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/tooltips.html">Tooltips</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/treeview.html">Treeview</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/typed-text.html">Typed
+                              text</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/videos/embed.html">Embed</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/components/videos/plyr.html">Plyr</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-6 col-xxl-3">
+                          <div class="nav flex-column">
+                            <p
+                              class="nav-link text-700 mb-0 fw-bold">Utilities</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/background.html">Background</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/borders.html">Borders</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/clearfix.html">Clearfix</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/colors.html">Colors</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/colored-links.html">Colored
+                              links</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/display.html">Display</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/flex.html">Flex</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/float.html">Float</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/focus-ring.html">Focus
+                              ring</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/grid.html">Grid</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/icon-link.html">Icon
+                              link</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/overlayscrollbar.html">Overlay
+                              scrollbar</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/position.html">Position</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/ratio.html">Ratio</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/spacing.html">Spacing</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/sizing.html">Sizing</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/stretched-link.html">Stretched
+                              link</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/text-truncation.html">Text
+                              truncation</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/typography.html">Typography</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/vertical-align.html">Vertical
+                              align</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/vertical-rule.html">Vertical
+                              rule</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/utilities/visibility.html">Visibility</a>
+                          </div>
+                        </div>
+                        <div class="col-6 col-xxl-3">
+                          <div class="nav flex-column">
+                            <p
+                              class="nav-link text-700 mb-0 fw-bold">Tables</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/tables/basic-tables.html">Basic
+                              tables</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/tables/advance-tables.html">Advance
+                              tables</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/tables/bulk-select.html">Bulk
+                              select</a>
+                            <p
+                              class="nav-link text-700 mb-0 fw-bold">Charts</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/charts/chartjs.html">Chartjs</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/charts/d3js.html">D3js<span
+                                class="badge rounded-pill ms-2 badge-subtle-success">New</span></a>
+                            <p
+                              class="nav-link text-700 mb-0 fw-bold">ECharts</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/charts/echarts/line-charts.html">Line
+                              charts</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/charts/echarts/bar-charts.html">Bar
+                              charts</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/charts/echarts/candlestick-charts.html">Candlestick
+                              charts</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/charts/echarts/geo-map.html">Geo
+                              map</a><a class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/charts/echarts/scatter-charts.html">Scatter
+                              charts</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/charts/echarts/pie-charts.html">Pie
+                              charts</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/charts/echarts/gauge-charts.html">Gauge
+                              charts</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/charts/echarts/radar-charts.html">Radar
+                              charts</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/charts/echarts/heatmap-charts.html">Heatmap
+                              charts</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/charts/echarts/how-to-use.html">How
+                              to use</a>
+                          </div>
+                        </div>
+                        <div class="col-6 col-xxl-3">
+                          <div class="nav flex-column">
+                            <p
+                              class="nav-link text-700 mb-0 fw-bold">Forms</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/forms/basic/form-control.html">Form
+                              control</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/forms/basic/input-group.html">Input
+                              group</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/forms/basic/select.html">Select</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/forms/basic/checks.html">Checks</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/forms/basic/range.html">Range</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/forms/basic/layout.html">Layout</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/forms/advance/advance-select.html">Advance
+                              select</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/forms/advance/date-picker.html">Date
+                              picker</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/forms/advance/editor.html">Editor</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/forms/advance/emoji-button.html">Emoji
+                              button</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/forms/advance/file-uploader.html">File
+                              uploader</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/forms/advance/input-mask.html">Input
+                              mask</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/forms/advance/range-slider.html">Range
+                              slider</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/forms/advance/rating.html">Rating</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/forms/floating-labels.html">Floating
+                              labels</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/forms/wizard.html">Wizard</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/forms/validation.html">Validation</a>
+                          </div>
+                        </div>
+                        <div class="col-6 col-xxl-3">
+                          <div class="nav flex-column pt-xxl-1">
+                            <p
+                              class="nav-link text-700 mb-0 fw-bold">Icons</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/icons/font-awesome.html">Font
+                              awesome</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/icons/bootstrap-icons.html">Bootstrap
+                              icons</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/icons/feather.html">Feather</a><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/icons/material-icons.html">Material
+                              icons</a>
+                            <p class="nav-link text-700 mb-0 fw-bold">Maps</p><a
+                              class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/maps/google-map.html">Google
+                              map</a><a class="nav-link py-1 link-600 fw-medium"
+                              href="../modules/maps/leaflet-map.html">Leaflet
+                              map</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown"><a class="nav-link dropdown-toggle"
+                  href="#" role="button" data-bs-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false"
+                  id="documentations">Documentation</a>
+                <div
+                  class="dropdown-menu dropdown-caret dropdown-menu-card border-0 mt-0"
+                  aria-labelledby="documentations">
+                  <div class="bg-white dark__bg-1000 rounded-3 py-2"><a
+                      class="dropdown-item link-600 fw-medium"
+                      href="../documentation/getting-started.html">Getting
+                      started</a><a class="dropdown-item link-600 fw-medium"
+                      href="../documentation/customization/configuration.html">Configuration</a><a
+                      class="dropdown-item link-600 fw-medium"
+                      href="../documentation/customization/styling.html">Styling<span
+                        class="badge rounded-pill ms-2 badge-subtle-success">Updated</span></a><a
+                      class="dropdown-item link-600 fw-medium"
+                      href="../documentation/customization/dark-mode.html">Dark
+                      mode</a><a class="dropdown-item link-600 fw-medium"
+                      href="../documentation/customization/plugin.html">Plugin</a><a
+                      class="dropdown-item link-600 fw-medium"
+                      href="../documentation/faq.html">Faq</a><a
+                      class="dropdown-item link-600 fw-medium"
+                      href="../documentation/gulp.html">Gulp</a><a
+                      class="dropdown-item link-600 fw-medium"
+                      href="../documentation/design-file.html">Design file</a><a
+                      class="dropdown-item link-600 fw-medium"
+                      href="../changelog.html">Changelog</a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item d-flex align-items-center me-2">
+                <div class="dropdown theme-control-dropdown landing-drop"><a
+                    class="nav-link d-flex align-items-center dropdown-toggle fa-icon-wait pe-1"
+                    href="#" role="button" id="themeSwitchDropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false"><span class="d-none d-lg-block"><span
+                        class="fas fa-sun"
+                        data-theme-dropdown-toggle-icon="light"></span><span
+                        class="fas fa-moon"
+                        data-theme-dropdown-toggle-icon="dark"></span><span
+                        class="fas fa-adjust"
+                        data-theme-dropdown-toggle-icon="auto"></span></span><span
+                      class="d-lg-none">Switch theme</span></a>
+                  <div
+                    class="dropdown-menu dropdown-menu-end dropdown-caret border py-0 mt-1"
+                    aria-labelledby="themeSwitchDropdown">
+                    <div class="bg-white dark__bg-1000 rounded-2 py-2">
+                      <button
+                        class="dropdown-item link-600 d-flex align-items-center gap-2"
+                        type="button" value="light"
+                        data-theme-control="theme"><span
+                          class="fas fa-sun"></span>Light<span
+                          class="fas fa-check dropdown-check-icon ms-auto text-600"></span></button>
+                      <button
+                        class="dropdown-item link-600 d-flex align-items-center gap-2"
+                        type="button" value="dark"
+                        data-theme-control="theme"><span class="fas fa-moon"
+                          data-fa-transform></span>Dark<span
+                          class="fas fa-check dropdown-check-icon ms-auto text-600"></span></button>
+                      <button
+                        class="dropdown-item link-600 d-flex align-items-center gap-2"
+                        type="button" value="auto"
+                        data-theme-control="theme"><span class="fas fa-adjust"
+                          data-fa-transform></span>Auto<span
+                          class="fas fa-check dropdown-check-icon ms-auto text-600"></span></button>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="signup.html">Get
+                  Started</a></li>
+            </ul>
           </div>
-          
+        </div>
+      </nav>
+      <div class="container-fluid">
+        <div class="row min-vh-100 bg-100">
+          <div class="col-6 d-none d-lg-block position-relative">
+            <!-- Start Background; to change the photo, upload a photo and then replace it here: -->
+            <div class="bg-holder"
+              style="background-image:url(https://gpufleet.consoledock.com/static/img/bg.jpeg);background-position: 50% 20%;">
+            </div>
+            <!-- End Background -->
+          </div>
+          <div
+            class="col-sm-10 col-md-6 px-sm-0 align-self-center mx-auto py-5">
+            <div class="row justify-content-center g-0">
+              <div class="col-lg-9 col-xl-8 col-xxl-6">
+                <div class="card">
+                  <div
+                    class="card-header bg-circle-shape bg-shape text-center p-2"><a
+                      class="font-sans-serif fw-bolder fs-5 z-1 position-relative link-light"
+                      href="/index.html"
+                      data-bs-theme="light">GPUfleet</a></div>
+                  <div class="card-body p-4">
+                    <div class="row flex-between-center">
+                      <div class="col-auto">
+                        <h3>Login</h3>
+                      </div>
+                      <div class="col-auto fs-10 text-600"><span
+                          class="mb-0 fw-semi-bold">New User?</span> <span><a
+                            href="/signup.html">Sign Up</a></span></div>
+                    </div>
+                    <form>
+                      <div class="mb-3">
+                        <label class="form-label" for="email">Email
+                          address</label>
+                        <input class="form-control" id="email"
+                          type="email">
+                      </div>
+                      <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                          <label class="form-label"
+                            for="password">Password</label>
+                        </div>
+                        <input class="form-control" id="password"
+                          type="password">
+                      </div>
+                      <div class="mb-3">
+                        <button class="btn btn-primary d-block w-100 mt-3"
+                          type="button" onclick="submitForm()">Log In</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-  
-
-</body>
+    </main>
+    <script src="./static/js/popper.min.js"></script>
+    <script src="./static/js/bootstrap.min.js"></script>
+    <script src="./static/js/anchor.min.js"></script>
+    <script src="./static/js/is.min.js"></script>
+    <script src="./static/js/swiper-bundle.min.js"></script>
+    <script src="./static/js/typed.js"></script>
+    <script src="./static/js/fa.min.js"></script>
+    <script src="./static/js/lodash.min.js"></script>
+    <script src="./static/js/list.min.js"></script>
+    <script src="./static/js/theme.js"></script>
+  </body>
 </html>
