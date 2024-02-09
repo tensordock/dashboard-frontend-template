@@ -6,7 +6,7 @@
     <title>User Account - Cloud GPU Deployments</title>
     <script src="https://js.stripe.com/v3/"></script>
     <script>
-    const stripe = Stripe('pk_live_51JqNQYHSshR0IOtvfpFJ335VCKxHeyzKzGT8XaWMNvt5ye74VXApsofamVwZN3Ec2H9Y9Ap5WsVlVwxgnEL1Ys7R00rbTg3ky9');
+    const stripe = Stripe('pk_test_51JqNQYHSshR0IOtvWv45wVZic3eTs6q5px6NaaqmbVXOAOSPCw7mAPTqS3HDK0tzXBJLKdwDrtkGT5cukjjAbfCK00BVmUO4oD');
   </script>
     <!-- Include the necessary scripts and styles -->
     <link rel="stylesheet" href="./static/css/theme.bundle.css" />
@@ -27,6 +27,33 @@
   </style>
   </head>
   <body>
+    <div class="modal fade" id="depositModal" tabindex="-1" aria-labelledby="depositModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content modal-content-black-text">
+          <div class="modal-header">
+            <h5 class="modal-title" id="depositModalLabel">Deposit
+              Funds</h5>
+            <button type="button" class="btn-close"
+                    data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <label for="modalDepositAmount" class="form-label">Enter
+              deposit amount:</label>
+            <div class="input-group mb-3">
+              <span class="input-group-text">$</span>
+              <input type="number" class="form-control"
+                     id="modalDepositAmount" placeholder="Amount">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary"
+                    id="confirmDepositButton">Confirm Deposit</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <nav class="navbar py-3 navbar-expand-lg navbar-light bg-blue fixed-top"
       style="background-color: rgb(40, 43, 85);">
       <div class="container">
@@ -110,18 +137,18 @@
                   </div>
                 </div>
                 <div class="col">
-                  <!-- <p class="mb-0 text-light">
+                  <!-- <p class="mb-0 text-dark">
                                 Your avatar
                             </p> -->
                   <small>
-                    <p class="text-light">
-                      Your user ID: <p class="bg-gray-500 text-light"
+                    <p class="text-dark">
+                      Your user ID: <p class="bg-gray-500 text-dark"
                         id="user-id"></p>
                     </p>
                   </small>
                   <small>
-                    <p class="text-light">
-                      Your email: <p class="bg-gray-500 text-light"
+                    <p class="text-dark">
+                      Your email: <p class="bg-gray-500 text-dark"
                         id="user-email"></p>
                     </p>
                   </small>
@@ -141,14 +168,12 @@
             <div class="card-body">
               <div class="row align-items-center">
                 <div class="col">
-                  <p class="mb-0 text-light">
-                    <span id="organization-name"> </span>, <span
-                      id="organization-type"> </span>
+                  <p class="mb-0 text-dark">
+                    <span id="organization-name"> </span>, <span id="organization-type"> </span>
                   </p>
-                  <small class="text-light">
+                  <small class="text-dark">
                     <p>
-                      ID: <kbd class="bg-gray-500 text-light"
-                        id="organization-id"> </kbd><br><br>
+                      ID: <span class="text-dark" id="organization-id"> </span><br><br>
                       Organization Members:
                     </p>
                     <ul>
@@ -183,162 +208,133 @@
                 </p>
               </small>
               <a type="button" class="btn btn-primary lift mb-2"
-                data-bs-toggle="modal"
-                data-bs-target="#depositModal" role="button" id="depositButton">
+                data-toggle="modal"
+                data-target="#depositModal" role="button" id="depositButton">
                 Deposit Funds
               </a>
             </div>
           </div>
-          <div class="modal fade" id="depositModal" tabindex="-1"
-            aria-labelledby="depositModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content modal-content-black-text">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="depositModalLabel">Deposit
-                    Funds</h5>
-                  <button type="button" class="btn-close"
-                    data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <label for="modalDepositAmount" class="form-label">Enter
-                    deposit amount:</label>
-                  <div class="input-group mb-3">
-                    <span class="input-group-text">$</span>
-                    <input type="number" class="form-control"
-                      id="modalDepositAmount" placeholder="Amount">
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary"
-                    data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary"
-                    id="confirmDepositButton">Confirm Deposit</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
     </section>
 
     <script>
-    document.addEventListener("DOMContentLoaded", async function() {
-      const baseUrl = 'https://marketplace.tensordock.com';
-      let loggedIn = false;
-      const userInfo = { email: '', orgName: '' };
+      document.addEventListener("DOMContentLoaded", async function() {
+        const baseUrl = 'http://localhost:5000';
+        let loggedIn = false;
+        const userInfo = { email: '', orgName: '' };
 
-      //const whitelabelToken = document.cookie.split('; ').find(row => row.startsWith('whitelabelToken='));
-      const whitelabelToken = "=033ee005-4469-4f37-907c-71c50447455f"
-      if (whitelabelToken) {
+        const whitelabelToken = document.cookie.split('; ').find(row => row.startsWith('whitelabelToken='));
+
+        if (whitelabelToken) {
+          try {
+            console.log("THIS RAN!")
+
+            const response = await fetch(`${baseUrl}/api/v0/client/whitelabel/token_verify`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': whitelabelToken.split('=')[1],
+              },
+            });
+
+            if (response.ok) {
+              const tokenVerifyResponse = await response.json();
+              loggedIn = true;
+              userInfo.email = tokenVerifyResponse.email;
+              userInfo.orgName = tokenVerifyResponse.org_name;
+            }
+          } catch (error) {
+            window.location.href = './login';
+          }
+        }
+          await getAccountInfo();
+      });
+
+     const baseUrl = 'http://localhost:5000';
+     const whitelabelToken = document.cookie.split('; ').find(row => row.startsWith('whitelabelToken='));
+
+     const getAccountInfo = async () => {
         try {
-          console.log("THIS RAN!")
-          const response = await fetch(`${baseUrl}/api/v0/client/whitelabel/token_verify`, {
-            method: 'POST',
+          const response = await fetch(`${baseUrl}/api/vO/client/whitelabel/getUserInfo`, {
+            method: 'GET',
             headers: {
               'Content-Type': 'application/json',
               'Authorization': whitelabelToken.split('=')[1]
             },
-            //body: JSON.stringify({ whitelabelToken: whitelabelToken.split('=')[1] })
           });
 
           if (response.ok) {
-            const tokenVerifyResponse = await response.json();
-            loggedIn = true;
-            userInfo.email = tokenVerifyResponse.email;
-            userInfo.orgName = tokenVerifyResponse.org_name;
+            const userInquiryResponse = await response.json();
+            console.log("Data", userInquiryResponse);
+
+            document.getElementById('account-funds').textContent = userInquiryResponse.balance;
+            document.getElementById('user-id').textContent = userInquiryResponse.uuid;
+            document.getElementById('user-email').textContent = userInquiryResponse.email;
+            document.getElementById('organization-id').textContent = userInquiryResponse.organization;
+            document.getElementById('organization-name').textContent = userInquiryResponse.organization_name;
+            document.getElementById('organization-type').textContent = userInquiryResponse.organization_type;
+
+            const membersList = document.getElementById('organization-members-list');
+            const members = userInquiryResponse.members;
+
+            members.forEach(member => {
+                const listItem = document.createElement('li');
+                listItem.textContent = member;
+
+                if (member === userInquiryResponse.email) {
+                    listItem.textContent += " (you)";
+                }
+
+                membersList.appendChild(listItem);
+            });
+
+            console.log("org name: ", userInquiryResponse.organization_name);
           }
         } catch (error) {
-          window.location.href = './login.html';
+          console.error("Error verifying token:", error);
+          showMessage("Error retrieving account information", true);
+          return "Error getting information";
+        }
+      };
+      const showMessage = (message, isError = true) => {
+          const messageBox = document.getElementById('messageBox');
+          messageBox.style.display = 'block';
+          messageBox.textContent = message;
+          messageBox.className = isError ? 'alert alert-danger' : 'alert alert-success';
+      };
+
+      const depositFunds = () => {
+        const depositAmount = document.getElementById('modalDepositAmount').value;
+
+        if (depositAmount !== null && Number(depositAmount) >= 0) {
+            fetch(`http://localhost:5000/createDepositFundsSession/${depositAmount}`, {
+              method: 'POST',
+              headers: {
+                'Authorization': whitelabelToken.split('=')[1],
+              },
+            })
+            .then((response) => {
+              if (!response.ok) throw new Error('Network response was not ok');
+              return response.json();
+            })
+            .then((session) => stripe.redirectToCheckout({ sessionId: session.id }))
+            .catch(function (error) {
+              console.error("Error:", error);
+              showMessage("Error: unable to open session");
+            });
+        } else {
+          showMessage("Invalid deposit amount");
         }
       }
-        await getAccountInfo();
 
-
-
-    });
-   const baseUrl = 'https://marketplace.tensordock.com';
-   const whitelabelToken = document.cookie.split('; ').find(row => row.startsWith('whitelabelToken='));
-   // const whitelabelToken = "=033ee005-4469-4f37-907c-71c50447455f"
-   const getAccountInfo = async () => {
-    console.log("THIS RAN!")
-      try {
-        const response = await fetch(`${baseUrl}/api/vO/client/whitelabel/getUserInfo`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': whitelabelToken.split('=')[1]
-          },
-          //body: JSON.stringify({ whitelabelToken: whitelabelToken.split('=')[1] })
-        });
-
-        if (response.ok) {
-          const userInquiryResponse = await response.json();
-          console.log("RESPONSE WAS OK!")
-          console.log("RESPONSE: ", userInquiryResponse)
-          document.getElementById('account-funds').textContent = userInquiryResponse.balance;
-          document.getElementById('user-id').textContent = userInquiryResponse.uuid;
-          document.getElementById('user-email').textContent = userInquiryResponse.email;
-          document.getElementById('organization-id').textContent = userInquiryResponse.organization;
-          document.getElementById('organization-name').textContent = userInquiryResponse.organization_name;
-          document.getElementById('organization-type').textContent = userInquiryResponse.organization_type;
-          const membersList = document.getElementById('organization-members-list');
-          const members = userInquiryResponse.members; 
-
-          members.forEach(member => {
-              const listItem = document.createElement('li');
-              listItem.textContent = member; 
-
-              if (member === userInquiryResponse.email) { 
-                  listItem.textContent += " (you)";
-              }
-
-              membersList.appendChild(listItem);
-          });
-          console.log("org name: ", userInquiryResponse.organization_name)
-
-        }
-      } catch (error) {
-
-        console.error("Error verifying token:", error);
-        showMessage("Error retrieving account information", true);
-        return "Error getting information";
-      }
-    };
-    const showMessage = (message, isError = true) => {
-        const messageBox = document.getElementById('messageBox');
-        messageBox.style.display = 'block';
-        messageBox.textContent = message;
-        messageBox.className = isError ? 'alert alert-danger' : 'alert alert-success';
-    };
-
-    const depositFunds = () => {
-    const depositAmount = document.getElementById('modalDepositAmount').value;
-    if (depositAmount !== null && Number(depositAmount) >= 0) {
-        fetch(`https://marketplace.tensordock.com/createDepositFundsSession/${depositAmount}`, {
-        method: 'POST',
-        headers: {
-            'Authorization': whitelabelToken.split('=')[1],
-        },
-        })
-        .then((response) => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.json();
-        })
-        .then((session) => stripe.redirectToCheckout({ sessionId: session.id }))
-        .catch(function (error) {
-        console.error("Error:", error);
-        showMessage("Error: unable to open session");
-        });
-    } else {
-        showMessage("Invalid deposit amount");
-    }
-    }
-
-        document.getElementById('confirmDepositButton').addEventListener('click', function() {
+      document.getElementById('confirmDepositButton').addEventListener('click', function() {
         depositFunds();
         $('#depositModal').modal('hide');
-        });
+      });
   </script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   </body>
 </html>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup to GPUfleet</title>
+    <title>Log in to GPUfleet</title>
     <script src="./static/js/config.js"></script>
     <script src="./static/js/simplebar.min.js"></script>
     <link rel="stylesheet" href="./static/css/swiper.css" />
@@ -12,53 +12,60 @@
     <link
       href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap"
       rel="stylesheet">
-    <link rel="stylesheet" href="./static/css/theme.css" />
+    <link rel="stylesheet" href="static/css/theme.bundle.css" />
     <link rel="stylesheet" href="./static/css/custom.css" />
     <script>
       // If the user is already logged in, redirect
-      const baseUrl = 'https://marketplace.tensordock.com';
+      const baseUrl = 'http://localhost:5000';
       const whitelabelToken = document.cookie.split('; ').find(row => row.startsWith('whitelabelToken='));
+
       document.addEventListener("DOMContentLoaded", async () => {
-      let loggedIn = false;
-      const userInfo = { email: '', orgName: '' };
-      console.log(whitelabelToken)
-      if (whitelabelToken) {
+        let loggedIn = false;
+        const userInfo = { email: '', orgName: '' };
+
+        console.log(whitelabelToken);
+
+        if (whitelabelToken) {
           const response = await fetch(`${baseUrl}/api/v0/client/whitelabel/token_verify`, {
               method: 'POST',
               headers: {
-              'Content-Type': 'application/json',
-              'Authorization': whitelabelToken.split('=')[1]
+                'Content-Type': 'application/json',
+                'Authorization': whitelabelToken.split('=')[1]
               },
           });
+
           if (response.ok) {
               const tokenVerifyResponse = await response.json();
               loggedIn = true;
               userInfo.email = tokenVerifyResponse.email;
               userInfo.orgName = tokenVerifyResponse.org_name;
-              window.location = '/list.html';
+              window.location = '/list';
           } 
-      }
+        }
       });
 
       function submitForm() {
         let formData = new FormData();
+
         formData.append('email', document.getElementById('email').value);
         formData.append('password', document.getElementById('password').value);
-        formData.append('subdomain', window.location.hostname.split('.')[0]);
+        formData.append('subdomain', window.location.hostname);
 
         fetch(`${baseUrl}/api/v0/client/whitelabel/login`, {
           method: 'POST',
-          body: formData
+          body: formData,
         })
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
+
           if(data.error) {
             alert(data.error);
             return;
           }
+
           document.cookie = `whitelabelToken=${data.token}`;
-          window.location.href = '/list.html';
+          window.location.href = '/list';
         })
         .catch(error => console.error('Error:', error));
       }

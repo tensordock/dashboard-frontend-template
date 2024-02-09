@@ -12,7 +12,7 @@
     <link
       href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap"
       rel="stylesheet">
-    <link rel="stylesheet" href="./static/css/theme.css" />
+    <link rel="stylesheet" href="static/css/theme.bundle.css" />
     <link rel="stylesheet" href="./static/css/custom.css" />
     <script>
       // If the user is already logged in, redirect
@@ -35,7 +35,7 @@
               loggedIn = true;
               userInfo.email = tokenVerifyResponse.email;
               userInfo.orgName = tokenVerifyResponse.org_name;
-              window.location = '/list.html';
+              window.location = '/list';
           } 
       }
       })
@@ -56,7 +56,7 @@
         .then((data) => {
           console.log(data);
           document.cookie = `whitelabelToken=${data.token}`;
-          window.location.href = '/login.html';
+          window.location.href = '/login';
         })
         .catch(error => console.error('Error:', error));
       }
