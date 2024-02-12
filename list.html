@@ -356,10 +356,38 @@
                                 </div>
                               </div>
                               <div class="d-flex justify-content-between">
-                                 <button type="button" class="btn m-3 btn-sm w-100 btn-falcon-default ${vm.status.toLowerCase().includes('stopped') && 'd-none'}" onclick="stopVM('${machineId}', false)">Stop VM & reserve GPU</button>
-                                 <button type="button" class="btn m-3 btn-sm w-100 btn-falcon-default ${vm.status.toLowerCase().includes('stopped') && 'd-none'}" onclick="stopVM('${machineId}', true)">Stop VM & release GPU</button>
-                                 <button type="button" class="btn m-3 btn-sm w-100 btn-falcon-default ${vm.status.toLowerCase() === 'running' && 'd-none'}" onclick="startVM('${machineId}')">Start VM</button>
-                                 <button type="button" class="btn m-3 btn-sm w-100 btn-falcon-default" onclick="deleteVM('${machineId}')">Delete Virtual Machine</button>
+                                 <button
+                                    type="button"
+                                    class="d-flex align-items-center justify-content-center btn m-3 btn-sm w-100 btn-falcon-default ${vm.status.toLowerCase().includes('stopped') && 'd-none'}"
+                                    onclick="stopVM('${machineId}', false)"
+                                    id="stopReserveVM-${machineId}"
+                                 >
+                                    Stop VM & reserve GPU
+                                 </button>
+                                 <button
+                                    type="button"
+                                    class="d-flex align-items-center justify-content-center btn m-3 btn-sm w-100 btn-falcon-default ${vm.status.toLowerCase().includes('stopped') && 'd-none'}"
+                                    onclick="stopVM('${machineId}', true)"
+                                    id="stopReleaseVM-${machineId}"
+                                 >
+                                    Stop VM & release GPU
+                                 </button>
+                                 <button
+                                    type="button"
+                                    class="d-flex align-items-center justify-content-center btn m-3 btn-sm w-100 btn-falcon-default ${vm.status.toLowerCase() === 'running' && 'd-none'}"
+                                    onclick="startVM('${machineId}')"
+                                    id="startVM-${machineId}"
+                                 >
+                                    Start VM
+                                 </button>
+                                 <button
+                                    type="button"
+                                    class="d-flex align-items-center justify-content-center btn m-3 btn-sm w-100 btn-falcon-default"
+                                    onclick="deleteVM('${machineId}')"
+                                    id="deleteVM-${machineId}"
+                                 >
+                                    Delete Virtual Machine
+                                 </button>
                               </div>
                         </div>
                     </td>
@@ -371,6 +399,15 @@
         }
 
         const stopVM = async (machineId, releaseGPU) => {
+            const stopType = releaseGPU ? 'stopReleaseVM' : 'stopReserveVM';
+            const buttonElement = document.getElementById(`${stopType}-${machineId}`);
+
+            buttonElement.innerHTML = `
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="margin-right: 7px"></span>
+            <span>Stopping...</span>
+            `;
+            buttonElement.disabled = true;
+
             const apiRoute = `${baseUrl}/api/v0/client/stop/single`;
             const formData = new FormData();
 
@@ -386,18 +423,22 @@
                 },
             });
 
-            console.log(response);
-
             if (response.ok){
-                console.log("Success!");
                 window.location.reload();
             } else {
-                console.log("response success: ", response.success);
-                console.log("ERROR!");
+                buttonElement.disabled = false;
             }
         }
 
         const startVM = async (machineId) => {
+            const buttonElement = document.getElementById(`startVM-${machineId}`);
+
+            buttonElement.innerHTML = `
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="margin-right: 7px"></span>
+            <span>Starting...</span>
+            `;
+            buttonElement.disabled = true;
+
             const apiRoute = `${baseUrl}/api/v0/client/start/single`;
             const formData = new FormData();
 
@@ -416,10 +457,19 @@
                 window.location.reload();
             } else {
                 console.log("response success: ", response.success);
+                buttonElement.disabled = false;
             }
         }
 
         const deleteVM = async (machineId) => {
+            const buttonElement = document.getElementById(`deleteVM-${machineId}`);
+            
+            buttonElement.innerHTML = `
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="margin-right: 7px"></span>
+            <span>Deleting...</span>
+            `;
+            buttonElement.disabled = true;
+
             const apiRoute = `${baseUrl}/api/v0/client/delete/single`;
             const formData = new FormData();
 
@@ -439,6 +489,7 @@
                 window.location.reload()
             } else {
                 console.log("response success: ", response.success);
+                buttonElement.disabled = false;
             }
         }
 
