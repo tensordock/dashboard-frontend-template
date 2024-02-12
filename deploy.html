@@ -1539,6 +1539,13 @@
     let externalPorts = [];
     let internalPorts = [];
 
+    document.getElementById("deployBtnParent").innerHTML = `
+    <button class="btn btn-falcon-primary w-100 lift btn-lg d-flex align-items-center justify-content-center" type="button" disabled>
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="margin-right: 7px"></span>
+        <span>Deploying...</span>
+    </button>
+    `;
+
     Array.from(document.getElementsByClassName("port-checkbox")).forEach((element) => {
       const externalPort = parseInt(element.getAttribute("data-port"));
 
