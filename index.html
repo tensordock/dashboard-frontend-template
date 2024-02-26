@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GPUfleet GPU Cloud — Affordable, Scalable GPUs</title>
-    <script src="./static/js/config.js"></script>
-    <script src="./static/js/simplebar.min.js"></script>
-    <link rel="stylesheet" href="./static/css/swiper.css" />
     <link
       rel="preconnect" href="https://fonts.gstatic.com">
     <link
@@ -36,7 +33,16 @@
               data-top-nav-dropdowns="data-top-nav-dropdowns">
               <li class="nav-item dropdown"><a class="nav-link" href="/deploy">Deploy</a>
               </li>
-              <li class="nav-item dropdown"><a class="nav-link" href="#" role="button">Documentation</a></li>
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link"
+                  href="https://tensordock.gitbook.io/whitelabeled-storefronts-tensordock/"
+                  role="button"
+                  target="_blank"
+                >
+                  Documentation
+                </a>
+              </li>
             </ul>
             <ul class="navbar-nav ms-auto">
               <li class="nav-item d-flex align-items-center me-2">
@@ -78,7 +84,12 @@
                   </div>
                 </div>
               </li>
-              <li class="nav-item"><a class="nav-link" href="signup">Get Started</a></li>
+              <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/signup">Register</a>
+              </li>
             </ul>
           </div>
         </div>
@@ -95,33 +106,67 @@
         <div class="container">
           <div class="row flex-center pt-8 pt-lg-10 pb-lg-9 pb-xl-0">
             <div
-              class="col-md-11 col-lg-8 col-xl-4 pb-7 pb-xl-9 text-center text-xl-start">
-              <h1 class="text-white fw-light">The <span
-                  class="typed-text fw-bold"
-                  data-typed-text='["acceleration","HPC","machine learning","rendering"]'></span><br />cloud</h1>
+              class="col-md-11 col-lg-8 col-xl-5 pb-7 pb-xl-9 text-center text-xl-start">
+              <h1 class="text-white fw-light">The <span id="hero-text" class="typed-text fw-bold"></span>
+                <br />cloud
+              </h1>
               <p class="lead text-white opacity-75">GPUfleet operates a massive,
                 scalable NVIDIA GPU cloud for your most demanding
                 HPC workloads</p><a
                 class="btn btn-outline-light border-2 rounded-pill btn-lg mt-4 fs-9 py-2"
-                href="/deploy.html">Deploy a GPU server<span
-                  class="fas fa-play ms-2"
-                  data-fa-transform="shrink-6 down-1"></span></a>
+                href="/deploy">Deploy a GPU server</a>
             </div>
-            <div class="col-xl-7 offset-xl-1 align-self-end mt-4 mt-xl-0"><a
-                class="img-landing-banner rounded" href="../index.html"><img
-                  class="img-fluid d-dark-none"
-                  src="https://marketplace.tensordock.com/static/img/logo.png"
-                  alt /><img
-                  class="img-fluid d-light-none"
-                  src="https://marketplace.tensordock.com/static/img/logo.png"
-                  alt /></a></div>
+            <div class="col-xl-7 mt-xl-0">
+              <a class="rounded" href="/deploy">
+                <img
+                  class="img-landing-banner img-fluid"
+                  src="https://themes.getbootstrap.com/wp-content/uploads/2019/03/falcon-v3.18.0.jpg"
+                />
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- end of .container-->
+
+      </section>
+      <section>
+
+        <div class="container">
+          <div class="row justify-content-center text-center">
+            <div class="col-lg-8 col-xl-7 col-xxl-6">
+              <h1 class="fs-7 fs-sm-5 fs-md-4">GPU platform of the future</h1>
+              <p class="lead">The industry's greatest hardware available at prices 80% less than big clouds. You can save even more when you lock in a long-term contract.</p>
+            </div>
+          </div>
+          <div class="row flex-center mt-8">
+            <div class="col-md col-lg-5 col-xl-4 ps-lg-6"><img class="img-fluid px-6 px-md-0" src="../static/img/money.png" alt=""></div>
+            <div class="col-md col-lg-5 col-xl-4 mt-4 mt-md-0">
+              <h5 class="text-info"><svg class="svg-inline--fa fa-lightbulb fa-w-11 me-2" aria-hidden="true" focusable="false" data-prefix="far" data-icon="lightbulb" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" data-fa-i2svg=""><path fill="currentColor" d="M176 80c-52.94 0-96 43.06-96 96 0 8.84 7.16 16 16 16s16-7.16 16-16c0-35.3 28.72-64 64-64 8.84 0 16-7.16 16-16s-7.16-16-16-16zM96.06 459.17c0 3.15.93 6.22 2.68 8.84l24.51 36.84c2.97 4.46 7.97 7.14 13.32 7.14h78.85c5.36 0 10.36-2.68 13.32-7.14l24.51-36.84c1.74-2.62 2.67-5.7 2.68-8.84l.05-43.18H96.02l.04 43.18zM176 0C73.72 0 0 82.97 0 176c0 44.37 16.45 84.85 43.56 115.78 16.64 18.99 42.74 58.8 52.42 92.16v.06h48v-.12c-.01-4.77-.72-9.51-2.15-14.07-5.59-17.81-22.82-64.77-62.17-109.67-20.54-23.43-31.52-53.15-31.61-84.14-.2-73.64 59.67-128 127.95-128 70.58 0 128 57.42 128 128 0 30.97-11.24 60.85-31.65 84.14-39.11 44.61-56.42 91.47-62.1 109.46a47.507 47.507 0 0 0-2.22 14.3v.1h48v-.05c9.68-33.37 35.78-73.18 52.42-92.16C335.55 260.85 352 220.37 352 176 352 78.8 273.2 0 176 0z"></path></svg><!-- <span class="far fa-lightbulb me-2"></span> Font Awesome fontawesome.com -->PLAN</h5>
+              <h3>Low prices</h3>
+              <p>Virtual machines are affordable and scale when you need them to.</p>
+            </div>
+          </div>
+          <div class="row flex-center mt-7">
+            <div class="col-md col-lg-5 col-xl-4 pe-lg-6 order-md-2"><img class="img-fluid px-6 px-md-0" src="../static/img/code_api.png" alt=""></div>
+            <div class="col-md col-lg-5 col-xl-4 mt-4 mt-md-0">
+              <h5 class="text-info"> <svg class="svg-inline--fa fa-object-ungroup fa-w-18 me-2" aria-hidden="true" focusable="false" data-prefix="far" data-icon="object-ungroup" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M564 224c6.627 0 12-5.373 12-12v-72c0-6.627-5.373-12-12-12h-72c-6.627 0-12 5.373-12 12v12h-88v-24h12c6.627 0 12-5.373 12-12V44c0-6.627-5.373-12-12-12h-72c-6.627 0-12 5.373-12 12v12H96V44c0-6.627-5.373-12-12-12H12C5.373 32 0 37.373 0 44v72c0 6.627 5.373 12 12 12h12v160H12c-6.627 0-12 5.373-12 12v72c0 6.627 5.373 12 12 12h72c6.627 0 12-5.373 12-12v-12h88v24h-12c-6.627 0-12 5.373-12 12v72c0 6.627 5.373 12 12 12h72c6.627 0 12-5.373 12-12v-12h224v12c0 6.627 5.373 12 12 12h72c6.627 0 12-5.373 12-12v-72c0-6.627-5.373-12-12-12h-12V224h12zM352 64h32v32h-32V64zm0 256h32v32h-32v-32zM64 352H32v-32h32v32zm0-256H32V64h32v32zm32 216v-12c0-6.627-5.373-12-12-12H72V128h12c6.627 0 12-5.373 12-12v-12h224v12c0 6.627 5.373 12 12 12h12v160h-12c-6.627 0-12 5.373-12 12v12H96zm128 136h-32v-32h32v32zm280-64h-12c-6.627 0-12 5.373-12 12v12H256v-12c0-6.627-5.373-12-12-12h-12v-24h88v12c0 6.627 5.373 12 12 12h72c6.627 0 12-5.373 12-12v-72c0-6.627-5.373-12-12-12h-12v-88h88v12c0 6.627 5.373 12 12 12h12v160zm40 64h-32v-32h32v32zm0-256h-32v-32h32v32z"></path></svg><!-- <span class="far fa-object-ungroup me-2"></span> Font Awesome fontawesome.com -->BUILD</h5>
+              <h3>Documented API</h3>
+              <p>Deploy and manage VMs programatically with our well-documented API.</p>
+            </div>
+          </div>
+          <div class="row flex-center mt-7">
+            <div class="col-md col-lg-5 col-xl-4 ps-lg-6"><img class="img-fluid px-6 px-md-0" src="../static/img/deployments.png" alt=""></div>
+            <div class="col-md col-lg-5 col-xl-4 mt-4 mt-md-0">
+              <h5 class="text-info"><svg class="svg-inline--fa fa-paper-plane fa-w-16 me-2" aria-hidden="true" focusable="false" data-prefix="far" data-icon="paper-plane" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M440 6.5L24 246.4c-34.4 19.9-31.1 70.8 5.7 85.9L144 379.6V464c0 46.4 59.2 65.5 86.6 28.6l43.8-59.1 111.9 46.2c5.9 2.4 12.1 3.6 18.3 3.6 8.2 0 16.3-2.1 23.6-6.2 12.8-7.2 21.6-20 23.9-34.5l59.4-387.2c6.1-40.1-36.9-68.8-71.5-48.9zM192 464v-64.6l36.6 15.1L192 464zm212.6-28.7l-153.8-63.5L391 169.5c10.7-15.5-9.5-33.5-23.7-21.2L155.8 332.6 48 288 464 48l-59.4 387.3z"></path></svg><!-- <span class="far fa-paper-plane me-2"></span> Font Awesome fontawesome.com -->DEPLOY</h5>
+              <h3>Dead-simple deployments</h3>
+              <p>Our virtualization software makes it easy to get up and running in minutes.</p>
+            </div>
           </div>
         </div>
         <!-- end of .container-->
 
       </section>
       <section class="bg-body-tertiary dark__bg-opacity-50 text-center">
-
         <div class="container">
           <div class="row">
             <div class="col">
@@ -171,7 +216,7 @@
             <div class="col-lg-8">
               <p class="fs-6 fs-sm-5 text-white">Deploy a cloud GPU today from
                 just <br><b>$0.50/hour</b></p>
-              <a href="/signup" class="btn btn-outline-light border-2 rounded-pill btn-lg mt-4 fs-9 py-2">Get Started</a>
+              <a href="/signup" class="btn btn-outline-light border-2 rounded-pill btn-lg mt-4 fs-9 py-2">Get started</a>
             </div>
           </div>
         </div>
@@ -197,17 +242,6 @@
               <p class="text-600">GPUfleet operates a massive NVIDIA GPU cloud
                 in the heart of the United States, providing accelerated cloud
                 services for hobbyists, startups, and enterprises alike.</p>
-              <div class="icon-group mt-4">
-                <a
-                  class="icon-item bg-white text-facebook" href="#!"><span
-                    class="fab fa-facebook-f"></span></a>
-                <a
-                  class="icon-item bg-white text-twitter" href="#!"><span
-                    class="fab fa-twitter"></span></a>
-                <a
-                  class="icon-item bg-white text-linkedin" href="#!"><span
-                    class="fab fa-linkedin-in"></span></a>
-              </div>
             </div>
             <div class="col ps-lg-6 ps-xl-8">
               <div class="d-flex justify-content-end row mt-5 mt-lg-0">
@@ -287,18 +321,14 @@
       <!-- <section> close ============================-->
       <!-- ============================================-->
     </main>
-    <!-- ===============================================-->
-    <!--    End of Main Content-->
-    <!-- ===============================================-->
-    <script src="./static/js/popper.min.js"></script>
-    <script src="./static/js/bootstrap.min.js"></script>
-    <script src="./static/js/anchor.min.js"></script>
-    <script src="./static/js/is.min.js"></script>
-    <script src="./static/js/swiper-bundle.min.js"></script>
-    <script src="./static/js/typed.js"></script>
-    <script src="./static/js/fa.min.js"></script>
-    <script src="./static/js/lodash.min.js"></script>
-    <script src="./static/js/list.min.js"></script>
-    <script src="./static/js/theme.js"></script>
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <script>
+      const typed = new Typed('#hero-text', {
+        strings: ["acceleration", "HPC", "rendering", "ML"],
+        typeSpeed: 50,
+        loop: true,
+        backDelay: 1500,
+      });
+    </script>
   </body>
 </html>
