@@ -1317,8 +1317,7 @@
     `;
 
       // Fetch local hostnodes
-      const localServersApiRoute = "http://localhost:5000/api/v0/client/deploy/hostnodes";
-      // const localServersApiRoute = "https://marketplace.tensordock.com/api/v0/client/deploy/hostnodes"
+      const localServersApiRoute = "https://marketplace.tensordock.com/api/v0/client/deploy/hostnodes"
 
       const localServersRequestParams = new URLSearchParams({
         minGPUCount: selectedGPUCount,
@@ -1623,7 +1622,7 @@
         return;
       }
 
-    const apiRoute = "http://localhost:5000/api/v0/client/deploy/single";
+    const apiRoute = "http://marketplace.tensordock.com/api/v0/client/deploy/single";
 
     const body = {
       deployment_type: selectedLocation.type,
@@ -1825,6 +1824,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
+  chooseGPU('L40 48GB PCIE');
 </script>
       </div>
     </main>

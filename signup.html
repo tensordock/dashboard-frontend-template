@@ -61,7 +61,7 @@
           document.cookie = `whitelabelToken=${data.token}`;
           window.location.href = '/account';
         })
-        .catch(error => console.error('Error:', error));
+        .catch(() =>  document.getElementById("signup-button").disabled = false);
       }
   </script>
   </head>

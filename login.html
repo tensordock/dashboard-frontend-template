@@ -43,6 +43,8 @@
       });
 
       function submitForm() {
+        document.getElementById("login-button").disabled = true;
+
         let formData = new FormData();
 
         formData.append('email', document.getElementById('email').value);
@@ -65,7 +67,7 @@
           document.cookie = `whitelabelToken=${data.token}`;
           window.location.href = '/list';
         })
-        .catch(error => console.error('Error:', error));
+        .catch(() => document.getElementById("login-button").disabled = false);
       }
   </script>
   </head>
@@ -176,8 +178,14 @@
                           type="password">
                       </div>
                       <div class="mb-3">
-                        <button class="btn btn-primary d-block w-100 mt-3"
-                          type="button" onclick="submitForm()">Log In</button>
+                        <button
+                          id="login-button"
+                          class="btn btn-primary d-block w-100 mt-3"
+                          type="button"
+                          onclick="submitForm()"
+                        >
+                          Log In
+                        </button>
                       </div>
                     </form>
                   </div>
