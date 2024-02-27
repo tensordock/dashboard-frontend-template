@@ -16,14 +16,12 @@
     <link rel="stylesheet" href="./static/css/custom.css" />
     <script>
       // If the user is already logged in, redirect
-      const baseUrl = 'http://localhost:5000';
+      const baseUrl = 'https://marketplace.tensordock.com';
       const whitelabelToken = document.cookie.split('; ').find(row => row.startsWith('whitelabelToken='));
 
       document.addEventListener("DOMContentLoaded", async () => {
         let loggedIn = false;
         const userInfo = { email: '', orgName: '' };
-
-        console.log(whitelabelToken);
 
         if (whitelabelToken) {
           const response = await fetch(`${baseUrl}/api/v0/client/whitelabel/token_verify`, {

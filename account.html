@@ -182,11 +182,12 @@
     </main>
 
     <script>
-      const stripe = Stripe('pk_test_51JqNQYHSshR0IOtvWv45wVZic3eTs6q5px6NaaqmbVXOAOSPCw7mAPTqS3HDK0tzXBJLKdwDrtkGT5cukjjAbfCK00BVmUO4oD');
+      const stripe = Stripe('pk_live_51JqNQYHSshR0IOtvfpFJ335VCKxHeyzKzGT8XaWMNvt5ye74VXApsofamVwZN3Ec2H9Y9Ap5WsVlVwxgnEL1Ys7R00rbTg3ky9');
       let stripeElements;
 
       document.addEventListener("DOMContentLoaded", async function() {
-        const baseUrl = 'http://localhost:5000';
+        const baseUrl = 'https://marketplace.tensordock.com';
+
         let loggedIn = false;
         const userInfo = { email: '', orgName: '' };
 
@@ -215,7 +216,7 @@
           await getAccountInfo();
       });
 
-     const baseUrl = 'http://localhost:5000';
+     const baseUrl = 'https://marketplace.tensordock.com';
      const whitelabelToken = document.cookie.split('; ').find(row => row.startsWith('whitelabelToken='));
 
      const getAccountInfo = async () => {
@@ -261,7 +262,7 @@
         const amount = document.getElementById('modalDepositAmount').value;
 
         if (amount !== null && Number(amount) >= 0) {
-            fetch(`http://localhost:5000/api/v0/client/whitelabel/deposit`, {
+            fetch(`https://marketplace.tensordock.com/api/v0/client/whitelabel/deposit`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

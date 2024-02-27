@@ -17,11 +17,12 @@
     <script>
       // If the user is already logged in, redirect
       const baseUrl = 'https://marketplace.tensordock.com';
+
       const whitelabelToken = document.cookie.split('; ').find(row => row.startsWith('whitelabelToken='));
       document.addEventListener("DOMContentLoaded", async () => {
       let loggedIn = false;
       const userInfo = { email: '', orgName: '' };
-      console.log(whitelabelToken)
+
       if (whitelabelToken) {
           const response = await fetch(`${baseUrl}/api/v0/client/whitelabel/token_verify`, {
               method: 'POST',
@@ -41,12 +42,15 @@
       })
 
       function submitForm() {
+        document.getElementById("signup-button").disabled = true;
+
         let formData = new FormData();
+
         formData.append('email', document.getElementById('email').value);
         formData.append('password', document.getElementById('password').value);
         formData.append('confirm_password', document.getElementById('confirm_password').value);
         formData.append('organization_name', document.getElementById('organization_name').value);
-        formData.append('subdomain', window.location.hostname.split('.')[0]);
+        formData.append('subdomain', window.location.hostname);
 
         fetch(`${baseUrl}/api/v0/client/whitelabel/register`, {
           method: 'POST',
@@ -54,9 +58,8 @@
         })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           document.cookie = `whitelabelToken=${data.token}`;
-          window.location.href = '/login';
+          window.location.href = '/account';
         })
         .catch(error => console.error('Error:', error));
       }
@@ -186,8 +189,14 @@
                           type="organization_name">
                       </div>
                       <div class="mb-3">
-                        <button class="btn btn-primary d-block w-100 mt-3"
-                          type="button" onclick="submitForm()">Sign Up</button>
+                        <button
+                          id="signup-button"
+                          class="btn btn-primary d-block w-100 mt-3"
+                          type="button"
+                          onclick="submitForm()"
+                        >
+                          Sign Up
+                        </button>
                       </div>
                     </form>
                   </div>
