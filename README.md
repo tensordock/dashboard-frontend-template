@@ -1,3 +1,9 @@
+# TensorDock Whitelabel Template
+
+## Deploying
+
+Make sure to `npm install` in this folder. To update your whitelabel site, `npm run zip`. This will create `site.zip`, which you can upload to [dashboard.tensordock.com/organization/storefront/panel](https://dashboard.tensordock.com/organization/storefront/panel).
+
 ## Static pages
 
 All remote info is dynamically fetched client-side. You can see a good example of this in `list.html`, line 272. All intended functionality per-page is already in our templates, so they are great for reference.

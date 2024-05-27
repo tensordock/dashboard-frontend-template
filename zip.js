@@ -17,16 +17,16 @@ async function main() {
     }
   });
 
-  console.log('\nAll required email templates found!\n');
+  console.log('\nAll required email templates found!');
 
   // Zip `content` folder
-  console.log('Creating a new ZIP file...');
+  console.log('\nCreating a new ZIP file...');
 
   const archive = archiver('site.zip', { zlib: { level: 9 } });
   archive.directory('content/', false);
 
   await archive.finalize();
-  console.log('ZIP file "site.zip" created successfully!\n');
+  console.log('🎉 ZIP file "site.zip" created successfully!');
 }
 
 main();
