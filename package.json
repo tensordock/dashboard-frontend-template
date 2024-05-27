@@ -1,0 +1,28 @@
+{
+  "name": "whitelabel-default-templates",
+  "version": "0.1.0",
+  "description": "Template for TensorDock whitelabel sites",
+  "scripts": {
+    "zip": "node zip.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tensordock/whitelabel-default-templates.git"
+  },
+  "author": "printer83mph",
+  "bugs": {
+    "url": "https://github.com/tensordock/whitelabel-default-templates/issues"
+  },
+  "homepage": "https://github.com/tensordock/whitelabel-default-templates#readme",
+  "dependencies": {
+    "archiver-promise": "^1.0.0"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": true,
+    "trailingComma": "es5"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5"
+  }
+}
