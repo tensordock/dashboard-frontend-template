@@ -1,11 +1,17 @@
 const fs = require('fs');
 const archiver = require('archiver-promise');
 
+const emailTemplates = [
+  'account_confirmation',
+  'deposit_confirmation',
+  'account_low_balance_3',
+  'account_low_balance_5',
+];
+
 async function main() {
   // Verify we have all required email templates
   console.log('Checking for required email templates...\n');
 
-  const emailTemplates = ['confirmation_email', 'deposit_confirmation_email'];
   emailTemplates.forEach(async (template) => {
     if (fs.existsSync(`./content/email/${template}.html`)) {
       console.log(`✅ Found ${template}.html`);

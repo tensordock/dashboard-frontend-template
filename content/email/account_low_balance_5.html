@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+      }
+      .container {
+        width: 80%;
+        margin: auto;
+        background: white;
+        padding: 20px;
+      }
+      .header {
+        color: #444;
+      }
+      .content {
+        margin-top: 20px;
+      }
+      .footer {
+        margin-top: 40px;
+        font-size: 12px;
+        color: #666;
+      }
+      a {
+        color: #1a0dab;
+        text-decoration: none;
+      }
+      .button {
+        background-color: #39467f;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+      }
+      .discord-link {
+        background-color: #7289da;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="header">Critical Low Balance Alert</h1>
+      <p>Hi! This is a friendly reminder that your {{ org_title }} account balance is below <strong>$20</strong>.</p>
+      <p class="content">You can top up your account directly from the account dashboard.</p>
+      <br />
+      <a href="{{ app_base_url }}/account" class="button"
+        >Deposit Additional Funds</a
+      >
+      <br />
+      <p><strong>Warning:</strong> If your account balance reaches $0, your servers will be automatically deleted, and any associated data will be lost. We highly recommend setting up a <strong>custom action <!-- TODO: setup this page + link here --> <a target="_blank" href="{{ app_base_url }}/">here</a></strong> to automatically refill your credit whenever it runs below a safe buffer, so that you always have time to rectify payment issues.</p>
+      <p class="footer">
+        Beep boop, I'm a bot. But reply to me, and I'll connect you to a real
+        person :)<br />
+        <a href="http://{{ whitelabel_site }}">{{ whitelabel_site }}</a>
+      </p>
+    </div>
+  </body>
+</html>
