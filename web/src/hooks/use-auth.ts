@@ -30,12 +30,23 @@ export function useLogin() {
       formData.append('email', email);
       formData.append('password', password);
 
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/login`,
-        formData
-      );
-      const { token } = res.data as { token: string };
-      localStorage.setItem('whitelabelToken', token);
+      let res;
+      try {
+        res = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/login`,
+          formData
+        );
+      } catch (err) {
+        throw new Error('Something went wrong');
+      }
+
+      const { token, success } = res.data as {
+        token?: string;
+        success: boolean;
+      };
+      if (!success) throw new Error('Incorrect username or password');
+
+      localStorage.setItem('whitelabelToken', token!);
     });
 }
 

@@ -24,11 +24,11 @@ export default function DeployPage() {
     <>
       <Head title={`Deploy an H100`} />
       <DashBlock header="Deploy a cloud H100 SXM5 GPU">
-        <p className="mt-4 text-gray-500 font-400">
-          <div>
+        <div className="mt-4 text-gray-500 font-400">
+          <p>
             Premium OEM-manufactured servers. Tier 3 data centers. NVSwitch
             fabric passed through when you deploy 8 GPUs.
-          </div>
+          </p>
           <Link
             to={INFRASTRUCTURE_URL}
             target="_blank"
@@ -36,7 +36,7 @@ export default function DeployPage() {
           >
             Our Infrastructure
           </Link>
-        </p>
+        </div>
       </DashBlock>
       <form
         className="grid gap-4 lg:grid-cols-[1fr_20rem]"

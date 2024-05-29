@@ -1,8 +1,11 @@
 import { useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 
 import useAuth from '../../hooks/use-auth';
 import { ROUTES } from '../router';
+
+import BGImage from '../../assets/img/bg.jpg';
+import { DOCUMENTATION_URL } from '../../constants/external';
 
 export default function AuthLayout() {
   const { loginInfo } = useAuth();
@@ -14,9 +17,53 @@ export default function AuthLayout() {
   }, [loginInfo, navigate]);
 
   return (
-    <main className="mx-auto container">
-      <h1>Auth Layout</h1>
-      <Outlet />
-    </main>
+    <div className="grid mx-auto h-screen max-h-[120rem] max-w-[180rem] overflow-hidden bg-neutral-100 lg:grid-cols-2">
+      <div
+        className="hidden bg-cover bg-center lg:flex lg:items-start lg:justify-center"
+        style={{ backgroundImage: `url(${BGImage})` }}
+      >
+        <nav className="flex items-center">
+          <h1>
+            <Link
+              to={ROUTES.home}
+              className="inline-block select-none py-4 text-3xl text-white font-extrabold font-display"
+            >
+              H100cloud
+            </Link>
+          </h1>
+          <ul className="ml-8 hidden flex font-medium font-display">
+            {[
+              { text: 'Deploy', to: '/deploy' },
+              { text: 'Documentation', to: DOCUMENTATION_URL },
+            ].map(({ text, to }) => (
+              <li key={to}>
+                <Link
+                  to={to}
+                  className="inline-block px-2 py-1 text-sm text-white/60 font-display transition-colors hover:text-white/100"
+                >
+                  {text}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+      <div className="relative">
+        <div className="absolute inset-0 overflow-auto">
+          <main className="mx-auto min-h-screen flex flex-col justify-center px-4 py-6 container 2xl:max-w-2xl xl:max-w-xl lg:py-12">
+            <div className="overflow-hidden rounded-xl bg-white shadow-lg">
+              <Link to={ROUTES.home}>
+                <h2 className="select-none bg-blue-500 py-4 text-center text-3xl text-white font-bold font-display">
+                  H100cloud
+                </h2>
+              </Link>
+              <div className="px-8 py-4">
+                <Outlet />
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -39,8 +39,8 @@ export default function AccountPage() {
     <>
       <Head title="Account Settings" />
       <DashBlock header="Account Settings">
-        <p className="mt-4 text-gray-500 font-400">
-          <div className="md:inline">Manage your H100cloud account.</div>
+        <div className="mt-4 text-gray-500 font-400">
+          <p className="md:inline">Manage your H100cloud account.</p>
           {/* TODO: make this variable */}
           <Link
             to={`mailto:support@tensordock.com`}
@@ -48,7 +48,7 @@ export default function AccountPage() {
           >
             Need help? Email support
           </Link>
-        </p>
+        </div>
       </DashBlock>
       <DashBlock>
         <h3 className="text-xl font-display">Profile</h3>

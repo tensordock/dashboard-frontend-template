@@ -7,7 +7,7 @@ export type HeadData = {
 
 const defaultHeadData: HeadData = {
   title: `H100cloud.com`,
-  favicon: '/vite.svg',
+  favicon: '/favicon.svg',
 };
 
 const baseTitle = ' | H100cloud.com';

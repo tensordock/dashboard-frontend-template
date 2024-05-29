@@ -5,7 +5,8 @@ import axios, { AxiosRequestHeaders } from 'axios';
  */
 export default axios.create({
   transformRequest: (data: object, headers: AxiosRequestHeaders) => {
-    headers.Authorization = localStorage.getItem('whitelabelToken');
+    const token = localStorage.getItem('whitelabelToken');
+    if (token) headers.Authorization = token;
     if (data instanceof FormData) {
       data.append('subdomain', import.meta.env.VITE_WHITELABEL_SUBDOMAIN);
     }
