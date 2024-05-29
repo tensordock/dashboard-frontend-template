@@ -18,14 +18,14 @@ export default function ActionSection() {
         <div className="flex gap-1">
           <Link
             to="/deploy"
-            className="inline-block select-none rounded bg-white px-6 py-2.5 text-neutral-6 font-medium font-display"
+            className="inline-block select-none rounded bg-white px-6 py-2.5 text-neutral-6 font-medium font-display transition-colors hover:bg-neutral-6 hover:text-white"
           >
             Get Started
           </Link>
           <a
             target="_blank"
             href={CUSTOM_REQUESTS_URL}
-            className="inline-block select-none border-2 border-white rounded px-6 py-2.5 text-white font-medium font-display"
+            className="inline-block select-none border-2 border-white rounded px-6 py-2.5 text-white font-medium font-display transition-colors hover:bg-white hover:text-neutral-6"
           >
             Custom Requests
           </a>

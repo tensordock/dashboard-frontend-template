@@ -146,17 +146,17 @@ export default function SplashSection() {
               H100cloud gives you access to the industry's most powerful GPUs
               for your most demanding HPC workloads
             </p>
-            <div className="mt-10 flex flex-col items-center justify-center gap-x-1 gap-y-6 md:flex-row xl:justify-start">
+            <div className="mt-10 flex flex-col items-center justify-center gap-x-1 gap-y-6 md:flex-row md:items-stretch xl:justify-start">
               <Link
                 to="/deploy"
-                className="inline-block select-none rounded bg-white px-6 py-2.5 text-neutral-6 font-medium font-display"
+                className="inline-block select-none rounded bg-white px-6 py-2.5 text-neutral-6 font-medium font-display transition-colors hover:bg-neutral-6 hover:text-white"
               >
                 Deploy a GPU Server
               </Link>
               <a
                 target="_blank"
                 href="https://h100cloud.com"
-                className="inline-block select-none border-2 border-white rounded px-6 py-2.5 text-white font-medium font-display"
+                className="inline-block select-none border-2 border-white rounded px-6 py-2.5 text-white font-medium font-display transition-colors hover:bg-white hover:text-neutral-6"
               >
                 Custom Servers
               </a>
