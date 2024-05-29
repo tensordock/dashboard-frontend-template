@@ -475,7 +475,7 @@
   var selectedHostnode = null;
   var hostnodes = {};
 
-  const baseUrl = 'https://dashboard.tensordock.com';
+  const baseUrl = 'http://127.0.0.1:5000';
 
   // Define configurations here!
   var validConfigurations = [
@@ -855,7 +855,7 @@
         return;
       }
 
-    const apiRoute = "https://dashboard.tensordock.com/api/v0/client/deploy/single";
+    const apiRoute = "http://localhost:5000/api/v0/client/deploy/single";
 
     const body = {
       deployment_type: selectedLocation.type,

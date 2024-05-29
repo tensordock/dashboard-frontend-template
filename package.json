@@ -24,5 +24,8 @@
   },
   "devDependencies": {
     "prettier": "^3.2.5"
-  }
+  },
+  "workspaces": [
+    "web"
+  ]
 }
