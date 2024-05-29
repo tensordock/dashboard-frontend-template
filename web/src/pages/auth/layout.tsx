@@ -6,6 +6,7 @@ import { ROUTES } from '../router';
 
 import BGImage from '../../assets/img/bg.jpg';
 import { DOCUMENTATION_URL } from '../../constants/external';
+import { LOGO_TEXT, SHORT_COMPANY_NAME } from '../../constants/branding';
 
 export default function AuthLayout() {
   const { loginInfo } = useAuth();
@@ -28,7 +29,7 @@ export default function AuthLayout() {
               to={ROUTES.home}
               className="inline-block select-none py-4 text-3xl text-white font-extrabold font-display"
             >
-              H100cloud
+              {LOGO_TEXT}
             </Link>
           </h1>
           <ul className="ml-8 hidden flex font-medium font-display">
@@ -54,7 +55,7 @@ export default function AuthLayout() {
             <div className="overflow-hidden rounded-xl bg-white shadow-lg">
               <Link to={ROUTES.home}>
                 <h2 className="select-none bg-blue-500 py-4 text-center text-3xl text-white font-bold font-display">
-                  H100cloud
+                  {SHORT_COMPANY_NAME}
                 </h2>
               </Link>
               <div className="px-8 py-4">

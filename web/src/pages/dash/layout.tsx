@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 
+import { LOGO_TEXT } from '../../constants/branding';
 import useAuth, { useLogout } from '../../hooks/use-auth';
 import { ROUTES } from '../router';
 
@@ -25,7 +26,7 @@ export default function DashLayout() {
               className="select-none text-3xl text-blue-500 font-bold font-display"
               to={ROUTES.home}
             >
-              H100cloud
+              {LOGO_TEXT}
             </Link>
           </h1>
           <div className="mt-4 flex items-center gap-3">

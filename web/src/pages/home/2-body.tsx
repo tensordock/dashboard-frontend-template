@@ -1,3 +1,5 @@
+import { SHORT_COMPANY_NAME, VIDEO_URL } from '../../constants/branding';
+
 import CodeAPIImage from '../../assets/img/code_api.png';
 import DeploymentsImage from '../../assets/img/deployments.png';
 import MoneyImage from '../../assets/img/money.png';
@@ -16,14 +18,14 @@ export default function BodySection() {
             autoPlay
             loop
             className="my-8"
-            src="https://www.strategicinfra.com/assets/h100cloud.webm"
+            src={VIDEO_URL}
             // @ts-expect-error - video type
             type="video/mp4"
             width="1200"
           ></video>
           <p className="max-w-prose text-lg text-gray-500">
-            Through H100cloud, you get to access cloud resources that previously
-            only long-term contract customers could access —{' '}
+            Through {SHORT_COMPANY_NAME}, you get to access cloud resources that
+            previously only long-term contract customers could access —{' '}
             <b>available on-demand, pro-rated to the microsecond</b>.
           </p>
         </div>
@@ -91,7 +93,7 @@ export default function BodySection() {
           All the bells and whistles
         </h2>
         <p className="mt-4 text-center text-xl text-gray-500 font-300">
-          Available right out of the box with H100cloud.
+          Available right out of the box with {SHORT_COMPANY_NAME}.
         </p>
         <div className="grid mx-auto mt-20 gap-20 container lg:grid-cols-3">
           {[

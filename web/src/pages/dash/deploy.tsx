@@ -22,7 +22,7 @@ export default function DeployPage() {
 
   return (
     <>
-      <Head title={`Deploy an H100`} />
+      <Head title={`Deploy a cloud GPU`} />
       <DashBlock header="Deploy a cloud H100 SXM5 GPU">
         <div className="mt-4 text-gray-500 font-400">
           <p>

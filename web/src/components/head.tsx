@@ -1,16 +1,18 @@
 import { useEffect } from 'react';
 
+import { COMPANY_NAME } from '../constants/branding';
+
 export type HeadData = {
   title: string;
   favicon: string;
 };
 
 const defaultHeadData: HeadData = {
-  title: `H100cloud.com`,
+  title: COMPANY_NAME,
   favicon: '/favicon.svg',
 };
 
-const baseTitle = ' | H100cloud.com';
+const baseTitle = ` | ${COMPANY_NAME}`;
 
 /**
  * Updates the document title and favicon.

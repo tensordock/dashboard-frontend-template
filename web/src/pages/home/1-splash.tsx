@@ -3,7 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ReactTyped } from 'react-typed';
 
+import { LOGO_TEXT, SHORT_COMPANY_NAME } from '../../constants/branding';
 import {
+  CUSTOM_REQUESTS_URL,
   DOCUMENTATION_URL,
   INFRASTRUCTURE_URL,
 } from '../../constants/external';
@@ -67,7 +69,7 @@ export default function SplashSection() {
                 to={ROUTES.home}
                 className="select-none text-3xl text-white font-extrabold font-display"
               >
-                H100cloud
+                {LOGO_TEXT}
               </Link>
             </h1>
             <ul className="ml-8 hidden font-medium font-display lg:flex">
@@ -170,8 +172,8 @@ export default function SplashSection() {
               </div>
             </h2>
             <p className="mt-4 text-xl text-white/75 font-300">
-              H100cloud gives you access to the industry's most powerful GPUs
-              for your most demanding HPC workloads
+              {SHORT_COMPANY_NAME} gives you access to the industry's most
+              powerful GPUs for your most demanding HPC workloads
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-x-1 gap-y-6 md:flex-row md:items-stretch xl:justify-start">
               <Link
@@ -182,7 +184,7 @@ export default function SplashSection() {
               </Link>
               <a
                 target="_blank"
-                href="https://h100cloud.com"
+                href={CUSTOM_REQUESTS_URL}
                 className="inline-block select-none border-2 border-white rounded px-6 py-2.5 text-white font-medium font-display transition-colors hover:bg-white hover:text-neutral-6"
               >
                 Custom Servers

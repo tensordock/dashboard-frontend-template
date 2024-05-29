@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+import { COMPANY_NAME, SHORT_COMPANY_NAME } from '../../constants/branding';
 import {
   ABOUT_URL,
   COMPANY_HOME_URL,
@@ -13,11 +14,14 @@ export default function FooterSection() {
     <footer className="bg-[rgb(11,23,39)] pt-18">
       <div className="grid mx-auto mb-12 container md:grid-cols-[1fr_300px]">
         <div>
-          <h3 className="px-4 text-xl text-white font-display">H100Cloud</h3>
+          <h3 className="px-4 text-xl text-white font-display">
+            {COMPANY_NAME}
+          </h3>
           <p className="mt-4 max-w-prose px-4 text-white/40">
-            H100cloud provides startups, AI labs, and enterprises access to a
-            massive NVIDIA GPU cloud colocated in the heart of the United States
-            managed by Strategic Infrastructure Holdings, completely on-demand.
+            {SHORT_COMPANY_NAME} provides startups, AI labs, and enterprises
+            access to a massive NVIDIA GPU cloud colocated in the heart of the
+            United States managed by Strategic Infrastructure Holdings,
+            completely on-demand.
           </p>
         </div>
         <div className="px-4">
@@ -53,7 +57,7 @@ export default function FooterSection() {
             href={COMPANY_HOME_URL}
             target="_blank"
           >
-            H100cloud
+            {COMPANY_NAME}
           </a>
           <br />
           All rights reserved.

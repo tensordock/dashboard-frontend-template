@@ -4,6 +4,7 @@ import useSWR from 'swr';
 
 import { DashBlock } from '../../components/dash';
 import Head from '../../components/head';
+import { SHORT_COMPANY_NAME } from '../../constants/branding';
 import axios from '../../util/axios';
 
 export default function AccountPage() {
@@ -40,7 +41,7 @@ export default function AccountPage() {
       <Head title="Account Settings" />
       <DashBlock header="Account Settings">
         <div className="mt-4 text-gray-500 font-400">
-          <p className="md:inline">Manage your H100cloud account.</p>
+          <p className="md:inline">Manage your {SHORT_COMPANY_NAME} account.</p>
           {/* TODO: make this variable */}
           <Link
             to={`mailto:support@tensordock.com`}
