@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 // import { z } from 'zod';
 
 import { DashBlock } from '../../components/dash';
+import Head from '../../components/head';
 import { INFRASTRUCTURE_URL } from '../../constants/external';
 // import { Configuration, validConfigurations } from '../../constants/datacenter';
 
@@ -21,6 +22,7 @@ export default function DeployPage() {
 
   return (
     <>
+      <Head title={`Deploy an H100`} />
       <DashBlock header="Deploy a cloud H100 SXM5 GPU">
         <p className="mt-4 text-gray-500 font-400">
           <div>

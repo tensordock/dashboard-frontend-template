@@ -2,6 +2,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
+import Head from '../../components/head';
 import { useLogin } from '../../hooks/use-auth';
 import { ROUTES } from '../router';
 
@@ -28,6 +29,7 @@ export default function LoginPage() {
 
   return (
     <>
+      <Head title="Log In" />
       <h1>Login</h1>
       <form>
         <input {...register('email')} />

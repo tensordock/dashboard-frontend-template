@@ -10,12 +10,14 @@ const defaultHeadData: HeadData = {
   favicon: '/vite.svg',
 };
 
+const baseTitle = ' | H100cloud.com';
+
 /**
  * Updates the document title and favicon.
  */
 export default function Head({ title, favicon }: Partial<HeadData>) {
   useEffect(() => {
-    document.title = title || defaultHeadData.title;
+    document.title = `${title || defaultHeadData.title}${baseTitle}`;
     const link = document.querySelector("link[rel='icon']") as HTMLLinkElement;
     if (link) {
       link.href = favicon || defaultHeadData.favicon;

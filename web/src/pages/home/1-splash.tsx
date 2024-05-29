@@ -58,12 +58,17 @@ export default function SplashSection() {
         />
         <div className="absolute inset-0 z-0 bg-black/25" />
         <nav
-          className={`fixed top-0 z-1 w-full transition-all duration-300 ${scrolledBelowSplash ? 'bg-[#061A27] shadow-lg backdrop-blur' : 'bg-[#061A27]/0'} ${menuOpen && !scrolledBelowSplash ? 'lg:bg-[#061A27]/0 max-lg:bg-[#061A27]' : ''}`}
+          className={`fixed top-0 z-1 w-full transition-all duration-300 ${scrolledBelowSplash ? 'bg-[#061A27] shadow-lg' : 'bg-[#061A27]/0'} ${menuOpen && !scrolledBelowSplash ? 'lg:bg-[#061A27]/0 max-lg:bg-[#061A27]' : ''}`}
           ref={navbarRef}
         >
           <div className="mx-auto flex items-center px-4 py-3 container">
-            <h1 className="select-none text-3xl text-white font-extrabold font-display">
-              H100cloud
+            <h1>
+              <Link
+                to={ROUTES.home}
+                className="select-none text-3xl text-white font-extrabold font-display"
+              >
+                H100cloud
+              </Link>
             </h1>
             <ul className="ml-8 hidden font-medium font-display lg:flex">
               {/* Desktop navbar */}
@@ -123,8 +128,12 @@ export default function SplashSection() {
                 <ul className="flex flex-col items-end pb-4 text-lg text-white/80 font-display">
                   {[
                     ...navLinks,
-                    { text: 'Login', to: ROUTES.login },
-                    { text: 'Register', to: ROUTES.signup },
+                    ...(loginInfo
+                      ? [{ text: 'Dashboard', to: ROUTES.account }]
+                      : [
+                          { text: 'Login', to: ROUTES.login },
+                          { text: 'Register', to: ROUTES.signup },
+                        ]),
                   ].map(({ text, to }) => (
                     <li key={to}>
                       <Link to={to} className="inline-block py-2">
@@ -140,7 +149,7 @@ export default function SplashSection() {
         {/* Splash */}
         <div className="relative grid mx-auto items-center gap-x-16 gap-y-12 overflow-hidden pt-28 container xl:grid-cols-2 xl:h-screen xl:max-h-2xl xl:min-h-140">
           <div className="flex flex-col px-2 text-center xl:text-left">
-            <h2 className="select-none text-3xl text-white font-light font-display lg:text-4xl xl:text-5xl">
+            <h2 className="select-none text-3xl text-white font-light font-display drop-shadow-md lg:text-4xl xl:text-5xl">
               <div>
                 The H100 cloud &mdash;{' '}
                 <strong className="mt-2 inline-block font-bold">

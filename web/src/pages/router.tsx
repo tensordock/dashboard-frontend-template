@@ -1,11 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom';
-// import HomePage from './home';
-import HomePageV2 from './home';
+
+import HomePage from './home';
 import DashLayout from './dash/layout';
 import AuthLayout from './auth/layout';
 import LoginPage from './auth/login';
 import DeployPage from './dash/deploy';
 import AccountPage from './dash/account';
+import ListPage from './dash/list';
+import SignupPage from './auth/signup';
 
 export const ROUTES = {
   home: '/',
@@ -18,20 +20,20 @@ export const ROUTES = {
 
 const router = createBrowserRouter([
   // { path: '/', element: <HomePage /> },
-  { path: '/', element: <HomePageV2 /> },
+  { path: '/', element: <HomePage /> },
   {
     element: <DashLayout />,
     children: [
       { path: 'deploy', element: <DeployPage /> },
       { path: 'account', element: <AccountPage /> },
-      { path: 'list', element: <div>List</div> },
+      { path: 'list', element: <ListPage /> },
     ],
   },
   {
     element: <AuthLayout />,
     children: [
       { path: 'login', element: <LoginPage /> },
-      { path: 'signup', element: <div>Signup</div> },
+      { path: 'signup', element: <SignupPage /> },
     ],
   },
 ]);

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
 import { DashBlock } from '../../components/dash';
+import Head from '../../components/head';
 import axios from '../../util/axios';
 
 export default function AccountPage() {
@@ -36,6 +37,7 @@ export default function AccountPage() {
 
   return (
     <>
+      <Head title="Account Settings" />
       <DashBlock header="Account Settings">
         <p className="mt-4 text-gray-500 font-400">
           <div className="md:inline">Manage your H100cloud account.</div>

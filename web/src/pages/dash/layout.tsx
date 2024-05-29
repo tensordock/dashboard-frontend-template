@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 
 import useAuth, { useLogout } from '../../hooks/use-auth';
 import { ROUTES } from '../router';
@@ -20,10 +20,15 @@ export default function DashLayout() {
     <div className="min-h-screen bg-blue-50">
       <main className="grid mx-auto px-4 container xl:grid-cols-[20rem_1fr]">
         <nav className="sticky top-0 self-start pb-4 pt-6">
-          <h1 className="relative z-20 select-none text-3xl text-blue-500 font-bold font-display">
-            H100cloud
+          <h1>
+            <Link
+              className="select-none text-3xl text-blue-500 font-bold font-display"
+              to={ROUTES.home}
+            >
+              H100cloud
+            </Link>
           </h1>
-          <div className="mt-4 flex items-center gap-3 -z-10">
+          <div className="mt-4 flex items-center gap-3">
             <div className="h-12 w-12 flex items-center justify-center rounded-full bg-white shadow-sm">
               <div className="i-tabler-user" />
             </div>
@@ -44,7 +49,7 @@ export default function DashLayout() {
               </button>
             </div>
           </div>
-          <ul className="mt-4 flex flex-col select-none -z-10">
+          <ul className="mt-4 flex flex-col select-none">
             {[
               { icon: 'i-tabler-arrow-back-up', text: 'Home', to: ROUTES.home },
               {
@@ -73,7 +78,7 @@ export default function DashLayout() {
             ))}
           </ul>
         </nav>
-        <div className="relative z-0 mb-24 mt-6 flex flex-col gap-y-4 rounded-xl bg-blue-50">
+        <div className="z-0 mb-24 mt-6 flex flex-col gap-y-4 rounded-xl bg-blue-50">
           <Outlet />
         </div>
       </main>
