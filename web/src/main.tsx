@@ -11,6 +11,6 @@ import 'virtual:uno.css';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <RouterProvider router={router} />
-    <Toaster />
+    <Toaster position="bottom-right" />
   </React.StrictMode>
 );

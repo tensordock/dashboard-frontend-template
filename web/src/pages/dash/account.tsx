@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { DashBlock } from '../../components/dash';
 import useSWR from 'swr';
 import axios from '../../util/axios';
+import toast from 'react-hot-toast';
 
 export default function AccountPage() {
   const { data } = useSWR(
@@ -66,9 +67,10 @@ export default function AccountPage() {
                 {value !== undefined && (
                   <button
                     className="i-tabler-copy ml-auto text-sm text-neutral-400 transition-colors hover:text-neutral-600"
-                    onClick={() =>
-                      navigator.clipboard.writeText(value.toString())
-                    }
+                    onClick={() => {
+                      navigator.clipboard.writeText(value.toString());
+                      toast.success('Copied to clipboard!');
+                    }}
                   />
                 )}
               </div>

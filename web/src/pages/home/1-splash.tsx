@@ -11,6 +11,7 @@ import {
   DOCUMENTATION_URL,
   INFRASTRUCTURE_URL,
 } from '../../constants/external';
+import useAuth from '../../hooks/use-auth';
 
 const navLinks = [
   { text: 'Deploy', to: '/deploy' },
@@ -46,6 +47,8 @@ export default function SplashSection() {
     };
   });
 
+  const { loginInfo } = useAuth();
+
   return (
     <>
       <section className="relative">
@@ -76,18 +79,30 @@ export default function SplashSection() {
               ))}
             </ul>
             <div className="ml-auto hidden font-medium font-display lg:flex">
-              <Link
-                to={ROUTES.login}
-                className="inline-block px-2 py-1 text-sm text-white/60 font-display transition-colors hover:text-white/100"
-              >
-                Login
-              </Link>
-              <Link
-                to={ROUTES.signup}
-                className="inline-block px-2 py-1 text-sm text-white/60 font-display transition-colors hover:text-white/100"
-              >
-                Register
-              </Link>
+              {loginInfo ? (
+                <Link
+                  to={ROUTES.account}
+                  className="inline-flex items-center gap-2 px-2 py-1 text-sm text-white/60 font-display transition-colors hover:text-white/100"
+                >
+                  <div className="i-tabler-user" />
+                  Dashboard
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    to={ROUTES.login}
+                    className="inline-block px-2 py-1 text-sm text-white/60 font-display transition-colors hover:text-white/100"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to={ROUTES.signup}
+                    className="inline-block px-2 py-1 text-sm text-white/60 font-display transition-colors hover:text-white/100"
+                  >
+                    Register
+                  </Link>
+                </>
+              )}
             </div>
             <button
               className="ml-auto inline-block text-4xl text-white/75 lg:hidden"
