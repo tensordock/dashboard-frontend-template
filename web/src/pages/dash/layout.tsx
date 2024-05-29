@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 
 import useAuth, { useLogout } from '../../hooks/use-auth';
 import { ROUTES } from '../router';
-import toast from 'react-hot-toast';
 
 export default function DashLayout() {
   const { loginInfo, isLoading } = useAuth();

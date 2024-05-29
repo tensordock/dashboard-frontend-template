@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom';
-import { DashBlock } from '../../components/dash';
-import useSWR from 'swr';
-import axios from '../../util/axios';
 import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
+import useSWR from 'swr';
+
+import { DashBlock } from '../../components/dash';
+import axios from '../../util/axios';
 
 export default function AccountPage() {
   const { data } = useSWR(

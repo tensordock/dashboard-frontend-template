@@ -3,15 +3,15 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ReactTyped } from 'react-typed';
 
-import { ROUTES } from '../router';
-
-import BGImage from '../../assets/img/bg.jpg';
-import DeployImage from '../../assets/img/deploy.png';
 import {
   DOCUMENTATION_URL,
   INFRASTRUCTURE_URL,
 } from '../../constants/external';
 import useAuth from '../../hooks/use-auth';
+import { ROUTES } from '../router';
+
+import BGImage from '../../assets/img/bg.jpg';
+import DeployImage from '../../assets/img/deploy.png';
 
 const navLinks = [
   { text: 'Deploy', to: '/deploy' },

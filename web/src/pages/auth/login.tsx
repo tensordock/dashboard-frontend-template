@@ -1,9 +1,9 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 import { useLogin } from '../../hooks/use-auth';
 import { ROUTES } from '../router';
-import { useNavigate } from 'react-router-dom';
 
 type FormData = {
   email: string;
