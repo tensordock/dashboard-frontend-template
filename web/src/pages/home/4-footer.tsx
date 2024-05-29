@@ -5,7 +5,7 @@ import {
   COMPANY_HOME_URL,
   CONTACT_EMAIL,
   DOCUMENTATION_URL,
-} from '../../constants/routes';
+} from '../../constants/external';
 import { ROUTES } from '../router';
 
 export default function FooterSection() {

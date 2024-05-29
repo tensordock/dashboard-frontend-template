@@ -7,7 +7,10 @@ import { ROUTES } from '../router';
 
 import BGImage from '../../assets/img/bg.jpg';
 import DeployImage from '../../assets/img/deploy.png';
-import { DOCUMENTATION_URL, INFRASTRUCTURE_URL } from '../../constants/routes';
+import {
+  DOCUMENTATION_URL,
+  INFRASTRUCTURE_URL,
+} from '../../constants/external';
 
 const navLinks = [
   { text: 'Deploy', to: '/deploy' },

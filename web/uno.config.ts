@@ -12,5 +12,4 @@ export default defineConfig({
       },
     }),
   ],
-  blocklist: ['text-600', 'text-900'],
 });

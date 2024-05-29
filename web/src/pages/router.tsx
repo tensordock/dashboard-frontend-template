@@ -3,6 +3,9 @@ import { createBrowserRouter } from 'react-router-dom';
 import HomePageV2 from './home';
 import DashLayout from './dash/layout';
 import AuthLayout from './auth/layout';
+import LoginPage from './auth/login';
+import DeployPage from './dash/deploy';
+import AccountPage from './dash/account';
 
 export const ROUTES = {
   home: '/',
@@ -19,15 +22,15 @@ const router = createBrowserRouter([
   {
     element: <DashLayout />,
     children: [
-      { path: 'deploy', element: <div>Deploy</div> },
-      { path: 'account', element: <div>Deploy</div> },
+      { path: 'deploy', element: <DeployPage /> },
+      { path: 'account', element: <AccountPage /> },
       { path: 'list', element: <div>List</div> },
     ],
   },
   {
     element: <AuthLayout />,
     children: [
-      { path: 'login', element: <div>Login</div> },
+      { path: 'login', element: <LoginPage /> },
       { path: 'signup', element: <div>Signup</div> },
     ],
   },

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import BGImage from '../../assets/img/bg.jpg';
-import { CUSTOM_REQUESTS_URL } from '../../constants/routes';
+import { CUSTOM_REQUESTS_URL } from '../../constants/external';
 
 export default function ActionSection() {
   return (
