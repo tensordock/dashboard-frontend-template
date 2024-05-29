@@ -3,7 +3,11 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ReactTyped } from 'react-typed';
 
-import { LOGO_TEXT, SHORT_COMPANY_NAME } from '../../constants/branding';
+import {
+  BG_IMAGE_URL,
+  LOGO_TEXT,
+  SHORT_COMPANY_NAME,
+} from '../../constants/branding';
 import {
   CUSTOM_REQUESTS_URL,
   DOCUMENTATION_URL,
@@ -12,7 +16,6 @@ import {
 import useAuth from '../../hooks/use-auth';
 import { ROUTES } from '../router';
 
-import BGImage from '../../assets/img/bg.jpg';
 import DeployImage from '../../assets/img/deploy.png';
 
 const navLinks = [
@@ -56,11 +59,11 @@ export default function SplashSection() {
       <section className="relative">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${BGImage})` }}
+          style={{ backgroundImage: `url(${BG_IMAGE_URL})` }}
         />
         <div className="absolute inset-0 z-0 bg-black/25" />
         <nav
-          className={`fixed top-0 z-1 w-full transition-all duration-300 ${scrolledBelowSplash ? 'bg-[#061A27] shadow-lg' : 'bg-[#061A27]/0'} ${menuOpen && !scrolledBelowSplash ? 'lg:bg-[#061A27]/0 max-lg:bg-[#061A27]' : ''}`}
+          className={`fixed top-0 z-1 w-full transition-all duration-300 ${scrolledBelowSplash ? 'bg-primary-950 shadow-lg' : 'bg-primary-950/0'} ${menuOpen && !scrolledBelowSplash ? 'lg:bg-primary-950/0 max-lg:bg-primary-950' : ''}`}
           ref={navbarRef}
         >
           <div className="mx-auto flex items-center px-4 py-3 container">
@@ -178,14 +181,14 @@ export default function SplashSection() {
             <div className="mt-10 flex flex-col items-center justify-center gap-x-1 gap-y-6 md:flex-row md:items-stretch xl:justify-start">
               <Link
                 to="/deploy"
-                className="inline-block select-none rounded bg-white px-6 py-2.5 text-neutral-6 font-medium font-display transition-colors hover:bg-neutral-6 hover:text-white"
+                className="inline-block select-none rounded bg-white px-6 py-2.5 text-gray-6 font-medium font-display transition-colors hover:bg-gray-6 hover:text-white"
               >
                 Deploy a GPU Server
               </Link>
               <a
                 target="_blank"
                 href={CUSTOM_REQUESTS_URL}
-                className="inline-block select-none border-2 border-white rounded px-6 py-2.5 text-white font-medium font-display transition-colors hover:bg-white hover:text-neutral-6"
+                className="inline-block select-none border-2 border-white rounded px-6 py-2.5 text-white font-medium font-display transition-colors hover:bg-white hover:text-gray-6"
               >
                 Custom Servers
               </a>

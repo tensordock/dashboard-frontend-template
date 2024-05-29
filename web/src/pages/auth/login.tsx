@@ -50,7 +50,7 @@ export default function LoginPage() {
           <Link
             to={ROUTES.signup}
             replace
-            className="text-blue-500 font-medium"
+            className="text-primary-500 font-medium"
           >
             Sign Up
           </Link>
@@ -72,7 +72,7 @@ export default function LoginPage() {
         />
         <button
           onClick={handleSubmit(onSubmit)}
-          className="mt-6 inline-flex justify-center rounded bg-blue-500 py-3 text-white font-semibold font-display transition-colors disabled:cursor-default disabled:bg-blue-300 hover:bg-blue-600"
+          className="mt-6 inline-flex justify-center rounded bg-primary-500 py-3 text-white font-semibold font-display transition-colors disabled:cursor-default disabled:bg-primary-300 hover:bg-primary-600"
           disabled={isSubmitting}
         >
           Submit

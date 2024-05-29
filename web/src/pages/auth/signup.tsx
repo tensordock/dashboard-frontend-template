@@ -62,7 +62,11 @@ export default function SignupPage() {
         <h1 className="text-2xl font-medium font-display">Sign Up</h1>
         <div className="ml-auto text-sm text-gray-500">
           Already joined?{' '}
-          <Link to={ROUTES.login} replace className="text-blue-500 font-medium">
+          <Link
+            to={ROUTES.login}
+            replace
+            className="text-primary-500 font-medium"
+          >
             Log In
           </Link>
         </div>
@@ -96,7 +100,7 @@ export default function SignupPage() {
         />
         <button
           onClick={handleSubmit(onSubmit)}
-          className="mt-6 inline-flex justify-center rounded bg-blue-500 py-3 text-white font-semibold font-display transition-colors disabled:cursor-default disabled:bg-blue-300 hover:bg-blue-600"
+          className="mt-6 inline-flex justify-center rounded bg-primary-500 py-3 text-white font-semibold font-display transition-colors disabled:cursor-default disabled:bg-primary-300 hover:bg-primary-600"
           disabled={isSubmitting}
         >
           Submit

@@ -45,7 +45,7 @@ export default function AccountPage() {
           {/* TODO: make this variable */}
           <Link
             to={`mailto:support@tensordock.com`}
-            className="mt-2 inline-block select-none rounded px-3 py-1 text-blue-500 font-300 font-display ring-1 ring-gray-300 md:ml-4 md:mt-0"
+            className="mt-2 inline-block select-none rounded px-3 py-1 text-primary-500 font-300 font-display ring-1 ring-gray-300 md:ml-4 md:mt-0"
           >
             Need help? Email support
           </Link>
@@ -63,14 +63,14 @@ export default function AccountPage() {
             { description: 'Account Balance', value: formattedBalance },
           ].map(({ description, value }) => (
             <li key={description}>
-              <label className="text-sm text-neutral-500 font-400 tracking-wide font-display">
+              <label className="text-sm text-gray-500 font-400 tracking-wide font-display">
                 {description}
               </label>
-              <div className="mt-1 flex items-center rounded bg-neutral-50/50 px-4 py-2 shadow-inner ring-1 ring-neutral-200">
+              <div className="mt-1 flex items-center rounded bg-gray-50/50 px-4 py-2 shadow-inner ring-1 ring-gray-200">
                 {value ?? 'Loading...'}
                 {value !== undefined && (
                   <button
-                    className="i-tabler-copy ml-auto text-sm text-neutral-400 transition-colors hover:text-neutral-600"
+                    className="i-tabler-copy ml-auto text-sm text-gray-400 transition-colors hover:text-gray-600"
                     onClick={() => {
                       navigator.clipboard.writeText(value.toString());
                       toast.success('Copied to clipboard!');
@@ -81,7 +81,7 @@ export default function AccountPage() {
             </li>
           ))}
         </ul>
-        <button className="ml-auto mt-6 rounded px-5 py-2 text-blue-500 font-display shadow-md ring-1 ring-neutral-200">
+        <button className="ml-auto mt-6 rounded px-5 py-2 text-primary-500 font-display shadow-md ring-1 ring-gray-200">
           Deposit Funds
         </button>
       </DashBlock>

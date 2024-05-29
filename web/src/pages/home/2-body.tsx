@@ -7,7 +7,7 @@ import MoneyImage from '../../assets/img/money.png';
 export default function BodySection() {
   return (
     <>
-      <section className="bg-blue-50 px-4 pt-18">
+      <section className="bg-primary-50 px-4 pt-18">
         <div className="mx-auto w-full md:w-160 sm:w-120">
           <h2 className="text-center text-2xl text-gray-7 font-medium font-display lg:text-4xl md:text-3xl">
             Highly performant hardware,{' '}
@@ -30,7 +30,7 @@ export default function BodySection() {
           </p>
         </div>
       </section>
-      <section className="bg-blue-50 py-18">
+      <section className="bg-primary-50 py-18">
         <ul className="mx-auto max-w-lg w-full flex flex-col gap-18 px-4 lg:max-w-4xl">
           {[
             {
@@ -77,7 +77,7 @@ export default function BodySection() {
                 className={`w-full px-12 grayscale ${idx % 2 === 0 ? '' : 'lg:order-last'}`}
               />
               <div className="mt-4 text-gray-7">
-                <div className="flex items-center gap-2 text-xl text-blue-500 font-medium font-display">
+                <div className="flex items-center gap-2 text-xl text-primary-500 font-medium font-display">
                   <div className={`${icon} text-2xl`} />
                   {tagline}
                 </div>
@@ -88,7 +88,7 @@ export default function BodySection() {
           ))}
         </ul>
       </section>
-      <section className="bg-blue-50/25 px-4 py-16 text-gray-7">
+      <section className="bg-primary-50/25 px-4 py-16 text-gray-7">
         <h2 className="text-center text-2xl font-400 font-display">
           All the bells and whistles
         </h2>

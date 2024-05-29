@@ -1,14 +1,13 @@
 import { Link } from 'react-router-dom';
 
+import { BG_IMAGE_URL } from '../../constants/branding';
 import { CUSTOM_REQUESTS_URL } from '../../constants/external';
-
-import BGImage from '../../assets/img/bg.jpg';
 
 export default function ActionSection() {
   return (
     <section
       className="relative bg-cover"
-      style={{ backgroundImage: `url(${BGImage})` }}
+      style={{ backgroundImage: `url(${BG_IMAGE_URL})` }}
     >
       <div className="absolute inset-0 bg-black/25" />
       <div className="relative mx-auto flex flex-col items-center gap-8 py-18 container lg:py-32 md:py-24">
@@ -19,14 +18,14 @@ export default function ActionSection() {
         <div className="flex gap-1">
           <Link
             to="/deploy"
-            className="inline-block select-none rounded bg-white px-6 py-2.5 text-neutral-6 font-medium font-display transition-colors hover:bg-neutral-6 hover:text-white"
+            className="inline-block select-none rounded bg-white px-6 py-2.5 text-gray-6 font-medium font-display transition-colors hover:bg-gray-6 hover:text-white"
           >
             Get Started
           </Link>
           <a
             target="_blank"
             href={CUSTOM_REQUESTS_URL}
-            className="inline-block select-none border-2 border-white rounded px-6 py-2.5 text-white font-medium font-display transition-colors hover:bg-white hover:text-neutral-6"
+            className="inline-block select-none border-2 border-white rounded px-6 py-2.5 text-white font-medium font-display transition-colors hover:bg-white hover:text-gray-6"
           >
             Custom Requests
           </a>

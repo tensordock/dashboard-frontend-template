@@ -32,7 +32,7 @@ export default function DeployPage() {
           <Link
             to={INFRASTRUCTURE_URL}
             target="_blank"
-            className="mt-2 inline-block select-none rounded px-3 py-1 text-blue-500 font-300 font-display ring-1 ring-gray-300"
+            className="mt-2 inline-block select-none rounded px-3 py-1 text-primary-500 font-300 font-display ring-1 ring-gray-300"
           >
             Our Infrastructure
           </Link>
@@ -55,10 +55,10 @@ export default function DeployPage() {
         <div className="lg:sticky lg:top-4 lg:self-start">
           <DashBlock>
             <h3 className="text-xl font-display">Your Server</h3>
-            <p className="mt-4 text-neutral-500">
+            <p className="mt-4 text-gray-500">
               Pricing details will appear once you select a configuration.
             </p>
-            <p className="mt-2 text-neutral-500">
+            <p className="mt-2 text-gray-500">
               Your actual charge will be pro-rated to the millisecond your
               server is deployed.
             </p>

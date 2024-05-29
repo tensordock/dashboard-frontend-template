@@ -4,9 +4,12 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/use-auth';
 import { ROUTES } from '../router';
 
-import BGImage from '../../assets/img/bg.jpg';
 import { DOCUMENTATION_URL } from '../../constants/external';
-import { LOGO_TEXT, SHORT_COMPANY_NAME } from '../../constants/branding';
+import {
+  BG_IMAGE_URL,
+  LOGO_TEXT,
+  SHORT_COMPANY_NAME,
+} from '../../constants/branding';
 
 export default function AuthLayout() {
   const { loginInfo } = useAuth();
@@ -18,10 +21,10 @@ export default function AuthLayout() {
   }, [loginInfo, navigate]);
 
   return (
-    <div className="grid mx-auto h-screen max-h-[120rem] max-w-[180rem] overflow-hidden bg-neutral-100 lg:grid-cols-2">
+    <div className="grid mx-auto h-screen max-h-[120rem] max-w-[180rem] overflow-hidden bg-gray-100 lg:grid-cols-2">
       <div
         className="hidden bg-cover bg-center lg:flex lg:items-start lg:justify-center"
-        style={{ backgroundImage: `url(${BGImage})` }}
+        style={{ backgroundImage: `url(${BG_IMAGE_URL})` }}
       >
         <nav className="flex items-center">
           <h1>
@@ -54,7 +57,7 @@ export default function AuthLayout() {
           <main className="mx-auto min-h-screen flex flex-col justify-center px-4 py-6 container 2xl:max-w-2xl xl:max-w-xl lg:py-12">
             <div className="overflow-hidden rounded-xl bg-white shadow-lg">
               <Link to={ROUTES.home}>
-                <h2 className="select-none bg-blue-500 py-4 text-center text-3xl text-white font-bold font-display">
+                <h2 className="select-none bg-primary-500 py-4 text-center text-3xl text-white font-bold font-display">
                   {SHORT_COMPANY_NAME}
                 </h2>
               </Link>

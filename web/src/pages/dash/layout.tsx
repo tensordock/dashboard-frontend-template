@@ -18,12 +18,12 @@ export default function DashLayout() {
   const logout = useLogout();
 
   return (
-    <div className="min-h-screen bg-blue-50">
+    <div className="min-h-screen bg-primary-50">
       <main className="grid mx-auto px-4 container xl:grid-cols-[20rem_1fr]">
         <nav className="sticky top-0 self-start pb-4 pt-6">
           <h1>
             <Link
-              className="select-none text-3xl text-blue-500 font-bold font-display"
+              className="select-none text-3xl text-primary-500 font-bold font-display"
               to={ROUTES.home}
             >
               {LOGO_TEXT}
@@ -34,7 +34,7 @@ export default function DashLayout() {
               <div className="i-tabler-user" />
             </div>
             <div className="flex flex-col items-start">
-              <p className="text-sm text-neutral-700">
+              <p className="text-sm text-gray-700">
                 {loginInfo ? loginInfo.email : '...'}
               </p>
               <button
@@ -44,7 +44,7 @@ export default function DashLayout() {
                   toast.success('Logged out!');
                   navigate(ROUTES.home, { replace: true });
                 }}
-                className="text-xs text-neutral-500"
+                className="text-xs text-gray-500"
               >
                 Logout
               </button>
@@ -79,7 +79,7 @@ export default function DashLayout() {
             ))}
           </ul>
         </nav>
-        <div className="z-0 mb-24 mt-6 flex flex-col gap-y-4 rounded-xl bg-blue-50">
+        <div className="z-0 mb-24 mt-6 flex flex-col gap-y-4 rounded-xl bg-primary-50">
           <Outlet />
         </div>
       </main>
