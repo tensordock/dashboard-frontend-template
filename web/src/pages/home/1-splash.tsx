@@ -16,7 +16,7 @@ import {
 import useAuth from '../../hooks/use-auth';
 import { ROUTES } from '../router';
 
-import DeployImage from '../../assets/img/deploy.png';
+import DeployImage from '../../assets/img/deploy.jpg';
 
 const navLinks = [
   { text: 'Deploy', to: '/deploy' },
@@ -59,8 +59,12 @@ export default function SplashSection() {
       <section className="relative">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${BG_IMAGE_URL})` }}
+          style={{
+            backgroundImage: `url(${BG_IMAGE_URL})`,
+          }}
         />
+        {/* helps progressively load image */}
+        <img src={BG_IMAGE_URL} className="hidden" />
         <div className="absolute inset-0 z-0 bg-black/25" />
         <nav
           className={`fixed top-0 z-1 w-full transition-all duration-300 ${scrolledBelowSplash ? 'bg-primary-950 shadow-lg' : 'bg-primary-950/0'} ${menuOpen && !scrolledBelowSplash ? 'lg:bg-primary-950/0 max-lg:bg-primary-950' : ''}`}

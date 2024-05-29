@@ -1,4 +1,4 @@
-import { defineConfig, presetWebFonts, presetIcons, presetUno } from 'unocss';
+import { defineConfig, presetIcons, presetUno, presetWebFonts } from 'unocss';
 
 export default defineConfig({
   presets: [
