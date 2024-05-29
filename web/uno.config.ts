@@ -7,8 +7,23 @@ export default defineConfig({
     presetWebFonts({
       provider: 'google',
       fonts: {
-        sans: 'Open Sans:300,400,500,600,700',
-        display: 'Poppins:300,400,500,600,700,800,900',
+        sans: [
+          { name: 'Open Sans', weights: ['300', '400', '500', '600', '700'] },
+          {
+            name: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+            provider: 'none',
+          },
+        ],
+        display: [
+          {
+            name: 'Poppins',
+            weights: ['300', '400', '500', '600', '700', '800', '900'],
+          },
+          {
+            name: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+            provider: 'none',
+          },
+        ],
       },
     }),
   ],
