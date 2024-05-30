@@ -14,7 +14,7 @@ import {
   INFRASTRUCTURE_URL,
 } from '../../constants/external';
 import useAuth from '../../hooks/use-auth';
-import { ROUTES } from '../router';
+import { ROUTES } from '../../constants/pages';
 
 import DeployImage from '../../assets/img/deploy.jpg';
 

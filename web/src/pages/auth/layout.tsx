@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 
 import useAuth from '../../hooks/use-auth';
-import { ROUTES } from '../router';
+import { ROUTES } from '../../constants/pages';
 
 import { DOCUMENTATION_URL } from '../../constants/external';
 import {

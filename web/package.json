@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.4.2",
+    "@stripe/react-stripe-js": "^2.7.1",
+    "@stripe/stripe-js": "^3.4.1",
     "@uidotdev/usehooks": "^2.4.1",
     "@unocss/reset": "^0.60.3",
     "axios": "^1.7.2",

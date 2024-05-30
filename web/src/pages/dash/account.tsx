@@ -6,6 +6,9 @@ import { DashBlock } from '../../components/dash';
 import Head from '../../components/head';
 import { SHORT_COMPANY_NAME } from '../../constants/branding';
 import axios from '../../util/axios';
+import { useState } from 'react';
+import DepositFundsForm from '../../components/forms/deposit-funds';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function AccountPage() {
   const { data } = useSWR(
@@ -35,6 +38,8 @@ export default function AccountPage() {
 
   const formattedBalance =
     balance !== undefined ? `$${balance.toFixed(2)}` : undefined;
+
+  const [mode, setMode] = useState<'none' | 'deposit' | 'customaction'>('none');
 
   return (
     <>
@@ -81,10 +86,53 @@ export default function AccountPage() {
             </li>
           ))}
         </ul>
-        <button className="ml-auto mt-6 rounded px-5 py-2 text-primary-500 font-display shadow-md ring-1 ring-gray-200">
-          Deposit Funds
-        </button>
+        <div className="mt-6 flex flex-wrap justify-end gap-4">
+          <button
+            className="rounded px-5 py-2 text-primary-500 font-display shadow-md ring-1 ring-gray-200"
+            onClick={() => setMode('deposit')}
+          >
+            Deposit Funds
+          </button>
+          <button
+            className="rounded px-5 py-2 text-primary-500 font-display shadow-md ring-1 ring-gray-200"
+            onClick={() => setMode('customaction')}
+          >
+            Add Custom Action
+          </button>
+        </div>
       </DashBlock>
+      <AnimatePresence mode="wait">
+        {mode === 'deposit' && (
+          <motion.div
+            key="deposit"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ ease: 'easeInOut' }}
+          >
+            <DashBlock header="Deposit Funds">
+              <div className="mt-4">
+                <DepositFundsForm />
+              </div>
+            </DashBlock>
+          </motion.div>
+        )}
+        {mode === 'customaction' && (
+          <motion.div
+            key="customaction"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ ease: 'easeInOut' }}
+          >
+            <DashBlock header="Add Custom Action">
+              <div className="mt-4">
+                <DepositFundsForm />
+              </div>
+            </DashBlock>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

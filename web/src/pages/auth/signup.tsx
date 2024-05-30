@@ -4,10 +4,10 @@ import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
-import TextInput from '../../components/form/text-input';
+import TextInput from '../../components/input/text-input';
 import Head from '../../components/head';
 import { useSignup } from '../../hooks/use-auth';
-import { ROUTES } from '../router';
+import { ROUTES } from '../../constants/pages';
 
 const signupSchema = z
   .object({

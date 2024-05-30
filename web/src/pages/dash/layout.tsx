@@ -4,7 +4,7 @@ import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 
 import { LOGO_TEXT } from '../../constants/branding';
 import useAuth, { useLogout } from '../../hooks/use-auth';
-import { ROUTES } from '../router';
+import { ROUTES } from '../../constants/pages';
 
 export default function DashLayout() {
   const { loginInfo, isLoading } = useAuth();

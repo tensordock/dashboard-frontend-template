@@ -7,7 +7,7 @@ import {
   CONTACT_EMAIL,
   DOCUMENTATION_URL,
 } from '../../constants/external';
-import { ROUTES } from '../router';
+import { ROUTES } from '../../constants/pages';
 
 export default function FooterSection() {
   return (

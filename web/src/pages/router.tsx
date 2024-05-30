@@ -9,15 +9,6 @@ import AccountPage from './dash/account';
 import ListPage from './dash/list';
 import SignupPage from './auth/signup';
 
-export const ROUTES = {
-  home: '/',
-  deploy: '/deploy',
-  login: '/login',
-  signup: '/signup',
-  account: '/account',
-  list: '/list',
-};
-
 const router = createBrowserRouter([
   // { path: '/', element: <HomePage /> },
   { path: '/', element: <HomePage /> },

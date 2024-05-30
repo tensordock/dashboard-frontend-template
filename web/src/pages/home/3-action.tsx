@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { BG_IMAGE_URL } from '../../constants/branding';
 import { CUSTOM_REQUESTS_URL } from '../../constants/external';
-import { ROUTES } from '../router';
+import { ROUTES } from '../../constants/pages';
 
 export default function ActionSection() {
   return (
