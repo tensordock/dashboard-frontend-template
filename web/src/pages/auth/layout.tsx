@@ -37,7 +37,7 @@ export default function AuthLayout() {
           </h1>
           <ul className="ml-8 hidden flex font-medium font-display">
             {[
-              { text: 'Deploy', to: '/deploy' },
+              { text: 'Deploy', to: ROUTES.deploy },
               { text: 'Documentation', to: DOCUMENTATION_URL },
             ].map(({ text, to }) => (
               <li key={to}>

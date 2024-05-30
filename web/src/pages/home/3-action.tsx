@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { BG_IMAGE_URL } from '../../constants/branding';
 import { CUSTOM_REQUESTS_URL } from '../../constants/external';
+import { ROUTES } from '../router';
 
 export default function ActionSection() {
   return (
@@ -17,7 +18,7 @@ export default function ActionSection() {
         </h2>
         <div className="flex gap-1">
           <Link
-            to="/deploy"
+            to={ROUTES.deploy}
             className="inline-block select-none rounded bg-white px-6 py-2.5 text-gray-6 font-medium font-display transition-colors hover:bg-gray-6 hover:text-white"
           >
             Get Started
