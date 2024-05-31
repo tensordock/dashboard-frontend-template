@@ -1,9 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  AddressElement,
-  Elements,
-  PaymentElement,
-} from '@stripe/react-stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
 import { Stripe } from '@stripe/stripe-js';
 import { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -13,6 +9,7 @@ import { z } from 'zod';
 import axios from '../../util/axios';
 import getStripe from '../../util/stripe';
 import TextInput from '../input/text-input';
+import StripeDepositForm from './stripe-deposit';
 
 const depositFormSchema = z.object({
   amount: z
@@ -26,7 +23,11 @@ const depositFormSchema = z.object({
 
 type DepositFormValues = z.infer<typeof depositFormSchema>;
 
-export default function DepositFundsForm() {
+export default function DepositFundsForm({
+  onSuccess,
+}: {
+  onSuccess?: () => void | Promise<void>;
+}) {
   const {
     control,
     handleSubmit,
@@ -125,16 +126,7 @@ export default function DepositFundsForm() {
             clientSecret: stripeInfo.clientSecret,
           }}
         >
-          <form className="mt-8 flex flex-col gap-6">
-            <PaymentElement />
-            <AddressElement options={{ mode: 'billing' }} />
-            <button
-              type="submit"
-              className="rounded bg-primary-500 px-4 py-2 text-white font-display shadow transition-colors sm:self-end hover:bg-primary-600 sm:px-12"
-            >
-              Complete Deposit
-            </button>
-          </form>
+          <StripeDepositForm onSuccess={onSuccess} />
         </Elements>
       )}
     </>

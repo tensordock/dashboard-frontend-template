@@ -112,7 +112,7 @@ export default function AccountPage() {
           >
             <DashBlock header="Deposit Funds">
               <div className="mt-4">
-                <DepositFundsForm />
+                <DepositFundsForm onSuccess={() => setMode('none')} />
               </div>
             </DashBlock>
           </motion.div>
