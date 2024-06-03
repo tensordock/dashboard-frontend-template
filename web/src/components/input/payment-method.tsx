@@ -1,9 +1,9 @@
 import { HTMLProps, forwardRef, useMemo } from 'react';
 import useSWR from 'swr';
-
 import { Link } from 'react-router-dom';
+
 import { ROUTES } from '../../constants/pages';
-import axios from '../../util/axios';
+import fetcher from '../../util/fetcher';
 
 export default forwardRef<
   HTMLSelectElement,
@@ -11,10 +11,7 @@ export default forwardRef<
 >(function PaymentMethodSelector(props, ref) {
   const { data } = useSWR(
     '/api/v0/client/whitelabel/paymentmethods',
-    async (url) => {
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}${url}`);
-      return res.data as { payment_methods: { last4: string; id: string }[] };
-    }
+    fetcher<{ payment_methods: { last4: string; id: string }[] }>
   );
 
   const options = useMemo(

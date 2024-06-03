@@ -1,32 +1,29 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
 import { DashBlock } from '../../components/dash';
 import { ROUTES } from '../../constants/pages';
 import axios from '../../util/axios';
+import fetcher from '../../util/fetcher';
 
 export default function AutomationsPage() {
   const { data, isValidating, mutate } = useSWR(
     '/api/v0/client/whitelabel/customactions',
-    async (url) => {
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}${url}`);
-
-      return res.data as {
-        custom_actions: {
-          uuid: string;
-          threshold: number;
-          charge_amount: number;
-          organization: string;
-          payment_method: string;
-          token_id: string;
-          creation_time: string;
-          note_private: string;
-          action: 'email' | 'charge';
-          message_target: string;
-        }[];
-      };
-    }
+    fetcher<{
+      custom_actions: {
+        uuid: string;
+        threshold: number;
+        charge_amount: number;
+        organization: string;
+        payment_method: string;
+        token_id: string;
+        creation_time: string;
+        note_private: string;
+        action: 'email' | 'charge';
+        message_target: string;
+      }[];
+    }>
   );
 
   const sortedActions = useMemo(

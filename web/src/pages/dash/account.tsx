@@ -5,11 +5,8 @@ import useSWR from 'swr';
 import { DashBlock } from '../../components/dash';
 import Head from '../../components/head';
 import { SHORT_COMPANY_NAME } from '../../constants/branding';
-import axios from '../../util/axios';
-import { useState } from 'react';
-import DepositFundsForm from '../../components/forms/deposit-funds';
-import { AnimatePresence, motion } from 'framer-motion';
 import { ROUTES } from '../../constants/pages';
+import axios from '../../util/axios';
 
 export default function AccountPage() {
   const { data } = useSWR(
