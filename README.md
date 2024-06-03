@@ -17,16 +17,28 @@ Since emails can't fetch data dynamically, we instead use templating. All emails
 
 Templating uses `{{ variablename }}` format.
 
-### `confirmation_email.html`
+### `account_confirmation.html`
 
 This email is sent when a user signs up for a new account.
 
 - `"{{ app_base_url }}/confirm/{{ token }}"` will be the account creation confirmation link.
 
-### `deposit_confirmation_email.html`
+### `deposit_confirmation.html`
 
 This email is sent to confirm a deposit into an organization's balance.
 
 - `${{ amount }}` is the deposit amount, i.e. `$20.24`
 
-### MORE EMAILS COMING
+### `account_low_balance_3.html`
+
+Sent to notify a user that their balance is below $3.
+
+### `account_low_balance_5.html`
+
+Sent to notify a user that their balance is below $10.
+
+### `account_low_balance_custom.html`
+
+Sent when a user has set up a custom action to notify them of their balance being below a custom threshold.
+
+- `${{ threshold }}` is the threshold they've set.

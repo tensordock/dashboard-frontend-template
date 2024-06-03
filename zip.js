@@ -6,6 +6,7 @@ const emailTemplates = [
   'deposit_confirmation',
   'account_low_balance_3',
   'account_low_balance_5',
+  'account_low_balance_custom',
 ];
 
 async function main() {
