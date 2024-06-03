@@ -45,13 +45,14 @@ export default function DepositFundsForm({
   } | null>(null);
 
   const onSubmit: SubmitHandler<DepositFormValues> = async ({ amount }) => {
-    console.log(parseFloat(amount));
     const [stripeSettled, clientSecretSettled] = await Promise.allSettled([
       getStripe(),
       (async () => {
         const res = await axios.post(
           `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/deposit`,
-          JSON.stringify({ amount: parseFloat(amount) }),
+          JSON.stringify({
+            amount: parseFloat(amount.replace(/[^0-9.-]/g, '')),
+          }),
           {
             validateStatus: (status) => status < 500,
             headers: { 'Content-Type': 'application/json' },

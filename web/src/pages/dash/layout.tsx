@@ -64,6 +64,11 @@ export default function DashLayout() {
                 to: ROUTES.list,
               },
               { icon: 'i-tabler-user', text: 'Account', to: ROUTES.account },
+              {
+                icon: 'i-tabler-automation',
+                text: 'Automations',
+                to: ROUTES.automations,
+              },
             ].map(({ icon, text, to }) => (
               <li key={to}>
                 <NavLink

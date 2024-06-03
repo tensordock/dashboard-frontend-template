@@ -2,7 +2,7 @@ export function DashBlock({
   children,
   header,
 }: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   header?: string;
 }) {
   return (
