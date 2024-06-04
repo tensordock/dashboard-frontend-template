@@ -1,29 +1,14 @@
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
-import useSWR from 'swr';
 
 import { DashBlock } from '../../components/dash';
 import Head from '../../components/head';
 import { SHORT_COMPANY_NAME } from '../../constants/branding';
 import { ROUTES } from '../../constants/pages';
-import axios from '../../util/axios';
+import useUserInfo from '../../hooks/use-user-info';
 
 export default function AccountPage() {
-  const { data } = useSWR(
-    '/api/vO/client/whitelabel/getUserInfo',
-    async (url) => {
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}${url}`);
-      return res.data as {
-        balance: number;
-        organization: string;
-        email: string;
-        uuid: string;
-        organization_name: string;
-        organization_type: string;
-        members: string[];
-      };
-    }
-  );
+  const { info } = useUserInfo();
 
   const {
     balance,
@@ -32,7 +17,7 @@ export default function AccountPage() {
     uuid: user_uuid,
     organization_name,
     organization_type,
-  } = data ?? {};
+  } = info ?? {};
 
   const formattedBalance =
     balance !== undefined ? `$${balance.toFixed(2)}` : undefined;

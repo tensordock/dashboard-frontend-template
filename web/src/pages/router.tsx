@@ -11,6 +11,7 @@ import DeployPage from './dash/deploy';
 import DashLayout from './dash/layout';
 import ListPage from './dash/list';
 import HomePage from './home';
+import ConfirmAccountPage from './confirm';
 
 const router = createBrowserRouter([
   // { path: '/', element: <HomePage /> },
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
       { path: 'signup', element: <SignupPage /> },
     ],
   },
+  { path: 'confirm/:token', element: <ConfirmAccountPage /> },
 ]);
 
 export default router;

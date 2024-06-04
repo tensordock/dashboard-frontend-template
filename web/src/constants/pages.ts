@@ -8,4 +8,5 @@ export const ROUTES = {
   account: '/account',
   accountDeposit: '/account/deposit',
   list: '/list',
+  confirm: '/confirm',
 };
