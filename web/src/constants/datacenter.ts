@@ -1,3 +1,39 @@
+export const OPERATING_SYSTEMS = [
+  'TensorML 20.04 LTS TensorFlow',
+  'TensorML 20.04 LTS PyTorch',
+  'TensorML 20.04 LTS Everything',
+  'Ubuntu 22.04 LTS',
+] as const;
+
+export type OperatingSystem = (typeof OPERATING_SYSTEMS)[number];
+
+export const OS_DETAILS: {
+  [key in OperatingSystem]: { features: string; forAI?: boolean };
+} = {
+  'TensorML 20.04 LTS TensorFlow': {
+    features: 'Docker, Jupyter, TensorFlow, Keras, CUDA',
+    forAI: true,
+  },
+  'TensorML 20.04 LTS PyTorch': {
+    features: 'Docker, Jupyter, PyTorch, CUDA',
+    forAI: true,
+  },
+  'TensorML 20.04 LTS Everything': {
+    features:
+      'Docker, Jupyter, RAPIDS, TensorFlow, PyTorch, Keras, fastai, CUDA',
+    forAI: true,
+  },
+  'Ubuntu 22.04 LTS': {
+    features: 'Docker',
+  },
+};
+
+export const DEFAULT_PORTS = [
+  { from: '20004', to: '22', id: 'default1' },
+  { from: '20018', to: '3389', id: 'default2' },
+  { from: '20022', to: '8888', id: 'default3' },
+];
+
 export type Configuration = {
   gpu_count: number;
   gpu_model: string;
