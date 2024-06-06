@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useCallback, useMemo } from 'react';
 import {
   Controller,
   SubmitHandler,
@@ -9,7 +10,6 @@ import {
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
 
-import { useCallback, useMemo } from 'react';
 import { DashBlock } from '../../components/dash';
 import Head from '../../components/head';
 import ConfigurationSelectInput from '../../components/input/deploy-configuration';
@@ -17,9 +17,10 @@ import OperatingSystemSelectInput from '../../components/input/deploy-os';
 import TextInput from '../../components/input/text-input';
 import { SHORT_COMPANY_NAME } from '../../constants/branding';
 import {
-  Configuration,
+  DeployConfiguration,
   DEFAULT_PORTS,
   OPERATING_SYSTEMS,
+  OS_DETAILS,
 } from '../../constants/datacenter';
 import {
   CONTACT_EMAIL,
@@ -43,31 +44,51 @@ const portSchema = ({ min, max }: { min?: number; max?: number } = {}) =>
       `Must be at most ${max}`
     );
 
-const deployFormSchema = z.object({
-  configuration: z.string(),
-  os: z.enum(OPERATING_SYSTEMS, {
-    message: 'Please select an operating system',
-  }),
-  adminPassword: z
-    .string()
-    .min(1, 'Please provide an admin password')
-    .min(8, 'Must be at least 8 characters')
-    .refine(
-      (password) =>
-        /[A-Z]/.test(password) || /[\W_]/.test(password) || /\d/.test(password),
-      'Password must contain at least 1 uppercase letter, symbol, or number'
-    ),
-  serverName: z.string().min(1, 'Please name your server'),
-  portForwards: z.array(
-    z.object({
-      from: portSchema({ min: 20019, max: 20099 }).refine(
-        (port) => DEFAULT_PORTS.findIndex(({ from }) => from === port) === -1,
-        'Cannot override default ports'
+const deployFormSchema = z
+  .object({
+    configuration: z.string(),
+    os: z.enum(OPERATING_SYSTEMS, {
+      message: 'Please select an operating system',
+    }),
+    adminPassword: z
+      .string()
+      .min(1, 'Please provide an admin password')
+      .min(8, 'Must be at least 8 characters')
+      .refine(
+        (password) =>
+          /[A-Z]/.test(password) ||
+          /[\W_]/.test(password) ||
+          /\d/.test(password),
+        'Password must contain at least 1 uppercase letter, symbol, or number'
       ),
-      to: portSchema({ min: 0, max: 65535 }),
-    })
-  ),
-});
+    serverName: z.string().min(1, 'Please name your server'),
+    portForwards: z.array(
+      z.object({
+        from: portSchema({ min: 20019, max: 20099 }).refine(
+          (port) => DEFAULT_PORTS.findIndex(({ from }) => from === port) === -1,
+          'Cannot override default ports'
+        ),
+        to: portSchema({ min: 0, max: 65535 }),
+      })
+    ),
+  })
+  .superRefine(({ os, configuration }, ctx) => {
+    const minStorage = OS_DETAILS[os].minStorageGB;
+    if (minStorage === undefined || configuration === undefined) return;
+
+    const config = JSON.parse(configuration) as DeployConfiguration;
+
+    if (config.storage < minStorage) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.too_small,
+        minimum: minStorage,
+        type: 'number',
+        inclusive: true,
+        message: `Please ensure you have enough storage space (${minStorage.toFixed(0)} GB) for our ${os} operating system template`,
+        path: ['configuration'],
+      });
+    }
+  });
 
 type DeployFormValues = z.infer<typeof deployFormSchema>;
 
@@ -97,7 +118,7 @@ export default function DeployPage() {
     () =>
       selectedConfigurationString === undefined
         ? undefined
-        : (JSON.parse(selectedConfigurationString) as Configuration),
+        : (JSON.parse(selectedConfigurationString) as DeployConfiguration),
     [selectedConfigurationString]
   );
 
@@ -110,7 +131,7 @@ export default function DeployPage() {
     async ({ configuration: configString, ...form }) => {
       if (!configString) return;
 
-      const configuration = JSON.parse(configString) as Configuration;
+      const configuration = JSON.parse(configString) as DeployConfiguration;
       console.log({ ...form, configuration });
       // TODO: ahhh make request and such
     },
@@ -164,6 +185,7 @@ export default function DeployPage() {
                   <ConfigurationSelectInput
                     configurations={configurations}
                     field={props.field}
+                    errorMessage={errors.configuration?.message}
                   />
                 )}
               />
@@ -300,7 +322,7 @@ export default function DeployPage() {
                     ${selectedConfiguration.price.toFixed(2)}/hr
                   </span>
                 </p>
-                <p className="mt-1 text-sm">
+                <p className="mt-1 text-sm text-gray-500">
                   Cost per hour when the VM is running.
                 </p>
                 <p className="mt-6 flex font-bold">
@@ -309,7 +331,7 @@ export default function DeployPage() {
                     ${(selectedConfiguration.storage * 0.0001).toFixed(2)}/hr
                   </span>
                 </p>
-                <p className="mt-1 text-sm">
+                <p className="mt-1 text-sm text-gray-500">
                   Stopped VMs incur reduced storage fees, but the availability
                   of GPUs on the same node is not guaranteed.
                 </p>
@@ -319,7 +341,7 @@ export default function DeployPage() {
                     ${info?.balance?.toFixed(2)}
                   </span>
                 </p>
-                <p className="mt-1 text-sm">
+                <p className="mt-1 text-sm text-gray-500">
                   Deposit more funds{' '}
                   <Link
                     to={ROUTES.accountDeposit}
@@ -330,8 +352,10 @@ export default function DeployPage() {
                   .
                 </p>
                 <p className="mt-6 text-sm text-gray-500">
-                  Email us at {SALES_EMAIL} if you are interested in committing
-                  to a monthly or longer contract. Save up to 30%.
+                  Email us at{' '}
+                  <a href={`mailto:${SALES_EMAIL}`}>{SALES_EMAIL}</a> if you are
+                  interested in committing to a monthly or longer contract. Save
+                  up to 30%.
                 </p>
                 <button
                   type="submit"

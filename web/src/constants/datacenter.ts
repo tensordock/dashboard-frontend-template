@@ -8,19 +8,26 @@ export const OPERATING_SYSTEMS = [
 export type OperatingSystem = (typeof OPERATING_SYSTEMS)[number];
 
 export const OS_DETAILS: {
-  [key in OperatingSystem]: { features: string; forAI?: boolean };
+  [key in OperatingSystem]: {
+    features: string;
+    minStorageGB?: number;
+    forAI?: boolean;
+  };
 } = {
   'TensorML 20.04 LTS TensorFlow': {
     features: 'Docker, Jupyter, TensorFlow, Keras, CUDA',
+    minStorageGB: 40,
     forAI: true,
   },
   'TensorML 20.04 LTS PyTorch': {
     features: 'Docker, Jupyter, PyTorch, CUDA',
+    minStorageGB: 40,
     forAI: true,
   },
   'TensorML 20.04 LTS Everything': {
     features:
       'Docker, Jupyter, RAPIDS, TensorFlow, PyTorch, Keras, fastai, CUDA',
+    minStorageGB: 60,
     forAI: true,
   },
   'Ubuntu 22.04 LTS': {
@@ -34,7 +41,7 @@ export const DEFAULT_PORTS = [
   { from: '20022', to: '8888', id: 'default3' },
 ];
 
-export type Configuration = {
+export type DeployConfiguration = {
   gpu_count: number;
   gpu_model: string;
   ram: number;
@@ -47,7 +54,7 @@ export type Configuration = {
   price: number;
 };
 
-export const createConfigurations = (): Configuration[] => [
+export const getDefaultConfigurations = (): DeployConfiguration[] => [
   {
     gpu_count: 1,
     gpu_model: 'h100-sxm5-80gb',

@@ -1,4 +1,7 @@
-import { Configuration, createConfigurations } from '../constants/datacenter';
+import {
+  DeployConfiguration,
+  getDefaultConfigurations,
+} from '../constants/datacenter';
 import fetcher from './fetcher';
 
 const SAVE_RAM_AMOUNT = 64;
@@ -80,17 +83,16 @@ function roundValue(value: number) {
 
 /**
  * Step 2: generate optimal configurations for deployment
+ *
+ * This finds the best hostnode for each configuration based on hostnode listings
  */
 export function generateDeployConfigurations(
   hostnodes: Record<string, HostnodeEntry>
 ) {
-  const configs = createConfigurations();
+  const configs = getDefaultConfigurations();
 
   configs.forEach((configuration) => {
-    const gpuCount = configuration.gpu_count;
-    const ram = configuration.ram;
-    const vcpu = configuration.vcpu;
-    const storage = configuration.storage;
+    const { gpu_count: gpuCount, ram, vcpu, storage } = configuration;
 
     let bestHostnode = null;
     let bestHostnodeConfig = null;
@@ -120,6 +122,7 @@ export function generateDeployConfigurations(
       ) {
         continue;
       }
+
       if (!bestHostnode) {
         bestHostnode = hostnodeID;
         bestHostnodeConfig = hostnode;
@@ -139,7 +142,7 @@ export function generateDeployConfigurations(
             specs.gpu[configuration.gpu_model].price * gpuCount
         ) < bestHostnodePrice ||
         (specs.gpu[configuration.gpu_model].amount <
-          bestHostnodeConfig.specs.gpu[configuration.gpu_model].amount &&
+          bestHostnodeConfig!.specs.gpu[configuration.gpu_model].amount &&
           specs.gpu[configuration.gpu_model].amount >= gpuCount &&
           specs.ram.amount >= ram &&
           specs.cpu.amount >= vcpu &&
@@ -176,8 +179,8 @@ export function generateDeployConfigurations(
  * Step 3: Spruce up the display, filter out configurations that are out of stock
  */
 export function getDisplayConfigurations(
-  configurations: Configuration[]
-): Configuration[] {
+  configurations: DeployConfiguration[]
+): DeployConfiguration[] {
   return configurations
     .filter(({ stock }) => stock) // make sure we're in stock!
     .map((configuration) => {
