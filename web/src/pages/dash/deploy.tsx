@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback, useMemo } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useCallback, useMemo, useState } from 'react';
 import {
   Controller,
   SubmitHandler,
@@ -7,8 +8,10 @@ import {
   useForm,
   useWatch,
 } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
+import { useNavigate } from 'react-router-dom';
 
 import { DashBlock } from '../../components/dash';
 import Head from '../../components/head';
@@ -16,12 +19,7 @@ import ConfigurationSelectInput from '../../components/input/deploy-configuratio
 import OperatingSystemSelectInput from '../../components/input/deploy-os';
 import TextInput from '../../components/input/text-input';
 import { SHORT_COMPANY_NAME } from '../../constants/branding';
-import {
-  DeployConfiguration,
-  DEFAULT_PORTS,
-  OPERATING_SYSTEMS,
-  OS_DETAILS,
-} from '../../constants/datacenter';
+import { DEFAULT_PORTS, DeployConfiguration } from '../../constants/datacenter';
 import {
   CONTACT_EMAIL,
   INFRASTRUCTURE_URL,
@@ -30,69 +28,13 @@ import {
 import { ROUTES } from '../../constants/pages';
 import useDeployConfigurations from '../../hooks/use-deploy-configurations';
 import useUserInfo from '../../hooks/use-user-info';
+import * as api from '../../util/api';
 
-const portSchema = ({ min, max }: { min?: number; max?: number } = {}) =>
-  z
-    .string()
-    .regex(/^[1-9][0-9]*$/, 'Please enter a valid port')
-    .refine(
-      (val) => min === undefined || parseInt(val) >= min,
-      `Must be at least ${min}`
-    )
-    .refine(
-      (val) => max === undefined || parseInt(val) <= max,
-      `Must be at most ${max}`
-    );
-
-const deployFormSchema = z
-  .object({
-    configuration: z.string(),
-    os: z.enum(OPERATING_SYSTEMS, {
-      message: 'Please select an operating system',
-    }),
-    adminPassword: z
-      .string()
-      .min(1, 'Please provide an admin password')
-      .min(8, 'Must be at least 8 characters')
-      .refine(
-        (password) =>
-          /[A-Z]/.test(password) ||
-          /[\W_]/.test(password) ||
-          /\d/.test(password),
-        'Password must contain at least 1 uppercase letter, symbol, or number'
-      ),
-    serverName: z.string().min(1, 'Please name your server'),
-    portForwards: z.array(
-      z.object({
-        from: portSchema({ min: 20019, max: 20099 }).refine(
-          (port) => DEFAULT_PORTS.findIndex(({ from }) => from === port) === -1,
-          'Cannot override default ports'
-        ),
-        to: portSchema({ min: 0, max: 65535 }),
-      })
-    ),
-  })
-  .superRefine(({ os, configuration }, ctx) => {
-    const minStorage = OS_DETAILS[os].minStorageGB;
-    if (minStorage === undefined || configuration === undefined) return;
-
-    const config = JSON.parse(configuration) as DeployConfiguration;
-
-    if (config.storage < minStorage) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.too_small,
-        minimum: minStorage,
-        type: 'number',
-        inclusive: true,
-        message: `Please ensure you have enough storage space (${minStorage.toFixed(0)} GB) for our ${os} operating system template`,
-        path: ['configuration'],
-      });
-    }
-  });
-
-type DeployFormValues = z.infer<typeof deployFormSchema>;
+type DeployFormValues = z.infer<typeof api.deploySchema>;
 
 export default function DeployPage() {
+  const navigate = useNavigate();
+
   const { configurations } = useDeployConfigurations();
   const { info } = useUserInfo();
 
@@ -102,11 +44,12 @@ export default function DeployPage() {
     handleSubmit,
     formState: { errors },
   } = useForm<DeployFormValues>({
-    resolver: zodResolver(deployFormSchema),
+    resolver: zodResolver(api.deploySchema),
     defaultValues: {
       adminPassword: '',
       serverName: '',
       portForwards: [],
+      cloudinitScript: '',
     },
   });
 
@@ -128,17 +71,23 @@ export default function DeployPage() {
   );
 
   const onSubmit = useCallback<SubmitHandler<DeployFormValues>>(
-    async ({ configuration: configString, ...form }) => {
-      if (!configString) return;
-
-      const configuration = JSON.parse(configString) as DeployConfiguration;
-      console.log({ ...form, configuration });
-      // TODO: ahhh make request and such
+    async (values) => {
+      const toastId = toast.loading('Deploying...');
+      try {
+        await api.deploy(values);
+        toast.success('Successfully deployed!', { id: toastId });
+        navigate(ROUTES.list);
+      } catch (err) {
+        if (err instanceof Error)
+          toast.error(`${err.message}.`, { id: toastId });
+      }
     },
-    []
+    [navigate]
   );
 
   const portForwards = useFieldArray({ control, name: 'portForwards' });
+
+  const [isAdvancedOpen, setAdvancedOpen] = useState(false);
 
   return (
     <>
@@ -228,7 +177,7 @@ export default function DeployPage() {
                 errorMessage={errors.serverName?.message}
                 label="Name"
               />
-              <h4 className="mt-6 text-gray-700 font-semibold">
+              <h4 className="mt-6 text-gray-700 font-display">
                 Configure port forwards
               </h4>
               <p className="text-sm text-gray-500">
@@ -283,6 +232,45 @@ export default function DeployPage() {
                 Add forwarding
               </button>
             </div>
+            <button
+              type="button"
+              onClick={() => setAdvancedOpen((o) => !o)}
+              className="mt-8 text-left font-display"
+            >
+              <div
+                className={`i-tabler-settings mr-2 inline-block translate-y-0.5 transition-transform duration-300 ${isAdvancedOpen ? 'rotate-90' : ''}`}
+              />
+              Click for more advanced options
+            </button>
+            <AnimatePresence>
+              {isAdvancedOpen && (
+                <motion.div
+                  initial={{ height: 0 }}
+                  animate={{ height: 'auto' }}
+                  exit={{ height: 0 }}
+                  className="flex flex-col overflow-hidden"
+                >
+                  <label className="flex flex-col p-1 pt-4">
+                    <div className="mb-1 text-sm text-gray-500">
+                      Cloudinit Script
+                    </div>
+                    <textarea
+                      {...register('cloudinitScript')}
+                      placeholder={`write_files:
+  - path: /home/user/cloudinit_website/index.html
+    permissions: '0777'
+    content: |
+      Woohoo! This site is working!
+    owner: user:user 
+runcmd:
+  - docker run -d --restart unless-stopped --stop-timeout 300 -v /home/user/cloudinit_website:/usr/share/nginx/html:ro -p 80:80 --name default_container nginx`}
+                      className="rounded px-2 py-1 text-sm font-mono ring-1 ring-gray-300"
+                      rows={11}
+                    />
+                  </label>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </DashBlock>
         </div>
         <div className="lg:sticky lg:top-4 lg:self-start">

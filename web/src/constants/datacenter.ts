@@ -152,3 +152,41 @@ export const getDefaultConfigurations = (): DeployConfiguration[] => [
     price: 0,
   },
 ];
+
+export const GPU_MAPPINGS = {
+  // 'A100 80GB SXM4': 'a100-sxm4-80gb',
+  // 'A100 80GB PCIE': 'a100-pcie-80gb',
+  // 'A100 40GB PCIE': 'a100-pcie-40gb',
+  // 'A100 40GB NVLink': 'a100-nvlink-40gb',
+  // 'L40S 48GB PCIE': 'l40s-pcie-48gb',
+  // 'L40 48GB PCIE': 'l40-pcie-48gb',
+  // 'V100 16GB SXM2': 'v100-sxm2-16gb',
+  // 'V100 16GB NVLink': 'v100-nvlink-16gb',
+  // 'RTX 6000 ADA 48GB': 'rtx6000ada-pcie-48gb',
+  // 'RTX 5000 ADA 32GB': 'rtx5000ada-pcie-32gb',
+  // 'RTX 4500 ADA 24GB': 'rtx4500ada-pcie-24gb',
+  // 'RTX 4000 ADA 20GB': 'rtx4000ada-pcie-20gb',
+  // 'RTX 4000 SFF ADA 20GB': 'rtx4000sffada-pcie-20gb',
+  // 'RTX A6000 48GB': 'rtxa6000-pcie-48gb',
+  // 'RTX A5000 24GB': 'rtxa5000-pcie-24gb',
+  // 'RTX A4000 16GB': 'rtxa4000-pcie-16gb',
+  // 'GeForce RTX 4090 24GB': 'geforcertx4090-pcie-24gb',
+  // 'GeForce RTX 3090 24GB': 'geforcertx3090-pcie-24gb',
+  // 'GeForce RTX 3080 Ti 12GB': 'geforcertx3080ti-pcie-12gb',
+  // 'GeForce RTX 3080 10GB': 'geforcertx3080-pcie-10gb',
+  // 'GeForce RTX 3070 Ti 8GB': 'geforcertx3070ti-pcie-8gb',
+  // 'GeForce RTX 3060 12GB': 'geforcertx3060-pcie-12gb',
+  // 'Quadro RTX 4000 8GB': 'quadrortx4000-pcie-8gb',
+  // 'Quadro RTX 5000 16GB': 'quadrortx5000-pcie-16gb',
+  'H100 SXM5 80GB': 'h100-sxm5-80gb',
+};
+
+export const OS_MAPPINGS = {
+  // 'Ubuntu 20.04 LTS': 'Ubuntu 20.04 LTS',
+  'Ubuntu 22.04 LTS': 'Ubuntu 22.04 LTS',
+  'TensorML 20.04 LTS TensorFlow': 'TensorML 20 TensorFlow',
+  'TensorML 20.04 LTS PyTorch': 'TensorML 20 PyTorch',
+  'TensorML 20.04 LTS Everything': 'TensorML 20 Everything',
+  // 'TensorML 20.04 LTS RAPIDS': 'TensorML 20 RAPIDS',
+  // 'Windows 10': 'Windows 10',
+};

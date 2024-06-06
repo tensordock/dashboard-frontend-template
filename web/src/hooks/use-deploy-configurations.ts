@@ -31,5 +31,12 @@ export default function useDeployConfigurations() {
     return getDisplayConfigurations(generateDeployConfigurations(hostnodes));
   }, [data]);
 
-  return { configurations, error, isLoading, isValidating, mutate };
+  return {
+    configurations,
+    hostnodes: data?.hostnodes,
+    error,
+    isLoading,
+    isValidating,
+    mutate,
+  };
 }

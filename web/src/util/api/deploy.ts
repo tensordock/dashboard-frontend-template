@@ -1,7 +1,15 @@
+import { z } from 'zod';
+
 import {
+  DEFAULT_PORTS,
   DeployConfiguration,
+  GPU_MAPPINGS,
+  OPERATING_SYSTEMS,
+  OS_DETAILS,
+  OS_MAPPINGS,
   getDefaultConfigurations,
 } from '../../constants/datacenter';
+import axios from '../axios';
 import fetcher from '../fetcher';
 
 const SAVE_RAM_AMOUNT = 64;
@@ -192,4 +200,123 @@ export function getDisplayConfigurations(
           .replace('gb', 'GB'),
       };
     });
+}
+
+const portSchema = ({ min, max }: { min?: number; max?: number } = {}) =>
+  z
+    .string()
+    .regex(/^[1-9][0-9]*$/, 'Please enter a valid port')
+    .refine(
+      (val) => min === undefined || parseInt(val) >= min,
+      `Must be at least ${min}`
+    )
+    .refine(
+      (val) => max === undefined || parseInt(val) <= max,
+      `Must be at most ${max}`
+    );
+
+export const deploySchema = z
+  .object({
+    configuration: z.string(),
+    os: z.enum(OPERATING_SYSTEMS, {
+      message: 'Please select an operating system',
+    }),
+    adminPassword: z
+      .string()
+      .min(1, 'Please provide an admin password')
+      .min(8, 'Must be at least 8 characters')
+      .refine(
+        (password) =>
+          /[A-Z]/.test(password) ||
+          /[\W_]/.test(password) ||
+          /\d/.test(password),
+        'Password must contain at least 1 uppercase letter, symbol, or number'
+      ),
+    serverName: z.string().min(1, 'Please name your server'),
+    portForwards: z.array(
+      z.object({
+        from: portSchema({ min: 20019, max: 20099 }).refine(
+          (port) => DEFAULT_PORTS.findIndex(({ from }) => from === port) === -1,
+          'Cannot override default ports'
+        ),
+        to: portSchema({ min: 0, max: 65535 }),
+      })
+    ),
+    cloudinitScript: z.string(),
+  })
+  .superRefine(({ os, configuration }, ctx) => {
+    const minStorage = OS_DETAILS[os].minStorageGB;
+    if (minStorage === undefined || configuration === undefined) return;
+
+    const config = JSON.parse(configuration) as DeployConfiguration;
+
+    if (config.storage < minStorage) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.too_small,
+        minimum: minStorage,
+        type: 'number',
+        inclusive: true,
+        message: `Please ensure you have enough storage space (${minStorage.toFixed(0)} GB) for our ${os} operating system template`,
+        path: ['configuration'],
+      });
+    }
+  });
+
+export async function deploy(values: z.infer<typeof deploySchema>) {
+  const {
+    configuration: configString,
+    os,
+    adminPassword,
+    serverName,
+    portForwards,
+    cloudinitScript,
+  } = values;
+
+  const config = JSON.parse(configString) as DeployConfiguration;
+
+  const externalPorts = portForwards.map(({ from }) => from);
+  const internalPorts = portForwards.map(({ to }) => to);
+
+  const body = {
+    deployment_type: 'local',
+    password: adminPassword,
+    name: serverName,
+    vcpus: config.vcpu,
+    storage: config.storage,
+    ram: config.ram,
+    country: 'United States',
+    gpu_count: config.gpu_count,
+    gpu_model: GPU_MAPPINGS[config.gpu_model as keyof typeof GPU_MAPPINGS],
+    operating_system: OS_MAPPINGS[os as keyof typeof OS_MAPPINGS],
+    hostnode: config.hostnode,
+    external_ports: `[${externalPorts.join(', ')}]`,
+    internal_ports: `[${internalPorts.join(', ')}]`,
+    ...(!!cloudinitScript && { cloudinit_script: cloudinitScript }),
+    // ...(selectedBid && {
+    //   price_type: 'spot',
+    //   price: selectedBid,
+    // }),
+  };
+
+  const formData = new FormData();
+
+  Object.keys(body).forEach((key) => {
+    const value = body[key as keyof typeof body];
+    if (value === undefined) return;
+    formData.append(key, `${value}`);
+  });
+
+  console.log(formData);
+
+  const res = await axios.post(
+    `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/deploy/single`,
+    formData,
+    { validateStatus: (status) => status < 500 }
+  );
+
+  const data = res.data as
+    | { success: true }
+    | { success: false; error: string };
+
+  if (!data.success) throw new Error(data.error);
 }
