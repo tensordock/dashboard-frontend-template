@@ -5,7 +5,7 @@ import {
   fetchHostnodeStock,
   generateDeployConfigurations,
   getDisplayConfigurations,
-} from '../util/api';
+} from '../util/api/deploy';
 
 const stockRequestParams = {
   minGPUCount: 1,

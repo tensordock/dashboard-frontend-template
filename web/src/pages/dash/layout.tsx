@@ -3,19 +3,18 @@ import toast from 'react-hot-toast';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 
 import { LOGO_TEXT } from '../../constants/branding';
-import useAuth, { useLogout } from '../../hooks/use-auth';
+import useAuth from '../../hooks/use-auth';
 import { ROUTES } from '../../constants/pages';
 
 export default function DashLayout() {
-  const { loginInfo, isLoading } = useAuth();
+  const { loginInfo, isLoading, logout } = useAuth();
   const navigate = useNavigate();
 
   // redirect to login page if not logged in
   useEffect(() => {
-    if (!isLoading && !loginInfo) navigate(ROUTES.login, { replace: true });
+    if (!isLoading && !loginInfo?.loggedIn)
+      navigate(ROUTES.login, { replace: true });
   }, [isLoading, loginInfo, navigate]);
-
-  const logout = useLogout();
 
   return (
     <div className="min-h-screen bg-primary-50">
@@ -35,7 +34,7 @@ export default function DashLayout() {
             </div>
             <div className="flex flex-col items-start">
               <p className="text-sm text-gray-700">
-                {loginInfo ? loginInfo.email : '...'}
+                {loginInfo?.loggedIn ? loginInfo.email : '...'}
               </p>
               <button
                 type="button"

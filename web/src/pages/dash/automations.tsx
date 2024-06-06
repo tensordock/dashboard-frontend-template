@@ -1,35 +1,11 @@
-import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import useSWR from 'swr';
 
 import { DashBlock } from '../../components/dash';
 import { ROUTES } from '../../constants/pages';
-import axios from '../../util/axios';
-import fetcher from '../../util/fetcher';
+import useAutomations from '../../hooks/use-automations';
 
 export default function AutomationsPage() {
-  const { data, isValidating, mutate } = useSWR(
-    '/api/v0/client/whitelabel/customactions',
-    fetcher<{
-      custom_actions: {
-        uuid: string;
-        threshold: number;
-        charge_amount: number;
-        organization: string;
-        payment_method: string;
-        token_id: string;
-        creation_time: string;
-        note_private: string;
-        action: 'email' | 'charge';
-        message_target: string;
-      }[];
-    }>
-  );
-
-  const sortedActions = useMemo(
-    () => data?.custom_actions.sort((a, b) => b.threshold - a.threshold),
-    [data]
-  );
+  const { automations, isValidating, deleteAutomation } = useAutomations();
 
   return (
     <>
@@ -39,13 +15,13 @@ export default function AutomationsPage() {
           balance reaches a threshold.
         </p>
       </DashBlock>
-      {sortedActions && (
+      {automations && (
         <DashBlock>
-          {sortedActions.length > 0 ? (
+          {automations.length > 0 ? (
             <>
               When my account reaches...
               <ul className="mt-6 space-y-4">
-                {sortedActions.map(
+                {automations.map(
                   ({ threshold, action, message_target, uuid }) => (
                     <li key={uuid} className="flex">
                       <div>
@@ -69,12 +45,7 @@ export default function AutomationsPage() {
                       </div>
                       <button
                         type="button"
-                        onClick={async () => {
-                          await axios.delete(
-                            `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/customactions/${uuid}`
-                          );
-                          mutate();
-                        }}
+                        onClick={async () => deleteAutomation(uuid)}
                         disabled={isValidating}
                         className="i-tabler-trash ml-auto text-red-500 disabled:text-red-300"
                       >

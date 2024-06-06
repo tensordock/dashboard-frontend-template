@@ -1,8 +1,8 @@
 import {
   DeployConfiguration,
   getDefaultConfigurations,
-} from '../constants/datacenter';
-import fetcher from './fetcher';
+} from '../../constants/datacenter';
+import fetcher from '../fetcher';
 
 const SAVE_RAM_AMOUNT = 64;
 const SAVE_CPU_AMOUNT = 16;

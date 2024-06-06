@@ -93,7 +93,7 @@ export default function SplashSection() {
               ))}
             </ul>
             <div className="ml-auto hidden font-medium font-display lg:flex">
-              {loginInfo ? (
+              {loginInfo?.loggedIn ? (
                 <Link
                   to={ROUTES.account}
                   className="inline-flex items-center gap-2 px-2 py-1 text-sm text-white/60 font-display transition-colors hover:text-white/100"
@@ -137,7 +137,7 @@ export default function SplashSection() {
                 <ul className="flex flex-col items-end pb-4 text-lg text-white/80 font-display">
                   {[
                     ...navLinks,
-                    ...(loginInfo
+                    ...(loginInfo?.loggedIn
                       ? [{ text: 'Dashboard', to: ROUTES.account }]
                       : [
                           { text: 'Login', to: ROUTES.login },

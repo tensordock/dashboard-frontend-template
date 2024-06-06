@@ -1,8 +1,7 @@
-import useSWR, { useSWRConfig } from 'swr';
+import { useCallback } from 'react';
+import useSWR from 'swr';
 
-import axios from '../util/axios';
-
-type LoginInfo = { email: string; org_name: string };
+import * as api from '../util/api';
 
 export default function useAuth() {
   const {
@@ -11,71 +10,28 @@ export default function useAuth() {
     isLoading,
     isValidating,
     mutate,
-  } = useSWR('/api/v0/client/whitelabel/token_verify', async (url) => {
-    if (!localStorage.getItem('whitelabelToken')) throw new Error('No token');
-    return axios
-      .post(`${import.meta.env.VITE_API_BASE_URL}${url}`)
-      .then((res) => res.data as LoginInfo);
-  });
+  } = useSWR('/api/v0/client/whitelabel/token_verify', api.fetchAuth);
 
-  return { loginInfo, error, isLoading, isValidating, mutate };
-}
+  const login = useCallback(
+    (email: string, password: string) =>
+      mutate(api.login({ email, password }).then(() => undefined)),
+    [mutate]
+  );
 
-export function useLogin() {
-  const { mutate } = useSWRConfig();
+  const signup = useCallback(
+    (email: string, org_name: string, password: string) =>
+      mutate(api.signup({ email, org_name, password }).then(() => undefined)),
+    [mutate]
+  );
 
-  return (email: string, password: string) =>
-    mutate('/api/v0/client/whitelabel/token_verify', async () => {
-      const formData = new FormData();
-      formData.append('email', email);
-      formData.append('password', password);
+  const logout = useCallback(
+    () =>
+      mutate(() => {
+        api.logout();
+        return undefined;
+      }),
+    [mutate]
+  );
 
-      let res;
-      try {
-        res = await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/login`,
-          formData
-        );
-      } catch (err) {
-        throw new Error('Something went wrong');
-      }
-
-      const { token, success } = res.data as {
-        token?: string;
-        success: boolean;
-      };
-      if (!success) throw new Error('Incorrect username or password');
-
-      localStorage.setItem('whitelabelToken', token!);
-    });
-}
-
-export function useSignup() {
-  const { mutate } = useSWRConfig();
-
-  return (email: string, organization_name: string, password: string) =>
-    mutate('/api/v0/client/whitelabel/token_verify', async () => {
-      const formData = new FormData();
-      formData.append('email', email);
-      formData.append('organization_name', organization_name);
-      formData.append('password', password);
-      formData.append('confirm_password', password);
-
-      const res = await axios.postForm(
-        `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/register`,
-        formData
-      );
-      const { token } = res.data as { token: string };
-      localStorage.setItem('whitelabelToken', token);
-    });
-}
-
-export function useLogout() {
-  const { mutate } = useSWRConfig();
-
-  return () => {
-    mutate('/api/v0/client/whitelabel/token_verify', () => {
-      localStorage.removeItem('whitelabelToken');
-    });
-  };
+  return { loginInfo, error, isLoading, isValidating, login, signup, logout };
 }

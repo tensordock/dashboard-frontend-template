@@ -25,7 +25,7 @@ export default function StripeDepositForm({
     evt.preventDefault();
     setIsSubmitting(true);
 
-    if (!stripe || !elements || !loginInfo) return;
+    if (!stripe || !elements || !loginInfo?.loggedIn) return;
 
     const result = await stripe.confirmPayment({
       //`Elements` instance that was used to create the Payment Element

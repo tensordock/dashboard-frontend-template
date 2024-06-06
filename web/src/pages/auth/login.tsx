@@ -4,27 +4,23 @@ import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
-import TextInput from '../../components/input/text-input';
 import Head from '../../components/head';
-import { useLogin } from '../../hooks/use-auth';
+import TextInput from '../../components/input/text-input';
 import { ROUTES } from '../../constants/pages';
+import useAuth from '../../hooks/use-auth';
+import * as api from '../../util/api';
 
-const loginSchema = z.object({
-  email: z.string().min(1, 'Email is required').email(),
-  password: z.string().min(1, 'Password is required'),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
+type LoginFormValues = z.infer<typeof api.loginSchema>;
 
 export default function LoginPage() {
-  const login = useLogin();
+  const { login } = useAuth();
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { isSubmitting, errors },
   } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(api.loginSchema),
     defaultValues: { email: '', password: '' },
   });
 

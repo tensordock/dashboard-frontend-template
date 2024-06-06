@@ -1,57 +1,29 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AxiosError } from 'axios';
 import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
 
-import TextInput from '../../components/input/text-input';
-import axios from '../../util/axios';
 import PaymentMethodSelector from '../../components/input/payment-method';
+import TextInput from '../../components/input/text-input';
+import useAutomations from '../../hooks/use-automations';
+import * as api from '../../util/api';
 
-const usdSchema = ({ min }: { min?: number } = {}) =>
-  z
-    .string()
-    .transform((val) => parseFloat(val.replace(/[^0-9.-]/g, '')))
-    .refine((val) => !isNaN(val), 'Amount must be a number')
-    .transform((val) => val || 0)
-    .refine(
-      (val) => min === undefined || val >= min,
-      `Must be at least $${min?.toFixed(2)}`
-    )
-    .transform((val) => val.toFixed(2));
-
-const addAutomationFormSchema = z
-  .object({
-    threshold: usdSchema({ min: 1 }),
-  })
-  .and(
-    z.discriminatedUnion('actionType', [
-      z.object({
-        actionType: z.literal('email'),
-        emailTarget: z.string().email('Please enter a valid email'),
-      }),
-      z.object({
-        actionType: z.literal('charge'),
-        chargeAmount: usdSchema({ min: 5 }),
-        chooseCard: z.string().min(1, 'Required'),
-      }),
-    ])
-  );
-
-type AddAutomationFormValues = z.infer<typeof addAutomationFormSchema>;
+type AddAutomationFormValues = z.infer<typeof api.addAutomationSchema>;
 
 export default function AddAutomationForm({
   onSuccess,
 }: {
   onSuccess?: () => void;
 }) {
+  const { addAutomation } = useAutomations();
+
   const {
     register,
     control,
     handleSubmit,
     formState: { isSubmitting, errors },
   } = useForm<AddAutomationFormValues>({
-    resolver: zodResolver(addAutomationFormSchema),
+    resolver: zodResolver(api.addAutomationSchema),
     defaultValues: {
       actionType: undefined,
       threshold: '$10.00',
@@ -64,41 +36,12 @@ export default function AddAutomationForm({
   const actionType = useWatch({ control, name: 'actionType' });
 
   const onSubmit: SubmitHandler<AddAutomationFormValues> = async (form) => {
-    const formData = new FormData();
-    formData.append('action', form.actionType);
-    formData.append(
-      'fundsThresholdAmount',
-      parseFloat(form.threshold.replace(/[^0-9.-]/g, '')).toFixed(2)
-    );
-
-    if (form.actionType === 'email') {
-      formData.append('emailInput', form.emailTarget);
-    } else if (form.actionType === 'charge') {
-      formData.append(
-        'fundsChargeAmount',
-        parseFloat(form.chargeAmount.replace(/[^0-9.-]/g, '')).toFixed(2)
-      );
-      formData.append('chooseCard', form.chooseCard);
-    }
-
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/customactions`,
-        formData,
-        { validateStatus: (status) => status < 500 }
-      );
-
-      const data = res.data as
-        | { success: true }
-        | { success: false; error: string };
-
-      if (!data.success) toast.error(data.error);
-      else {
-        toast.success('Successfully added automation!');
-        if (onSuccess) onSuccess();
-      }
+      await addAutomation(form);
+      toast.success('Successfully added automation!');
+      if (onSuccess) onSuccess();
     } catch (err) {
-      if (err instanceof AxiosError) toast.error(err.message);
+      if (err instanceof Error) toast.error(err.message);
     }
   };
 

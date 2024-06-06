@@ -1,28 +1,28 @@
 import { HTMLProps, forwardRef, useMemo } from 'react';
-import useSWR from 'swr';
 import { Link } from 'react-router-dom';
+import useSWR from 'swr';
 
 import { ROUTES } from '../../constants/pages';
-import fetcher from '../../util/fetcher';
+import { fetchPaymentMethods } from '../../util/api/payment';
 
 export default forwardRef<
   HTMLSelectElement,
   Omit<HTMLProps<HTMLSelectElement>, 'ref'>
 >(function PaymentMethodSelector(props, ref) {
-  const { data } = useSWR(
+  const { data: paymentMethods } = useSWR(
     '/api/v0/client/whitelabel/paymentmethods',
-    fetcher<{ payment_methods: { last4: string; id: string }[] }>
+    fetchPaymentMethods
   );
 
   const options = useMemo(
     () => [
       { text: 'Select...', value: undefined },
-      ...(data?.payment_methods.map(({ last4, id }) => ({
+      ...(paymentMethods?.map(({ last4, id }) => ({
         text: `**** **** **** ${last4}`,
         value: id,
       })) ?? []),
     ],
-    [data]
+    [paymentMethods]
   );
 
   return (
@@ -39,7 +39,7 @@ export default forwardRef<
           </option>
         ))}
       </select>
-      {data && data.payment_methods.length === 0 && (
+      {paymentMethods && paymentMethods?.length === 0 && (
         <div className="mt-2 max-w-prose font-display">
           Please{' '}
           <Link to={ROUTES.accountDeposit} className="font-semibold underline">

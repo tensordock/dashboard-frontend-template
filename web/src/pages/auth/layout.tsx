@@ -17,7 +17,7 @@ export default function AuthLayout() {
 
   // redirect to account page if already logged in
   useEffect(() => {
-    if (loginInfo) navigate(ROUTES.account, { replace: true });
+    if (loginInfo?.loggedIn) navigate(ROUTES.account, { replace: true });
   }, [loginInfo, navigate]);
 
   return (

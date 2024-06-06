@@ -4,25 +4,18 @@ import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
-import TextInput from '../../components/input/text-input';
 import Head from '../../components/head';
-import { useSignup } from '../../hooks/use-auth';
+import TextInput from '../../components/input/text-input';
 import { ROUTES } from '../../constants/pages';
+import useAuth from '../../hooks/use-auth';
+import * as api from '../../util/api';
 
-const signupSchema = z
-  .object({
-    email: z.string().min(1, 'Email is required').email(),
-    org_name: z
-      .string()
-      .trim()
-      .min(1, 'Organization name is required')
-      .min(3, 'Organization name must be at least 3 characters'),
-    password: z
-      .string()
-      .min(1, 'Password is required')
-      .min(4, 'Password must be at least 4 characters'),
-    confirm_password: z.string().min(1, 'Please confirm your password'),
-  })
+const signupSchema = api.signupSchema
+  .and(
+    z.object({
+      confirm_password: z.string().min(1, 'Please confirm your password'),
+    })
+  )
   .refine(({ password, confirm_password }) => password === confirm_password, {
     path: ['confirm_password'],
     message: 'Passwords do not match',
@@ -31,7 +24,7 @@ const signupSchema = z
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function SignupPage() {
-  const signup = useSignup();
+  const { signup } = useAuth();
   const navigate = useNavigate();
   const {
     register,
