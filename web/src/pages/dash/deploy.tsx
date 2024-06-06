@@ -152,12 +152,14 @@ export default function DeployPage() {
             <Controller
               control={control}
               name="os"
-              render={({ field }) => (
-                <OperatingSystemSelectInput
-                  field={field}
-                  errorMessage={errors.os?.message}
-                />
-              )}
+              render={({ field }) => {
+                return (
+                  <OperatingSystemSelectInput
+                    field={field}
+                    errorMessage={errors.os?.message}
+                  />
+                );
+              }}
             />
           </DashBlock>
           <DashBlock>

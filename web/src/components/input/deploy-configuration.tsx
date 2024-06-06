@@ -1,13 +1,19 @@
 import { AnimatePresence, motion } from 'framer-motion';
+import { RefCallBack } from 'react-hook-form';
 
 import { DeployConfiguration } from '../../constants/datacenter';
 
 export default function ConfigurationSelectInput({
-  field: { onChange, value, disabled },
+  field: { onChange, value, disabled, ref },
   configurations,
   errorMessage,
 }: {
-  field: { onChange: (v: string) => void; value: string; disabled?: boolean };
+  field: {
+    onChange: (v: string) => void;
+    value: string;
+    disabled?: boolean;
+    ref: RefCallBack;
+  };
   configurations: DeployConfiguration[];
   errorMessage?: string;
 }) {
@@ -22,7 +28,7 @@ export default function ConfigurationSelectInput({
         animate="show"
         className="flex flex-col gap-4"
       >
-        {configurations.map((config) => {
+        {configurations.map((config, idx) => {
           const stringified = JSON.stringify(config);
           const isSelected = stringified === value;
           return (
@@ -43,6 +49,7 @@ export default function ConfigurationSelectInput({
                 onClick={() => onChange(stringified)}
                 disabled={disabled}
                 className={`rounded-lg px-6 py-8 text-left flex flex-col transition ${isSelected ? 'bg-primary-500 text-white shadow-lg' : 'bg-primary-500/10 hover:bg-primary-500/20'}`}
+                ref={idx === 0 ? ref : undefined}
               >
                 <div>
                   <h4 className="text-xl font-medium font-display">
@@ -93,8 +100,13 @@ export default function ConfigurationSelectInput({
       </motion.ul>
       <AnimatePresence>
         {errorMessage && (
-          <motion.div className="mt-1 text-sm text-red-500">
-            {errorMessage}.
+          <motion.div
+            className="overflow-auto"
+            initial={{ height: 0 }}
+            animate={{ height: 'auto' }}
+            exit={{ height: 0 }}
+          >
+            <div className="mt-1 text-sm text-red-500">{errorMessage}.</div>
           </motion.div>
         )}
       </AnimatePresence>
