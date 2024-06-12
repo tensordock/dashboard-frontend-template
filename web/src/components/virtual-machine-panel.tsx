@@ -6,6 +6,21 @@ import { DEFAULT_PORTS } from '../constants/datacenter';
 import useVirtualMachines from '../hooks/use-virtual-machines';
 import { VirtualMachineEntry } from '../util/api';
 
+const VM_STATUS_INFO = new Map([
+  ['Running', { class: 'text-green-700', text: 'Running' }],
+  [
+    'Stopped',
+    { class: 'text-red-700', text: 'Stopped with resources reserved' },
+  ],
+  [
+    'StoppedDisassociated',
+    {
+      class: 'text-red-700',
+      text: 'Stopped with resources disassociated ',
+    },
+  ],
+]);
+
 export default function VirtualMachinePanel({
   vm,
 }: {
@@ -37,6 +52,13 @@ export default function VirtualMachinePanel({
   );
 
   const { startVM, stopVM, deleteVM } = useVirtualMachines();
+
+  const statusInfo = VM_STATUS_INFO.get(vm.status) || {
+    class: '',
+    text: vm.status,
+  };
+
+  console.log(vm);
 
   return (
     <li className="rounded-xl bg-gray-50 ring-1 ring-gray-200">
@@ -103,7 +125,7 @@ export default function VirtualMachinePanel({
                     </p>
                     <p className="text-gray-700 font-medium tabular-nums">
                       $
-                      {(vm.status === 'Running'
+                      {(vm.status === 'Running' || vm.status === 'Stopped'
                         ? parseFloat(vm.total_price)
                         : parseFloat(vm.storage_price)
                       ).toFixed(4)}
@@ -141,18 +163,23 @@ export default function VirtualMachinePanel({
           </div>
         </div>
         <div className="flex flex-col lg:ml-auto lg:items-end lg:text-end">
-          <div className="mb-4 flex items-center font-display">
-            <p>
+          <div className={'mb-4 flex items-center font-display'}>
+            <p className={`rounded ${statusInfo.class} inline-block`}>
               <span className="i-tabler-activity-heartbeat mr-2 inline-block translate-y-0.5 animate-pulse" />
-              {vm.status}
+              {statusInfo.text}
             </p>
             <button
               type="button"
-              onClick={() =>
-                onButtonClick(() => deleteVM(vm.id), 'Deleting machine...')
-              }
+              onClick={() => {
+                if (!window.confirm('Are you sure you want to delete this VM?'))
+                  return;
+                return onButtonClick(
+                  () => deleteVM(vm.id),
+                  'Deleting machine...'
+                );
+              }}
               disabled={disableButtons}
-              className="ml-auto rounded bg-red-500/0 px-4 py-1 text-sm text-red-500 font-display shadow ring-1 ring-red-500 transition-colors lg:ml-6 disabled:text-red-300 disabled:ring-red-300 hover:enabled:bg-red-500/100 hover:enabled:text-white"
+              className="ml-auto min-w-max rounded bg-red-500/0 px-4 py-1 text-sm text-red-500 font-display shadow ring-1 ring-red-500 transition-colors lg:ml-6 disabled:text-red-300 disabled:ring-red-300 hover:enabled:bg-red-500/100 hover:enabled:text-white"
             >
               <span className="i-tabler-trash mr-2 inline-block translate-y-0.5" />
               Delete
