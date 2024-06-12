@@ -43,7 +43,7 @@ export default function VirtualMachinePanel({
       <h3 className="block rounded-t-xl bg-primary-500 px-8 py-4 text-xl text-white font-display">
         {vm.name}
       </h3>
-      <div className="px-8 py-4 flex flex-col lg:flex-row gap-6">
+      <div className="flex flex-col gap-6 px-8 py-4 lg:flex-row">
         <div>
           <div className="text-sm text-gray-500">
             <p>
@@ -82,7 +82,7 @@ export default function VirtualMachinePanel({
                   exit={{ height: 0 }}
                   className="overflow-hidden"
                 >
-                  <div className="grid grid-cols-2 mt-2 gap-y-1 gap-x-4">
+                  <div className="grid grid-cols-2 mt-2 gap-x-4 gap-y-1">
                     <p className="select-none">Compute cost</p>
                     <p className="tabular-nums">
                       ${parseFloat(vm.compute_price).toFixed(4)}/hour
@@ -98,10 +98,10 @@ export default function VirtualMachinePanel({
                       ${parseFloat(vm.total_price).toFixed(4)}/hour
                     </p>
 
-                    <p className="text-gray-700 font-medium select-none">
+                    <p className="select-none text-gray-700 font-medium">
                       Currently
                     </p>
-                    <p className="tabular-nums text-gray-700 font-medium">
+                    <p className="text-gray-700 font-medium tabular-nums">
                       $
                       {(vm.status === 'Running'
                         ? parseFloat(vm.total_price)
@@ -111,7 +111,7 @@ export default function VirtualMachinePanel({
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-2 mt-2 gap-y-1 gap-x-4">
+                  <div className="grid grid-cols-2 mt-2 gap-x-4 gap-y-1">
                     <p className="select-none">OS</p>
                     <p>{vm.operating_system}</p>
 
@@ -140,7 +140,7 @@ export default function VirtualMachinePanel({
             </AnimatePresence>
           </div>
         </div>
-        <div className="lg:ml-auto flex flex-col lg:items-end lg:text-end">
+        <div className="flex flex-col lg:ml-auto lg:items-end lg:text-end">
           <div className="mb-4 flex items-center font-display">
             <p>
               <span className="i-tabler-activity-heartbeat mr-2 inline-block translate-y-0.5 animate-pulse" />
@@ -164,7 +164,7 @@ export default function VirtualMachinePanel({
                 type="button"
                 onClick={() =>
                   onButtonClick(
-                    () => stopVM(vm.id, false),
+                    () => stopVM(vm.id, true),
                     'Stopping machine...'
                   )
                 }
@@ -178,7 +178,7 @@ export default function VirtualMachinePanel({
                 type="button"
                 onClick={() =>
                   onButtonClick(
-                    () => stopVM(vm.id, true),
+                    () => stopVM(vm.id, false),
                     'Stopping machine...'
                   )
                 }
