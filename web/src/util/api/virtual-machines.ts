@@ -29,7 +29,7 @@ export interface VirtualMachineEntry {
   city: string;
   cpu_threadscount: string;
   ip_address?: string;
-  dedicated_ip_address: string;
+  dedicated_ip_address?: string;
 }
 
 export async function fetchVMList() {

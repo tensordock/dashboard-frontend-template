@@ -10,20 +10,26 @@ export default function useVirtualMachines() {
   );
 
   const stopVM = useCallback(
-    (machineId: string, releaseGPU: boolean) => {
-      mutate(api.stopVM(machineId, releaseGPU).then(() => undefined));
+    async (machineId: string, releaseGPU: boolean) => {
+      await api.stopVM(machineId, releaseGPU);
+      return mutate();
     },
     [mutate]
   );
 
   const startVM = useCallback(
-    (machineId: string) => mutate(api.startVM(machineId).then(() => undefined)),
+    async (machineId: string) => {
+      await api.startVM(machineId);
+      return mutate();
+    },
     [mutate]
   );
 
   const deleteVM = useCallback(
-    (machineId: string) =>
-      mutate(api.deleteVM(machineId).then(() => undefined)),
+    async (machineId: string) => {
+      await api.deleteVM(machineId);
+      return mutate();
+    },
     [mutate]
   );
 
