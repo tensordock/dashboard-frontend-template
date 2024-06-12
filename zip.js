@@ -7,6 +7,8 @@ const emailTemplates = [
   'account_low_balance_3',
   'account_low_balance_5',
   'account_low_balance_custom',
+  'auto_charge',
+  'auto_charge_failed',
 ];
 
 async function main() {

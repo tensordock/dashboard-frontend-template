@@ -42,3 +42,18 @@ Sent to notify a user that their balance is below $10.
 Sent when a user has set up a custom action to notify them of their balance being below a custom threshold.
 
 - `${{ threshold }}` is the threshold they've set.
+
+### `auto_charge`
+
+Sent when an automated charge is made based on low threshold (user-configured).
+
+- `{{ card_last4 }}`: Last 4 digits of card used for auto payment.
+- `${{ charge }}`: Amount charged.
+- `${{ threshold }}`: Threshold for auto charge set by user.
+
+### `auto_charge_failed`
+
+Sent when an automated charge based on low threshold fails (user-configured).
+
+- `${{ charge }}`: Amount that would have been charged.
+- `${{ threshold }}`: Threshold for auto charge set by user.
