@@ -9,7 +9,7 @@ import AutomationsPage from './dash/automations';
 import AddAutomationPage from './dash/automations-add';
 import DeployPage from './dash/deploy';
 import DashLayout from './dash/layout';
-import ListPage from './dash/list';
+import VirtualMachinesPage from './dash/virtual-machines';
 import HomePage from './home';
 import ConfirmAccountPage from './confirm';
 
@@ -24,7 +24,7 @@ const router = createBrowserRouter([
       { path: 'automations/add', element: <AddAutomationPage /> },
       { path: 'account', element: <AccountPage /> },
       { path: 'account/deposit', element: <DepositFundsPage /> },
-      { path: 'list', element: <ListPage /> },
+      { path: 'list', element: <VirtualMachinesPage /> },
     ],
   },
   {

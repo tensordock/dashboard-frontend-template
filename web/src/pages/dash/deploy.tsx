@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 import { z } from 'zod';
 import { useNavigate } from 'react-router-dom';
 
-import { DashBlock } from '../../components/dash';
+import { DashBlock } from '../../components/dash-block';
 import Head from '../../components/head';
 import ConfigurationSelectInput from '../../components/input/deploy-configuration';
 import OperatingSystemSelectInput from '../../components/input/deploy-os';
@@ -126,19 +126,21 @@ export default function DeployPage() {
                 Email us
               </Link>
             </div>
-            {configurations && (
-              <Controller
-                control={control}
-                name="configuration"
-                render={(props) => (
-                  <ConfigurationSelectInput
-                    configurations={configurations}
-                    field={props.field}
-                    errorMessage={errors.configuration?.message}
-                  />
-                )}
-              />
-            )}
+            <AnimatePresence initial={false}>
+              {configurations && (
+                <Controller
+                  control={control}
+                  name="configuration"
+                  render={(props) => (
+                    <ConfigurationSelectInput
+                      configurations={configurations}
+                      field={props.field}
+                      errorMessage={errors.configuration?.message}
+                    />
+                  )}
+                />
+              )}
+            </AnimatePresence>
             {configurations === undefined && (
               <div className="px-6 py-4 text-gray-500">
                 Loading configurations...
