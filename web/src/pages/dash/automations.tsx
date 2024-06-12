@@ -1,14 +1,16 @@
 import { Link } from 'react-router-dom';
 
-import { DashBlock } from '../../components/dash';
+import { DashBlock } from '../../components/dash-block';
 import { ROUTES } from '../../constants/pages';
 import useAutomations from '../../hooks/use-automations';
+import Head from '../../components/head';
 
 export default function AutomationsPage() {
   const { automations, isValidating, deleteAutomation } = useAutomations();
 
   return (
     <>
+      <Head title="Automations" />
       <DashBlock header="Manage Automations">
         <p className="mt-4 text-gray-500 font-400">
           Automatically get an alert or recharge your account funds when your

@@ -1,7 +1,7 @@
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 
-import { DashBlock } from '../../components/dash';
+import { DashBlock } from '../../components/dash-block';
 import Head from '../../components/head';
 import { SHORT_COMPANY_NAME } from '../../constants/branding';
 import { ROUTES } from '../../constants/pages';

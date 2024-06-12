@@ -1,7 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 
-import { DashBlock } from '../../components/dash';
+import { DashBlock } from '../../components/dash-block';
 import AddAutomationForm from '../../components/forms/add-automation';
+import Head from '../../components/head';
 import { ROUTES } from '../../constants/pages';
 
 export default function AddAutomationPage() {
@@ -9,6 +10,7 @@ export default function AddAutomationPage() {
 
   return (
     <>
+      <Head title="Add Automation" />
       <Link
         to={ROUTES.automations}
         className="inline-block pb-2 pt-4 text-sm text-gray-500 font-display"
