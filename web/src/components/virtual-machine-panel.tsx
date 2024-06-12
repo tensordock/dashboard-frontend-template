@@ -58,8 +58,6 @@ export default function VirtualMachinePanel({
     text: vm.status,
   };
 
-  console.log(vm);
-
   return (
     <li className="rounded-xl bg-gray-50 ring-1 ring-gray-200">
       <h3 className="block rounded-t-xl bg-primary-500 px-8 py-4 text-xl text-white font-display">
@@ -69,29 +67,29 @@ export default function VirtualMachinePanel({
         <div>
           <div className="text-sm text-gray-500">
             <p>
-              <div className="i-tabler-map-pin mr-2 inline-block translate-y-[0.12em]" />
+              <span className="i-tabler-map-pin mr-2 inline-block translate-y-[0.12em]" />
               {vm.city}, {vm.state}, {vm.country}
             </p>
             <p className="mt-1">
-              <div className="i-tabler-cloud-computing mr-2 inline-block translate-y-[0.12em]" />
+              <span className="i-tabler-cloud-computing mr-2 inline-block translate-y-[0.12em]" />
               {vm.specs.gpu.type} ({vm.specs.gpu.amount})
             </p>
             <div className="mt-1 flex flex-wrap gap-4">
               <p>
-                <div className="i-tabler-cpu mr-1 inline-block translate-y-[0.12em]" />
+                <span className="i-tabler-cpu mr-1 inline-block translate-y-[0.12em]" />
                 {vm.specs.vcpus} vCPUs
               </p>
               <p>
-                <div className="i-tabler-stack-2 mr-1 inline-block translate-y-[0.12em]" />
+                <span className="i-tabler-stack-2 mr-1 inline-block translate-y-[0.12em]" />
                 {vm.specs.ram} GB RAM
               </p>
               <p>
-                <div className="i-tabler-database mr-1 inline-block translate-y-[0.12em]" />
+                <span className="i-tabler-database mr-1 inline-block translate-y-[0.12em]" />
                 {vm.specs.storage} GB Storage
               </p>
             </div>
             <button onClick={() => setDetailsOpen((o) => !o)} className="mt-4">
-              <div
+              <span
                 className={`i-tabler-chevron-down inline-block translate-y-[.15em] mr-2 transition-transform ${detailsOpen ? '' : '-rotate-90'}`}
               />
               Details
@@ -151,7 +149,7 @@ export default function VirtualMachinePanel({
                       ].map(([from, to]) => (
                         <p key={`${from}..${to}`}>
                           {from}{' '}
-                          <div className="i-tabler-arrow-right mr-1 inline-block translate-y-[0.12em]" />{' '}
+                          <span className="i-tabler-arrow-right mr-1 inline-block translate-y-[0.12em]" />{' '}
                           {to}
                         </p>
                       ))}
