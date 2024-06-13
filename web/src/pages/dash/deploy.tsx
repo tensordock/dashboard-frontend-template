@@ -167,7 +167,7 @@ export default function DeployPage() {
           <DashBlock>
             <h3 className="text-xl font-display">Configure details</h3>
             <div className="mt-6 flex flex-col gap-4">
-              <TextInput disabled value="admin" label="Admin Username" />
+              <TextInput disabled value="user" label="Admin Username" />
               <TextInput
                 {...register('adminPassword')}
                 type="password"
