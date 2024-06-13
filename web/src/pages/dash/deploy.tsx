@@ -66,7 +66,7 @@ export default function DeployPage() {
   );
 
   const accountBalanceTooLow = useMemo(
-    () => info !== undefined && info.balance <= 0,
+    () => info !== undefined && info.balance <= 1,
     [info]
   );
 
@@ -355,7 +355,7 @@ runcmd:
                   className={`mt-8 rounded px-4 py-2 font-medium font-display transition-colors ${accountBalanceTooLow ? 'ring-1 ring-gray-300 text-blue-500' : 'bg-primary-500 hover:bg-primary-600 text-white'}`}
                 >
                   {accountBalanceTooLow
-                    ? 'Balance of $0.00 too low'
+                    ? `Balance of $${info?.balance} too low`
                     : 'Deploy Server'}
                 </button>
               </div>
