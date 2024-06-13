@@ -52,7 +52,10 @@ export default function LoginPage() {
           </Link>
         </div>
       </div>
-      <form className="mb-2 mt-4 flex flex-col gap-4">
+      <form
+        className="mb-2 mt-4 flex flex-col gap-4"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <TextInput
           {...register('email')}
           label="Email"
@@ -66,9 +69,16 @@ export default function LoginPage() {
           placeholder="••••••••"
           errorMessage={errors.password?.message}
         />
+        <Link
+          to={ROUTES.resetPassword}
+          className="text-sm text-gray-500 underline"
+        >
+          <span className="i-tabler-help mr-1 inline-block translate-y-[.15em]" />
+          Forgot your password?
+        </Link>
         <button
-          onClick={handleSubmit(onSubmit)}
-          className="mt-6 inline-flex justify-center rounded bg-primary-500 py-3 text-white font-semibold font-display transition-colors disabled:cursor-default disabled:bg-primary-300 hover:bg-primary-600"
+          type="submit"
+          className="mt-2 inline-flex justify-center rounded bg-primary-500 py-3 text-white font-semibold font-display transition-colors disabled:cursor-default disabled:bg-primary-300 hover:bg-primary-600"
           disabled={isSubmitting}
         >
           Submit

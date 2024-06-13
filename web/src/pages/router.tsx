@@ -12,6 +12,7 @@ import DashLayout from './dash/layout';
 import VirtualMachinesPage from './dash/virtual-machines';
 import HomePage from './home';
 import ConfirmAccountPage from './confirm';
+import ResetPasswordPage from './auth/reset-password';
 
 const router = createBrowserRouter([
   // { path: '/', element: <HomePage /> },
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
     children: [
       { path: 'login', element: <LoginPage /> },
       { path: 'signup', element: <SignupPage /> },
+      { path: 'reset-password', element: <ResetPasswordPage /> },
     ],
   },
   { path: 'confirm/:token', element: <ConfirmAccountPage /> },

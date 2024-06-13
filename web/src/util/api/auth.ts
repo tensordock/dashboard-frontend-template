@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import axios from '../axios';
 
 /**
@@ -141,4 +142,26 @@ export async function confirmToken(
  */
 export function logout() {
   localStorage.removeItem('whitelabelToken');
+}
+
+/**
+ * Requests an email with a password reset link.
+ */
+export async function resetPassword(email: string, validate?: boolean) {
+  if (validate) z.string().email().parse(email);
+
+  const formData = new FormData();
+  formData.append('email', email);
+
+  const res = await axios.postForm(
+    `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/reset_password`,
+    formData,
+    { validateStatus: (status) => status < 500 }
+  );
+
+  const data = res.data as
+    | { success: true }
+    | { success: false; error: string };
+
+  if (!data.success) throw new Error(data.error);
 }

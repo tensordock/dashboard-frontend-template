@@ -11,6 +11,7 @@ const emailTemplates = [
   'auto_charge_failed',
   'alert_servers_stopped',
   'alert_servers_deleted',
+  'forgot_password',
 ];
 
 async function main() {

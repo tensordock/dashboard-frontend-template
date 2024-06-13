@@ -64,7 +64,10 @@ export default function SignupPage() {
           </Link>
         </div>
       </div>
-      <form className="mb-2 mt-4 flex flex-col gap-4">
+      <form
+        className="mb-2 mt-4 flex flex-col gap-4"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <TextInput
           {...register('email')}
           label="Email"
@@ -92,7 +95,7 @@ export default function SignupPage() {
           errorMessage={errors.confirm_password?.message}
         />
         <button
-          onClick={handleSubmit(onSubmit)}
+          type="submit"
           className="mt-6 inline-flex justify-center rounded bg-primary-500 py-3 text-white font-semibold font-display transition-colors disabled:cursor-default disabled:bg-primary-300 hover:bg-primary-600"
           disabled={isSubmitting}
         >
