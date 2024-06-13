@@ -13,6 +13,7 @@ import VirtualMachinesPage from './dash/virtual-machines';
 import HomePage from './home';
 import ConfirmAccountPage from './confirm';
 import ResetPasswordPage from './auth/reset-password';
+import ChangePasswordPage from './auth/change-password';
 
 const router = createBrowserRouter([
   // { path: '/', element: <HomePage /> },
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
       { path: 'login', element: <LoginPage /> },
       { path: 'signup', element: <SignupPage /> },
       { path: 'reset-password', element: <ResetPasswordPage /> },
+      { path: 'change-password/:token', element: <ChangePasswordPage /> },
     ],
   },
   { path: 'confirm/:token', element: <ConfirmAccountPage /> },

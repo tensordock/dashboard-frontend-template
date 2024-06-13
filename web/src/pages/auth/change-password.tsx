@@ -1,0 +1,93 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { z } from 'zod';
+
+import Head from '../../components/head';
+import TextInput from '../../components/input/text-input';
+import { ROUTES } from '../../constants/pages';
+import * as api from '../../util/api';
+
+const changePasswordSchema = z
+  .object({
+    password: api.passwordSchema,
+    confirmPassword: api.passwordSchema,
+  })
+  .refine(({ password, confirmPassword }) => password === confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  });
+
+type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>;
+
+export default function ChangePasswordPage() {
+  const navigate = useNavigate();
+  const { token } = useParams();
+  const [searchParams] = useSearchParams();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting, errors },
+  } = useForm<ChangePasswordFormValues>({
+    resolver: zodResolver(changePasswordSchema),
+    defaultValues: { password: '', confirmPassword: '' },
+  });
+
+  const onSubmit: SubmitHandler<ChangePasswordFormValues> = async ({
+    password,
+  }) => {
+    const email = searchParams.get('email');
+    if (!email || !token) {
+      toast.error('Invalid link.');
+      return;
+    }
+
+    const toastId = toast.loading('Changing password...');
+    try {
+      await api.changePassword(email, password, token);
+      toast.success('Password changed successfully.', { id: toastId });
+      navigate(ROUTES.login, { replace: true });
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? `${err.message}.` : 'An unknown error occurred',
+        { id: toastId }
+      );
+    }
+  };
+
+  return (
+    <>
+      <Head title="Change Password" />
+      <h1 className="text-2xl font-medium font-display">Change Password</h1>
+      <p className="mt-1 text-sm text-gray-500">
+        Changing password for {searchParams.get('email')}
+      </p>
+      <form
+        className="mb-2 mt-4 flex flex-col gap-4"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <TextInput
+          {...register('password')}
+          type="password"
+          label="New Password"
+          errorMessage={errors.password?.message}
+        />
+        <TextInput
+          {...register('confirmPassword')}
+          type="password"
+          label="Confirm Password"
+          errorMessage={errors.confirmPassword?.message}
+        />
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="rounded bg-primary-500 px-4 py-2 text-white font-display shadow transition-colors sm:self-end disabled:bg-primary-300 sm:px-12 hover:enabled:bg-primary-600"
+        >
+          Change Password
+        </button>
+      </form>
+    </>
+  );
+}

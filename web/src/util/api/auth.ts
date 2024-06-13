@@ -63,6 +63,11 @@ export async function login(
   localStorage.setItem('whitelabelToken', data.token);
 }
 
+export const passwordSchema = z
+  .string()
+  .min(1, 'Password is required')
+  .min(4, 'Password must be at least 4 characters');
+
 /**
  * `zod` validation schema for user signup form.
  */
@@ -73,10 +78,7 @@ export const signupSchema = z.object({
     .trim()
     .min(1, 'Organization name is required')
     .min(3, 'Organization name must be at least 3 characters'),
-  password: z
-    .string()
-    .min(1, 'Password is required')
-    .min(4, 'Password must be at least 4 characters'),
+  password: passwordSchema,
 });
 
 /**
@@ -157,6 +159,35 @@ export async function resetPassword(email: string, validate?: boolean) {
     `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/reset_password`,
     formData,
     { validateStatus: (status) => status < 500 }
+  );
+
+  const data = res.data as
+    | { success: true }
+    | { success: false; error: string };
+
+  if (!data.success) throw new Error(data.error);
+}
+
+const changePasswordSchema = z.object({
+  email: z.string().email(),
+  password: passwordSchema,
+});
+
+export async function changePassword(
+  email: string,
+  password: string,
+  token: string,
+  validate?: boolean
+) {
+  if (validate) changePasswordSchema.parse({ email, password });
+
+  const formData = new FormData();
+  formData.append('password', password);
+
+  const res = await axios.postForm(
+    `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/change_password/${token}`,
+    formData,
+    { validateStatus: (status) => status < 500, params: { email } }
   );
 
   const data = res.data as
