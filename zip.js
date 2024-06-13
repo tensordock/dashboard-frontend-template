@@ -9,6 +9,8 @@ const emailTemplates = [
   'account_low_balance_custom',
   'auto_charge',
   'auto_charge_failed',
+  'alert_servers_stopped',
+  'alert_servers_deleted',
 ];
 
 async function main() {

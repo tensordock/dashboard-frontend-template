@@ -57,3 +57,16 @@ Sent when an automated charge based on low threshold fails (user-configured).
 
 - `${{ charge }}`: Amount that would have been charged.
 - `${{ threshold }}`: Threshold for auto charge set by user.
+
+### `alert_servers_stopped`
+
+Sent when an org's balance hits $1, and their servers are stopped.
+
+- `${{ balance }}`: Organization's current balance
+
+### `alert_servers_deleted`
+
+Sent when an org's balance is negative, and their servers are deleted.
+
+
+- `${{ balance }}`: Organization's current balance

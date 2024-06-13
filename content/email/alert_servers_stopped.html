@@ -57,12 +57,14 @@
 
 <body>
   <div class="container">
-    <h1 class="header">Credit Card Auto-Charged ${{ charge }}</h1>
+    <h1 class="header">Servers Stopped, Low Balance</h1>
     <p>
-      Thank you for your continued business. This is a notification that your card ending in <strong>{{ card_last4 }}</strong> was charged <strong>${{ charge }}</strong> and that amount was deposited into your {{ org_title }} account. This is in accordance with the automation you set up to charge the above amount when your account falls below <strong>${{ threshold }}</strong> in credit. To change or delete your automatic charge threshold, visit the link below:
+      <strong>Your servers were stopped as a precautionary measure because your balance (<strong>{{ balance }}</strong>) fell below $1, ensuring you have more time to top-up your account for when your balance reaches $0.</strong>
     </p>
-    <a href="http://{{ whitelabel_site }}/automations" class="button">Manage Automations</a>
-    <br />
+    <p>
+      You can top-up your account directly from our dashboard homepage using the following link:
+    </p>
+    <a href="http://{{ whitelabel_site }}/account" class="button">Deposit Funds</a>
     <p class="footer">
       Beep boop, I'm a bot. But reply to me, and I'll connect you to a real
       person :)<br />

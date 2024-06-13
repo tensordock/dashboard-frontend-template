@@ -60,11 +60,13 @@
     <h1 class="header">Important: Credit Card Failed</h1>
     <p>
       Thank you so much for your continued business. This is a notification that one of your cards was attempted to be charged <strong>{{ charge }}</strong> due to your custom threshold action with threshold of <strong>${{ threshold }}</strong>, but the transaction failed. This may be because your card requires authentication every time it is used, or because an unexpected error occurred. Please deposit funds manually for now and contact support for more information. This automation has been disabled until your re-configuration. To change or delete your automatic charge threshold, visit the link below:
+    </p>
     <br />
+    <a href="http://{{ whitelabel_site }}/automations" class="button">Manage Automations</a>
     <p class="footer">
       Beep boop, I'm a bot. But reply to me, and I'll connect you to a real
       person :)<br />
-      <a href="http://{{ whitelabel_site }}/automations">{{ whitelabel_site }}/automations</a>
+      <a href="http://{{ whitelabel_site }}">{{ whitelabel_site }}</a>
     </p>
   </div>
 </body>
