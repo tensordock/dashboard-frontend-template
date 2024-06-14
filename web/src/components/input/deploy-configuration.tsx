@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { RefCallBack } from 'react-hook-form';
 
-import { DeployConfiguration } from '../../constants/datacenter';
+import { DeployConfiguration } from '../../constants/hardware-software';
 
 export default function ConfigurationSelectInput({
   field: { onChange, value, disabled, ref },

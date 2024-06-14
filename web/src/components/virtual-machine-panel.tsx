@@ -2,7 +2,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 
-import { DEFAULT_PORTS } from '../constants/datacenter';
 import useVirtualMachines from '../hooks/use-virtual-machines';
 import { VirtualMachineEntry } from '../util/api';
 
@@ -143,10 +142,7 @@ export default function VirtualMachinePanel({
 
                     <p className="select-none">Port Forwards</p>
                     <div>
-                      {[
-                        ...DEFAULT_PORTS.map(({ from, to }) => [from, to]),
-                        ...Object.entries(vm.port_forwards),
-                      ].map(([from, to]) => (
+                      {Object.entries(vm.port_forwards).map(([from, to]) => (
                         <p key={`${from}..${to}`}>
                           {from}{' '}
                           <span className="i-tabler-arrow-right mr-1 inline-block translate-y-[0.12em]" />{' '}

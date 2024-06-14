@@ -9,24 +9,16 @@ import {
   useWatch,
 } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
-import { useNavigate } from 'react-router-dom';
 
 import { DashBlock } from '../../components/dash-block';
 import Head from '../../components/head';
-import ConfigurationSelectInput from '../../components/input/deploy-configuration';
 import OperatingSystemSelectInput from '../../components/input/deploy-os';
+import DeploySpecInput from '../../components/input/deploy-spec';
 import TextInput from '../../components/input/text-input';
-import { SHORT_COMPANY_NAME } from '../../constants/branding';
-import { DEFAULT_PORTS, DeployConfiguration } from '../../constants/datacenter';
-import {
-  CONTACT_EMAIL,
-  INFRASTRUCTURE_URL,
-  SALES_EMAIL,
-} from '../../constants/external';
-import { ROUTES } from '../../constants/pages';
-import useDeployConfigurations from '../../hooks/use-deploy-configurations';
+import * as constants from '../../constants';
+import useHostnodes from '../../hooks/use-hostnodes';
 import useUserInfo from '../../hooks/use-user-info';
 import * as api from '../../util/api';
 
@@ -34,9 +26,6 @@ type DeployFormValues = z.infer<typeof api.deploySchema>;
 
 export default function DeployPage() {
   const navigate = useNavigate();
-
-  const { configurations } = useDeployConfigurations();
-  const { info } = useUserInfo();
 
   const {
     register,
@@ -50,39 +39,51 @@ export default function DeployPage() {
       serverName: '',
       portForwards: [],
       cloudinitScript: '',
+      specs: constants.DEFAULT_DEPLOY_SPECS,
     },
   });
 
-  const selectedConfigurationString = useWatch({
-    control,
-    name: 'configuration',
-  });
-  const selectedConfiguration = useMemo(
-    () =>
-      selectedConfigurationString === undefined
-        ? undefined
-        : (JSON.parse(selectedConfigurationString) as DeployConfiguration),
-    [selectedConfigurationString]
-  );
+  const specs = useWatch({ control, name: 'specs' });
 
+  const { hostnodes } = useHostnodes({
+    minGPUCount: specs.gpu_count,
+    minRAM: specs.ram,
+    minStorage: specs.storage,
+    minvCPUs: specs.vcpu,
+    minVRAM: 1,
+    requiresRTX: false,
+  });
+
+  const { info } = useUserInfo();
   const accountBalanceTooLow = useMemo(
     () => info !== undefined && info.balance <= 1,
     [info]
   );
 
+  console.log(hostnodes);
+
+  const { locations, suggestedLocations } = useMemo(
+    () =>
+      hostnodes
+        ? api.generateLocations(specs, hostnodes)
+        : { locations: undefined, suggestedLocations: undefined },
+    [hostnodes, specs]
+  );
+
   const onSubmit = useCallback<SubmitHandler<DeployFormValues>>(
     async (values) => {
+      if (!hostnodes) return;
       const toastId = toast.loading('Deploying...');
       try {
-        await api.deploy(values);
+        await api.deploy(values, hostnodes);
         toast.success('Successfully deployed!', { id: toastId });
-        navigate(ROUTES.list);
+        navigate(constants.ROUTES.list);
       } catch (err) {
         if (err instanceof Error)
           toast.error(`${err.message}.`, { id: toastId });
       }
     },
-    [navigate]
+    [navigate, hostnodes]
   );
 
   const portForwards = useFieldArray({ control, name: 'portForwards' });
@@ -99,7 +100,7 @@ export default function DeployPage() {
             fabric passed through when you deploy 8 GPUs.
           </p>
           <Link
-            to={INFRASTRUCTURE_URL}
+            to={constants.INFRASTRUCTURE_URL}
             target="_blank"
             className="mt-2 inline-block select-none rounded px-3 py-1 text-primary-500 font-300 font-display ring-1 ring-gray-300"
           >
@@ -107,160 +108,189 @@ export default function DeployPage() {
           </Link>
         </div>
       </DashBlock>
-      <form
-        className="grid gap-4 lg:grid-cols-[1fr_20rem]"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <div className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {constants.GPU_SWITCHING_ALLOWED && (
           <DashBlock>
-            <h3 className="text-xl font-display">Select a configuration</h3>
+            <h3 className="text-xl font-display">Select an available GPU</h3>
             <div className="mb-4 mt-2 space-y-2">
               <span className="block text-gray-500 md:inline">
                 Need InfiniBand or custom deployments?
               </span>
               <Link
-                to={`mailto:${CONTACT_EMAIL}`}
+                to={`mailto:${constants.CONTACT_EMAIL}`}
                 target="_blank"
                 className="inline-block select-none rounded px-3 py-1 text-primary-500 font-300 font-display ring-1 ring-gray-300 md:ml-4"
               >
                 Email us
               </Link>
             </div>
-            <AnimatePresence initial={false}>
-              {configurations && (
-                <Controller
-                  control={control}
-                  name="configuration"
-                  render={(props) => (
-                    <ConfigurationSelectInput
-                      configurations={configurations}
-                      field={props.field}
-                      errorMessage={errors.configuration?.message}
-                    />
-                  )}
+          </DashBlock>
+        )}
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <DeploySpecInput
+            {...register('specs.gpu_count')}
+            label="GPU Count"
+            errorMessage={errors.specs?.gpu_count?.message}
+            options={constants.ALLOWED_GPU_COUNT}
+            disabled={constants.ALLOWED_GPU_COUNT.length === 1}
+          />
+          <DeploySpecInput
+            {...register('specs.ram')}
+            label="RAM"
+            errorMessage={errors.specs?.ram?.message}
+            options={constants.ALLOWED_RAM_GB}
+            disabled={constants.ALLOWED_RAM_GB.length === 1}
+            transformValues={(ram) => `${ram} GB`}
+          />
+          <DeploySpecInput
+            {...register('specs.vcpu')}
+            label="vCPU Count"
+            errorMessage={errors.specs?.vcpu?.message}
+            disabled={constants.ALLOWED_VCPU_COUNT.length === 1}
+            options={constants.ALLOWED_VCPU_COUNT}
+          />
+          <DeploySpecInput
+            {...register('specs.storage')}
+            label="NVMe SSD"
+            errorMessage={errors.specs?.vcpu?.message}
+            options={constants.ALLOWED_STORAGE_GB}
+            disabled={constants.ALLOWED_STORAGE_GB.length === 1}
+            transformValues={(v) => `${v} GB`}
+          />
+        </div>
+        <DashBlock>
+          <h3 className="mb-6 select-none text-xl font-display">
+            Select an operating system
+          </h3>
+          <Controller
+            control={control}
+            name="os"
+            render={({ field }) => {
+              return (
+                <OperatingSystemSelectInput
+                  field={field}
+                  errorMessage={errors.os?.message}
                 />
-              )}
-            </AnimatePresence>
-            {configurations === undefined && (
-              <div className="px-6 py-4 text-gray-500">
-                Loading configurations...
+              );
+            }}
+          />
+        </DashBlock>
+        <DashBlock>
+          <h3 className="select-none text-xl font-display">
+            Select a location
+          </h3>
+          <Controller
+            control={control}
+            name={'hostnode'}
+            render={({ field: { value, onChange } }) => (
+              <div>
+                {locations &&
+                  Object.entries(locations).map(([id, loc]) => {
+                    const isSelected = value === id;
+                    // TODO
+                    return (
+                      <button type="button" onClick={() => onChange(id)}>
+                        {loc.location}
+                      </button>
+                    );
+                  })}
               </div>
             )}
-          </DashBlock>
-          <DashBlock>
-            <h3 className="mb-6 text-xl font-display">
-              Select an operating system
-            </h3>
-            <Controller
-              control={control}
-              name="os"
-              render={({ field }) => {
-                return (
-                  <OperatingSystemSelectInput
-                    field={field}
-                    errorMessage={errors.os?.message}
-                  />
-                );
-              }}
+          />
+        </DashBlock>
+        <DashBlock>
+          <h3 className="select-none text-xl font-display">
+            Configure details
+          </h3>
+          <div className="mt-6 flex flex-col gap-4">
+            <TextInput disabled value="user" label="Admin Username" />
+            <TextInput
+              {...register('adminPassword')}
+              type="password"
+              placeholder="••••••••"
+              errorMessage={errors.adminPassword?.message}
+              label="Admin Password"
             />
-          </DashBlock>
-          <DashBlock>
-            <h3 className="text-xl font-display">Configure details</h3>
-            <div className="mt-6 flex flex-col gap-4">
-              <TextInput disabled value="user" label="Admin Username" />
-              <TextInput
-                {...register('adminPassword')}
-                type="password"
-                placeholder="••••••••"
-                errorMessage={errors.adminPassword?.message}
-                label="Admin Password"
-              />
-              <TextInput
-                {...register('serverName')}
-                placeholder={`My ${SHORT_COMPANY_NAME} Server`}
-                errorMessage={errors.serverName?.message}
-                label="Name"
-              />
-              <h4 className="mt-6 text-gray-700 font-display">
-                Configure port forwards
-              </h4>
-              <p className="text-sm text-gray-500">
-                You may forward up to 64 ports. The external port is where
-                requests will enter; the internal port is where you set the
-                requests to be forwarded to. We've by default included an SSH
-                port (a port forwarded to port 22) so that you will be able to
-                access your instance once created.
-              </p>
-              <div className="mt-2 flex flex-col gap-2">
-                <div className="grid grid-cols-[1fr_1fr_40px] gap-2 text-sm text-gray-500">
-                  <div>External Port</div>
-                  <div>Internal Port</div>
-                </div>
-                {DEFAULT_PORTS.map(({ from, to, id }) => (
-                  <div key={id} className="grid grid-cols-[1fr_1fr_40px] gap-2">
-                    <TextInput disabled value={from} />
-                    <TextInput disabled value={to} />
-                  </div>
-                ))}
-                {portForwards.fields.map((forward, idx) => (
-                  <div
-                    key={forward.id}
-                    className="grid grid-cols-[1fr_1fr_40px] gap-2"
-                  >
-                    <TextInput
-                      {...register(`portForwards.${idx}.from`)}
-                      placeholder="From"
-                      errorMessage={errors.portForwards?.[idx]?.from?.message}
-                    />
-                    <TextInput
-                      {...register(`portForwards.${idx}.to`)}
-                      placeholder="To"
-                      errorMessage={errors.portForwards?.[idx]?.to?.message}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => portForwards.remove(idx)}
-                      className="i-tabler-trash my-[10px] h-[20px] w-[40px] text-red-500 opacity-50 transition-opacity hover:opacity-100"
-                    >
-                      <div className="sr-only">Delete</div>
-                    </button>
-                  </div>
-                ))}
+            <TextInput
+              {...register('serverName')}
+              placeholder={`My ${constants.SHORT_COMPANY_NAME} Server`}
+              errorMessage={errors.serverName?.message}
+              label="Name"
+            />
+            <h4 className="mt-6 text-gray-700 font-display">
+              Configure port forwards
+            </h4>
+            <p className="text-sm text-gray-500">
+              You may forward up to 64 ports. The external port is where
+              requests will enter; the internal port is where you set the
+              requests to be forwarded to. We've by default included an SSH port
+              (a port forwarded to port 22) so that you will be able to access
+              your instance once created.
+            </p>
+            <div className="mt-2 flex flex-col gap-2">
+              <div className="grid grid-cols-[1fr_1fr_40px] gap-2 text-sm text-gray-500">
+                <div>External Port</div>
+                <div>Internal Port</div>
               </div>
-              <button
-                type="button"
-                onClick={() => portForwards.append({ from: '', to: '' })}
-                className="rounded px-4 py-2 ring-1 ring-gray-300 transition-colors hover:bg-gray-100"
-              >
-                <div className="i-tabler-plus mr-2 inline-block translate-y-[2px]" />
-                Add forwarding
-              </button>
+              {portForwards.fields.map((forward, idx) => (
+                <div
+                  key={forward.id}
+                  className="grid grid-cols-[1fr_1fr_40px] gap-2"
+                >
+                  <TextInput
+                    {...register(`portForwards.${idx}.from`)}
+                    placeholder="From"
+                    errorMessage={errors.portForwards?.[idx]?.from?.message}
+                  />
+                  <TextInput
+                    {...register(`portForwards.${idx}.to`)}
+                    placeholder="To"
+                    errorMessage={errors.portForwards?.[idx]?.to?.message}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => portForwards.remove(idx)}
+                    className="i-tabler-trash my-[10px] h-[20px] w-[40px] text-red-500 opacity-50 transition-opacity hover:opacity-100"
+                  >
+                    <div className="sr-only">Delete</div>
+                  </button>
+                </div>
+              ))}
             </div>
             <button
               type="button"
-              onClick={() => setAdvancedOpen((o) => !o)}
-              className="mt-8 text-left font-display"
+              onClick={() => portForwards.append({ from: '', to: '' })}
+              className="rounded px-4 py-2 ring-1 ring-gray-300 transition-colors hover:bg-gray-100"
             >
-              <div
-                className={`i-tabler-settings mr-2 inline-block translate-y-0.5 transition-transform duration-300 ${isAdvancedOpen ? 'rotate-90' : ''}`}
-              />
-              Click for more advanced options
+              <div className="i-tabler-plus mr-2 inline-block translate-y-[2px]" />
+              Add forwarding
             </button>
-            <AnimatePresence>
-              {isAdvancedOpen && (
-                <motion.div
-                  initial={{ height: 0 }}
-                  animate={{ height: 'auto' }}
-                  exit={{ height: 0 }}
-                  className="flex flex-col overflow-hidden"
-                >
-                  <label className="flex flex-col p-1 pt-4">
-                    <div className="mb-1 text-sm text-gray-500">
-                      Cloudinit Script
-                    </div>
-                    <textarea
-                      {...register('cloudinitScript')}
-                      placeholder={`write_files:
+          </div>
+          <button
+            type="button"
+            onClick={() => setAdvancedOpen((o) => !o)}
+            className="mt-8 text-left font-display"
+          >
+            <div
+              className={`i-tabler-settings mr-2 inline-block translate-y-0.5 transition-transform duration-300 ${isAdvancedOpen ? 'rotate-90' : ''}`}
+            />
+            Click for more advanced options
+          </button>
+          <AnimatePresence>
+            {isAdvancedOpen && (
+              <motion.div
+                initial={{ height: 0 }}
+                animate={{ height: 'auto' }}
+                exit={{ height: 0 }}
+                className="flex flex-col overflow-hidden"
+              >
+                <label className="flex flex-col p-1 pt-4">
+                  <div className="mb-1 text-sm text-gray-500">
+                    Cloudinit Script
+                  </div>
+                  <textarea
+                    {...register('cloudinitScript')}
+                    placeholder={`write_files:
   - path: /home/user/cloudinit_website/index.html
     permissions: '0777'
     content: |
@@ -268,104 +298,103 @@ export default function DeployPage() {
     owner: user:user 
 runcmd:
   - docker run -d --restart unless-stopped --stop-timeout 300 -v /home/user/cloudinit_website:/usr/share/nginx/html:ro -p 80:80 --name default_container nginx`}
-                      className="rounded px-2 py-1 text-sm font-mono ring-1 ring-gray-300"
-                      rows={11}
-                    />
-                  </label>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </DashBlock>
-        </div>
-        <div className="lg:sticky lg:top-4 lg:self-start">
-          <DashBlock>
-            <h3 className="text-xl font-display">Your Server</h3>
-            {selectedConfiguration ? (
-              <div className="mt-4 flex flex-col">
-                <p className="text-sm text-gray-500">
-                  Your actual charge will be pro-rated to the millisecond your
-                  server is deployed.
-                </p>
-                <p className="mt-4">
-                  {selectedConfiguration.vcpu} vCPUs, Intel Xeon Platinum 8470 @
-                  3.8 GHz boost
-                </p>
-                <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
-                  <p className="inline-flex items-center gap-2">
-                    <span className="i-tabler-stack-2" />
-                    {selectedConfiguration.ram} GB DDR5
-                  </p>
-                  <p className="inline-flex items-center gap-2">
-                    <span className="i-tabler-database" />
-                    {selectedConfiguration.storage} GB NVMe SSD
-                  </p>
-                  <p className="inline-flex items-center gap-2">
-                    <span className="i-tabler-bolt" />
-                    {selectedConfiguration.bandwidth} Gbps
-                  </p>
-                  <p className="inline-flex items-center gap-2">
-                    <span className="i-tabler-map-pin" />
-                    Dallas, Texas
-                  </p>
-                </div>
-                <p className="mt-8 flex font-bold">
-                  Running Cost
-                  <span className="ml-auto tabular-nums">
-                    ${selectedConfiguration.price.toFixed(2)}/hr
-                  </span>
-                </p>
-                <p className="mt-1 text-sm text-gray-500">
-                  Cost per hour when the VM is running.
-                </p>
-                <p className="mt-6 flex font-bold">
-                  Stopped Cost
-                  <span className="ml-auto tabular-nums">
-                    ${(selectedConfiguration.storage * 0.0001).toFixed(2)}/hr
-                  </span>
-                </p>
-                <p className="mt-1 text-sm text-gray-500">
-                  Stopped VMs incur reduced storage fees, but the availability
-                  of GPUs on the same node is not guaranteed.
-                </p>
-                <p className="mt-8 flex font-bold">
-                  Account Balance
-                  <span className="ml-auto tabular-nums">
-                    ${info?.balance?.toFixed(2)}
-                  </span>
-                </p>
-                <p className="mt-1 text-sm text-gray-500">
-                  Deposit more funds{' '}
-                  <Link
-                    to={ROUTES.accountDeposit}
-                    className="font-medium underline transition-colors hover:text-gray-500"
-                  >
-                    here
-                  </Link>
-                  .
-                </p>
-                <p className="mt-6 text-sm text-gray-500">
-                  Email us at{' '}
-                  <a href={`mailto:${SALES_EMAIL}`}>{SALES_EMAIL}</a> if you are
-                  interested in committing to a monthly or longer contract. Save
-                  up to 30%.
-                </p>
-                <button
-                  type="submit"
-                  disabled={accountBalanceTooLow}
-                  className={`mt-8 rounded px-4 py-2 font-medium font-display transition-colors ${accountBalanceTooLow ? 'ring-1 ring-gray-300 text-blue-500' : 'bg-primary-500 hover:bg-primary-600 text-white'}`}
-                >
-                  {accountBalanceTooLow
-                    ? `Balance of $${info?.balance} too low`
-                    : 'Deploy Server'}
-                </button>
-              </div>
-            ) : (
-              <p className="mt-4 text-gray-500">
-                Pricing details will appear once you select a configuration.
-              </p>
+                    className="rounded px-2 py-1 text-sm font-mono ring-1 ring-gray-300"
+                    rows={11}
+                  />
+                </label>
+              </motion.div>
             )}
-          </DashBlock>
-        </div>
+          </AnimatePresence>
+        </DashBlock>
+
+        <DashBlock>
+          <h3 className="select-none text-xl font-display">Your Server</h3>
+          {specs ? (
+            <div className="mt-4 flex flex-col">
+              <p className="text-sm text-gray-500">
+                Your actual charge will be pro-rated to the millisecond your
+                server is deployed.
+              </p>
+              <p className="mt-4">
+                {specs.vcpu} vCPUs, Intel Xeon Platinum 8470 @ 3.8 GHz boost
+              </p>
+              <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
+                <p className="inline-flex items-center gap-2">
+                  <span className="i-tabler-stack-2" />
+                  {specs.ram} GB DDR5
+                </p>
+                <p className="inline-flex items-center gap-2">
+                  <span className="i-tabler-database" />
+                  {specs.storage} GB NVMe SSD
+                </p>
+                <p className="inline-flex items-center gap-2">
+                  <span className="i-tabler-bolt" />
+                  TODO: bandwidth Gbps
+                </p>
+                <p className="inline-flex items-center gap-2">
+                  <span className="i-tabler-map-pin" />
+                  Dallas, Texas
+                </p>
+              </div>
+              <p className="mt-8 flex font-bold">
+                Running Cost
+                <span className="ml-auto tabular-nums">
+                  TODO: price.toFixed(2) /hr
+                </span>
+              </p>
+              <p className="mt-1 text-sm text-gray-500">
+                Cost per hour when the VM is running.
+              </p>
+              <p className="mt-6 flex font-bold">
+                Stopped Cost
+                <span className="ml-auto tabular-nums">
+                  ${(specs.storage * 0.0001).toFixed(2)}/hr
+                </span>
+              </p>
+              <p className="mt-1 text-sm text-gray-500">
+                Stopped VMs incur reduced storage fees, but the availability of
+                GPUs on the same node is not guaranteed.
+              </p>
+              <p className="mt-8 flex font-bold">
+                Account Balance
+                <span className="ml-auto tabular-nums">
+                  ${info?.balance?.toFixed(2)}
+                </span>
+              </p>
+              <p className="mt-1 text-sm text-gray-500">
+                Deposit more funds{' '}
+                <Link
+                  to={constants.ROUTES.accountDeposit}
+                  className="font-medium underline transition-colors hover:text-gray-500"
+                >
+                  here
+                </Link>
+                .
+              </p>
+              <p className="mt-6 text-sm text-gray-500">
+                Email us at{' '}
+                <a href={`mailto:${constants.SALES_EMAIL}`}>
+                  {constants.SALES_EMAIL}
+                </a>{' '}
+                if you are interested in committing to a monthly or longer
+                contract. Save up to 30%.
+              </p>
+              <button
+                type="submit"
+                disabled={accountBalanceTooLow}
+                className={`mt-8 rounded px-4 py-2 font-medium font-display transition-colors ${accountBalanceTooLow ? 'ring-1 ring-gray-300 text-blue-500' : 'bg-primary-500 hover:bg-primary-600 text-white'}`}
+              >
+                {accountBalanceTooLow
+                  ? `Balance of $${info?.balance} too low`
+                  : 'Deploy Server'}
+              </button>
+            </div>
+          ) : (
+            <p className="mt-4 text-gray-500">
+              Pricing details will appear once you select a configuration.
+            </p>
+          )}
+        </DashBlock>
       </form>
     </>
   );

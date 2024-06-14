@@ -1,20 +1,8 @@
 import { z } from 'zod';
 
-import {
-  DEFAULT_PORTS,
-  DeployConfiguration,
-  GPU_MAPPINGS,
-  OPERATING_SYSTEMS,
-  OS_DETAILS,
-  OS_MAPPINGS,
-  getDefaultConfigurations,
-} from '../../constants/datacenter';
+import * as constants from '../../constants';
 import axios from '../axios';
 import fetcher from '../fetcher';
-
-const SAVE_RAM_AMOUNT = 64;
-const SAVE_CPU_AMOUNT = 16;
-const SAVE_STORAGE_AMOUNT = 600;
 
 export interface HostnodeEntry {
   location: {
@@ -24,7 +12,7 @@ export interface HostnodeEntry {
     city: string;
     dc?: { name: string; tier: string };
   };
-  networking: { ports: unknown; receive: unknown; send: unknown };
+  networking: { ports: number[]; receive: number; send: number };
   specs: {
     cpu: { amount: number; type: string; price: number };
     ram: { amount: number; price: number };
@@ -58,26 +46,28 @@ export interface HostnodeEntry {
   };
 }
 
-/**
- * Step 1: fetch stocks from API
- */
-export async function fetchHostnodeStock(params: {
+export interface FetchHostnodesParams {
   minGPUCount: number;
   minRAM: number;
   minvCPUs: number;
   minStorage: number;
-  minVRAM: number;
-  requiresRTX: boolean;
-  domain: string;
-}) {
+  minVRAM?: number;
+  requiresRTX?: boolean;
+  domain?: string;
+}
+
+/**
+ * Step 1: fetch hostnode availability from API
+ */
+export async function fetchHostnodeStock(params: FetchHostnodesParams) {
   const stockRequestParams = new URLSearchParams({
     minGPUCount: params.minGPUCount.toFixed(0),
     minRAM: params.minRAM.toFixed(0),
     minvCPUs: params.minvCPUs.toFixed(0),
     minStorage: params.minStorage.toFixed(0),
-    minVRAM: params.minVRAM.toFixed(0),
-    requiresRTX: `${params.requiresRTX}`,
-    domain: params.domain,
+    ...(params.minVRAM && { minVRAM: params.minVRAM.toFixed(0) }),
+    ...(params.requiresRTX && { requiresRTX: `${params.requiresRTX}` }),
+    ...(params.domain && { domain: params.domain }),
   });
 
   return fetcher<{
@@ -85,123 +75,165 @@ export async function fetchHostnodeStock(params: {
   }>(`/api/v0/client/deploy/hostnodes?${stockRequestParams}`);
 }
 
+function formatLocationAvailability(stock: number) {
+  if (stock >= 8) return 'High Stock';
+  if (stock >= 4 && stock < 8) return 'Medium Stock';
+  return 'Low Stock';
+}
+
 function roundValue(value: number) {
-  return Math.round(value * 100) / 100;
+  return Math.round(value * 1000) / 1000;
+}
+
+function calculateVMPrice(
+  {
+    gpuPrice,
+    ramPrice,
+    cpuPrice,
+    storagePrice,
+  }: {
+    gpuPrice: number;
+    ramPrice: number;
+    cpuPrice: number;
+    storagePrice: number;
+  },
+  selectedSpecs: z.infer<typeof deploySchema>['specs']
+) {
+  const resourcePrices = {
+    gpuTotal: gpuPrice * selectedSpecs.gpu_count,
+    ramTotal: ramPrice * selectedSpecs.ram,
+    cpuTotal: cpuPrice * selectedSpecs.vcpu,
+    storageTotal: storagePrice * selectedSpecs.storage,
+  };
+
+  // TODO: Increase granularity of rounding for merging purposes
+  const total = Object.values(resourcePrices)
+    .reduce((acc, curr) => acc + roundValue(curr), 0)
+    .toFixed(4);
+
+  return {
+    ...resourcePrices,
+    total,
+  };
+}
+
+interface LocationInfo {
+  availability: string;
+  location: string;
+  price: string;
+  gpuType: string;
+  stock: number;
+  cpuType: string;
+  hostnodes: [
+    {
+      id: string;
+      ports: HostnodeEntry['networking']['ports'];
+      specs: HostnodeEntry['specs'];
+      reserved: HostnodeEntry['status']['reserved'];
+      uptime: HostnodeEntry['status']['uptime'];
+    },
+  ];
 }
 
 /**
- * Step 2: generate optimal configurations for deployment
- *
- * This finds the best hostnode for each configuration based on hostnode listings
+ * Step 2: generate location
  */
-export function generateDeployConfigurations(
+export function generateLocations(
+  selectedSpecs: z.infer<typeof deploySchema>['specs'],
   hostnodes: Record<string, HostnodeEntry>
 ) {
-  const configs = getDefaultConfigurations();
+  const locations: Record<string, LocationInfo> = {};
+  const suggestedLocations: Record<string, LocationInfo> = {};
 
-  configs.forEach((configuration) => {
-    const { gpu_count: gpuCount, ram, vcpu, storage } = configuration;
+  for (const hostnodeId in hostnodes) {
+    const hostnode = hostnodes[hostnodeId];
 
-    let bestHostnode = null;
-    let bestHostnodeConfig = null;
-    let bestHostnodePrice = -1;
-    for (const [hostnodeID, hostnode] of Object.entries(hostnodes)) {
-      const { specs } = hostnode;
+    for (const hostnodeGPU in hostnode.specs.gpu) {
+      const vmPrice = calculateVMPrice(
+        {
+          gpuPrice: hostnode.specs.gpu[hostnodeGPU].price,
+          ramPrice: hostnode.specs.ram.price,
+          cpuPrice: hostnode.specs.cpu.price,
+          storagePrice: hostnode.specs.storage.price,
+        },
+        selectedSpecs
+      ).total;
+
+      const listToUpdate =
+        selectedSpecs.gpu_model === hostnodeGPU
+          ? locations
+          : suggestedLocations;
+
+      const currentLocationId = hostnode.location.id + vmPrice.toString();
+
+      let gpuVRAM: number;
+      {
+        const gpuSplit = selectedSpecs.gpu_model.split('-');
+        gpuVRAM = Number(gpuSplit[gpuSplit.length - 1].replace('gb', ''));
+      }
+
+      // Validate each GPU individually, as the returned hostnodes may have GPUs not matching the criteria
       if (
-        specs.gpu[configuration.gpu_model].amount < gpuCount ||
-        specs.ram.amount < ram ||
-        specs.ram.amount -
-          ram -
-          SAVE_RAM_AMOUNT *
-            (specs.gpu[configuration.gpu_model].amount - gpuCount) <
-          0 ||
-        specs.cpu.amount < vcpu ||
-        specs.cpu.amount -
-          vcpu -
-          SAVE_CPU_AMOUNT *
-            (specs.gpu[configuration.gpu_model].amount - gpuCount) <
-          0 ||
-        specs.storage.amount < storage ||
-        specs.storage.amount -
-          storage -
-          SAVE_STORAGE_AMOUNT *
-            (specs.gpu[configuration.gpu_model].amount - gpuCount) <
-          0
-      ) {
+        hostnode.specs.gpu[hostnodeGPU].amount < selectedSpecs.gpu_count ||
+        hostnode.specs.gpu[hostnodeGPU].vram < gpuVRAM ||
+        (constants.GPU_INFO[selectedSpecs.gpu_model].displayName.includes(
+          'RTX'
+        ) &&
+          !hostnode.specs.gpu[hostnodeGPU].rtx)
+      )
         continue;
-      }
 
-      if (!bestHostnode) {
-        bestHostnode = hostnodeID;
-        bestHostnodeConfig = hostnode;
-        bestHostnodePrice = roundValue(
-          specs.ram.price * ram +
-            specs.cpu.price * vcpu +
-            specs.storage.price * storage +
-            specs.gpu[configuration.gpu_model].price * gpuCount
-        );
-      }
+      if (listToUpdate[currentLocationId]) {
+        // If there are two or more hostnodes, we automatically say there is medium availability, even if there is only 1 GPU on each
+        // If there are more than 8 GPUs, we say there is high availability... 8 unrented GPUs in one location is a lot!
+        listToUpdate[currentLocationId].stock +=
+          hostnode.specs.gpu[hostnodeGPU].amount;
+        listToUpdate[currentLocationId].availability =
+          formatLocationAvailability(listToUpdate[currentLocationId].stock);
 
-      if (
-        roundValue(
-          specs.ram.price * ram +
-            specs.cpu.price * vcpu +
-            specs.storage.price * storage +
-            specs.gpu[configuration.gpu_model].price * gpuCount
-        ) < bestHostnodePrice ||
-        (specs.gpu[configuration.gpu_model].amount <
-          bestHostnodeConfig!.specs.gpu[configuration.gpu_model].amount &&
-          specs.gpu[configuration.gpu_model].amount >= gpuCount &&
-          specs.ram.amount >= ram &&
-          specs.cpu.amount >= vcpu &&
-          specs.storage.amount >= storage &&
-          roundValue(
-            specs.ram.price * ram +
-              specs.cpu.price * vcpu +
-              specs.storage.price * storage +
-              specs.gpu[configuration.gpu_model].price * gpuCount
-          ) <= bestHostnodePrice)
-      ) {
-        bestHostnode = hostnodeID;
-        bestHostnodeConfig = hostnode;
-        bestHostnodePrice = roundValue(
-          specs.ram.price * ram +
-            specs.cpu.price * vcpu +
-            specs.storage.price * storage +
-            specs.gpu[configuration.gpu_model].price * gpuCount
-        );
+        if (
+          !listToUpdate[currentLocationId].hostnodes.find(
+            (node) => node.id === hostnodeId
+          )
+        ) {
+          listToUpdate[currentLocationId].hostnodes.push({
+            id: hostnodeId,
+            ports: hostnode.networking.ports,
+            specs: hostnode.specs,
+            reserved: hostnode.status.reserved,
+            uptime: hostnode.status.uptime,
+          });
+        }
+      } else {
+        listToUpdate[currentLocationId] = {
+          availability: formatLocationAvailability(
+            hostnode.specs.gpu[hostnodeGPU].amount
+          ),
+          location: `${hostnode.location.city}, ${hostnode.location.region}, ${hostnode.location.country}`,
+          price: vmPrice,
+          gpuType: hostnodeGPU,
+          stock: hostnode.specs.gpu[hostnodeGPU].amount,
+          cpuType: hostnode.specs.cpu.type,
+          hostnodes: [
+            {
+              id: hostnodeId,
+              ports: hostnode.networking.ports,
+              specs: hostnode.specs,
+              reserved: hostnode.status.reserved,
+              uptime: hostnode.status.uptime,
+            },
+          ],
+        };
       }
     }
-
-    if (bestHostnode) {
-      configuration.hostnode = bestHostnode;
-      configuration.stock = true;
-      configuration.price = bestHostnodePrice;
-    }
-  });
-
-  return configs;
+  }
+  return {
+    locations,
+    suggestedLocations,
+  };
 }
 
-/**
- * Step 3: Spruce up the display, filter out configurations that are out of stock
- */
-export function getDisplayConfigurations(
-  configurations: DeployConfiguration[]
-): DeployConfiguration[] {
-  return configurations
-    .filter(({ stock }) => stock) // make sure we're in stock!
-    .map((configuration) => {
-      return {
-        ...configuration,
-        gpu_model: configuration.gpu_model
-          .replace('h100', 'H100')
-          .replace('-sxm5-', ' SXM5 ')
-          .replace('gb', 'GB'),
-      };
-    });
-}
-
+// TODO: remove if not needed
 const portSchema = ({ min, max }: { min?: number; max?: number } = {}) =>
   z
     .string()
@@ -215,12 +247,26 @@ const portSchema = ({ min, max }: { min?: number; max?: number } = {}) =>
       `Must be at most ${max}`
     );
 
+/**
+ * zod validator for deployment parameters
+ */
 export const deploySchema = z
   .object({
-    configuration: z.string(),
-    os: z.enum(OPERATING_SYSTEMS, {
-      message: 'Please select an operating system',
+    specs: z.object({
+      gpu_count: z.number().min(1),
+      // @ts-expect-error it's an array we're fiine
+      gpu_model: z.enum([...constants.ALLOWED_GPUS.values()], {
+        message: 'Please select a GPU model',
+      }) as z.ZodSchema<constants.GpuModel>,
+      ram: z.number().min(1),
+      vcpu: z.number().min(1),
+      storage: z.number().min(1),
     }),
+    hostnode: z.string(),
+    // @ts-expect-error it's an array we're fiine
+    os: z.enum([...constants.ALLOWED_OS.values()], {
+      message: 'Please select an operating system',
+    }) as z.ZodSchema<constants.OperatingSystem>,
     adminPassword: z
       .string()
       .min(1, 'Please provide an admin password')
@@ -235,36 +281,35 @@ export const deploySchema = z
     serverName: z.string().min(1, 'Please name your server'),
     portForwards: z.array(
       z.object({
-        from: portSchema({ min: 20019, max: 20099 }).refine(
-          (port) => DEFAULT_PORTS.findIndex(({ from }) => from === port) === -1,
-          'Cannot override default ports'
-        ),
+        from: portSchema({ min: 20019, max: 20099 }),
         to: portSchema({ min: 0, max: 65535 }),
       })
     ),
     cloudinitScript: z.string(),
   })
-  .superRefine(({ os, configuration }, ctx) => {
-    const minStorage = OS_DETAILS[os].minStorageGB;
-    if (minStorage === undefined || configuration === undefined) return;
+  .superRefine(({ os, specs }, ctx) => {
+    const minStorage = constants.OS_INFO[os].minStorageGB;
+    if (minStorage === undefined || specs?.storage === undefined) return;
 
-    const config = JSON.parse(configuration) as DeployConfiguration;
-
-    if (config.storage < minStorage) {
+    if (specs.storage < minStorage) {
       ctx.addIssue({
         code: z.ZodIssueCode.too_small,
         minimum: minStorage,
         type: 'number',
         inclusive: true,
         message: `Please ensure you have enough storage space (${minStorage.toFixed(0)} GB) for our ${os} operating system template`,
-        path: ['configuration'],
+        path: ['specs', 'storage'],
       });
     }
   });
 
-export async function deploy(values: z.infer<typeof deploySchema>) {
+export async function deploy(
+  values: z.infer<typeof deploySchema>,
+  hostnodes: Record<string, HostnodeEntry>
+) {
   const {
-    configuration: configString,
+    specs,
+    hostnode,
     os,
     adminPassword,
     serverName,
@@ -272,30 +317,34 @@ export async function deploy(values: z.infer<typeof deploySchema>) {
     cloudinitScript,
   } = values;
 
-  const config = JSON.parse(configString) as DeployConfiguration;
-
   const externalPorts = portForwards.map(({ from }) => from);
   const internalPorts = portForwards.map(({ to }) => to);
+
+  // validate that this hostnode is available
+  // TODO: maybe don't need this
+  if (!(hostnode in hostnodes)) throw new Error('Selected hostnode not listed');
+
+  // validate that we use only available ports
+  for (const { from } of portForwards) {
+    if (!hostnodes[hostnode].networking.ports.includes(parseInt(from)))
+      throw new Error(`Port ${from} is unavailable`);
+  }
 
   const body = {
     deployment_type: 'local',
     password: adminPassword,
     name: serverName,
-    vcpus: config.vcpu,
-    storage: config.storage,
-    ram: config.ram,
-    country: 'United States',
-    gpu_count: config.gpu_count,
-    gpu_model: GPU_MAPPINGS[config.gpu_model as keyof typeof GPU_MAPPINGS],
-    operating_system: OS_MAPPINGS[os as keyof typeof OS_MAPPINGS],
-    hostnode: config.hostnode,
+    vcpus: specs.vcpu,
+    storage: specs.storage,
+    ram: specs.ram,
+    country: 'United States', // TODO: check w someone what this means
+    gpu_count: specs.gpu_count,
+    gpu_model: specs.gpu_model,
+    operating_system: os,
+    hostnode: hostnode,
     external_ports: `[${externalPorts.join(', ')}]`,
     internal_ports: `[${internalPorts.join(', ')}]`,
     ...(!!cloudinitScript && { cloudinit_script: cloudinitScript }),
-    // ...(selectedBid && {
-    //   price_type: 'spot',
-    //   price: selectedBid,
-    // }),
   };
 
   const formData = new FormData();

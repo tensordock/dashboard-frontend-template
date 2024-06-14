@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { RefCallBack } from 'react-hook-form';
 
-import { OPERATING_SYSTEMS, OS_DETAILS } from '../../constants/datacenter';
+import * as constants from '../../constants';
 
 export default function OperatingSystemSelectInput({
   field: { onChange, value, disabled, ref },
@@ -17,29 +17,27 @@ export default function OperatingSystemSelectInput({
 }) {
   return (
     <>
-      <div className="flex flex-col">
-        {OPERATING_SYSTEMS.map((os, idx) => {
+      <div className="grid overflow-hidden rounded-xl md:grid-cols-2">
+        {[...constants.ALLOWED_OS.values()].map((os, idx) => {
           const isSelected = value === os;
-          const { features, forAI } = OS_DETAILS[os];
+          const { features, forAI } = constants.OS_INFO[os];
           return (
             <button
               key={os}
               type="button"
               onClick={() => onChange(os)}
               disabled={disabled}
-              className={`px-6 py-4 text-left flex flex-col transition border-primary-500/30 first:rounded-t-lg last:rounded-b-lg ${isSelected ? 'bg-primary-500 text-white shadow-lg' : 'bg-primary-500/10 hover:bg-primary-500/20'}`}
+              className={`px-6 py-4 text-left flex flex-col transition border-primary-500/30 ${isSelected ? 'bg-primary-500 text-white shadow-lg' : 'bg-primary-500/10 hover:bg-primary-500/20'}`}
               ref={idx === 0 ? ref : undefined}
             >
-              <h4 className="flex items-center font-display">
-                {os}
-                {forAI && (
-                  <span
-                    className={`rounded px-4 py-1 font-display transition-colors ml-auto inline-block text-sm ${isSelected ? 'ring-1 ring-white/30' : 'bg-primary-500/20 text-primary-500'}`}
-                  >
-                    ML / AI
-                  </span>
-                )}
-              </h4>
+              <h4 className="flex items-center font-display">{os}</h4>
+              {forAI && (
+                <div
+                  className={`mt-2 w-max rounded px-4 py-1 font-display transition-colors text-sm ${isSelected ? 'ring-1 ring-white/30' : 'bg-primary-500/20 text-primary-500'}`}
+                >
+                  ML / AI
+                </div>
+              )}
               <AnimatePresence>
                 {isSelected && (
                   <motion.div
