@@ -227,8 +227,8 @@ export default function VirtualMachinePanel({
                 </div>
                 <p className="select-none">Connection Instructions</p>
                 <div>
-                  <pre>{`ssh user@${vm.ip_address}`}</pre> and log in with the
-                  password you set
+                  <pre>{`ssh -p ${Object.entries(vm.port_forwards).find(([, to]) => to === '22')?.[0]} user@${vm.ip_address}`}</pre>{' '}
+                  and log in with the password you set
                 </div>
               </div>
             </m.div>
