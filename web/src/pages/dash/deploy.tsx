@@ -20,10 +20,10 @@ import OperatingSystemSelectInput from '../../components/input/deploy-os';
 import DeploySpecInput from '../../components/input/deploy-spec';
 import TextInput from '../../components/input/text-input';
 import * as constants from '../../constants';
+import useAuth from '../../hooks/use-auth';
 import useHostnodes from '../../hooks/use-hostnodes';
 import useUserInfo from '../../hooks/use-user-info';
 import * as api from '../../util/api';
-import useAuth from '../../hooks/use-auth';
 
 type DeployFormValues = z.infer<typeof api.deploySchema>;
 
@@ -515,7 +515,7 @@ runcmd:
               {loginInfo?.loggedIn === false && (
                 <Link
                   to={constants.ROUTES.login}
-                  className="mt-8 rounded px-4 py-2 font-medium font-display bg-primary-500 hover:bg-primary-600 text-white text-center transition-colors"
+                  className="mt-8 rounded bg-primary-500 px-4 py-2 text-center text-white font-medium font-display transition-colors hover:bg-primary-600"
                 >
                   Log In to Deploy
                 </Link>

@@ -1,10 +1,9 @@
-import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 
 import { LOGO_TEXT } from '../../constants/branding';
-import useAuth from '../../hooks/use-auth';
 import { ROUTES } from '../../constants/pages';
+import useAuth from '../../hooks/use-auth';
 
 export default function DashLayout() {
   const { loginInfo, logout } = useAuth();
