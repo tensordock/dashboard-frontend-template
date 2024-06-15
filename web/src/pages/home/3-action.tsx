@@ -13,8 +13,8 @@ export default function ActionSection() {
       <div className="absolute inset-0 bg-black/25" />
       <div className="relative mx-auto flex flex-col items-center gap-8 py-18 container lg:py-32 md:py-24">
         <h2 className="text-center text-3xl text-white lh-relaxed font-display">
-          Deploy a cloud H100 today from just{' '}
-          <strong className="inline-block md:block">$2.50/hour.</strong>
+          Deploy a cloud GPU today from just{' '}
+          <strong className="inline-block md:block">$0.50/hour.</strong>
         </h2>
         <div className="flex gap-1">
           <Link

@@ -1,4 +1,4 @@
-import { SHORT_COMPANY_NAME, VIDEO_URL } from '../../constants/branding';
+import { SHORT_COMPANY_NAME } from '../../constants/branding';
 
 import CodeAPIImage from '../../assets/img/code_api.png';
 import DeploymentsImage from '../../assets/img/deployments.png';
@@ -10,23 +10,12 @@ export default function BodySection() {
       <section className="bg-primary-50 px-4 pt-18">
         <div className="mx-auto w-full md:w-160 sm:w-120">
           <h2 className="text-center text-2xl text-gray-7 font-medium font-display lg:text-4xl md:text-3xl">
-            Highly performant hardware,{' '}
-            <strong className="font-extrabold">secure.</strong>
+            GPU platform of the future
           </h2>
-          <video
-            muted
-            autoPlay
-            loop
-            className="my-8"
-            src={VIDEO_URL}
-            // @ts-expect-error - video type
-            type="video/mp4"
-            width="1200"
-          ></video>
-          <p className="max-w-prose text-lg text-gray-500">
-            Through {SHORT_COMPANY_NAME}, you get to access cloud resources that
-            previously only long-term contract customers could access —{' '}
-            <b>available on-demand, pro-rated to the microsecond</b>.
+          <p className="mt-4 max-w-prose text-lg text-gray-500">
+            The industry's greatest hardware available at prices 80% less than
+            large clouds. You can save even more when you purchase a long-term
+            contract.
           </p>
         </div>
       </section>
@@ -34,40 +23,28 @@ export default function BodySection() {
         <ul className="mx-auto max-w-lg w-full flex flex-col gap-18 px-4 lg:max-w-4xl">
           {[
             {
-              image: DeploymentsImage,
-              alt: 'Deployments',
-              icon: 'i-tabler-rocket',
-              tagline: 'DEPLOY',
-              header: (
-                <>
-                  Unbeatable <strong>Performance</strong>
-                </>
-              ),
-              body: 'Our H100 SXM5 GPUs outperform H100 PCIE cards by 30%, measured by raw FP32 performance',
+              image: MoneyImage,
+              alt: 'Save',
+              icon: 'i-tabler-bulb',
+              tagline: 'SAVE',
+              header: <>Low prices</>,
+              body: 'From only $0.50/hr, our virtual machines are affordable and can be scaled when you need them to.',
             },
             {
               image: CodeAPIImage,
               alt: 'API',
               icon: 'i-tabler-code',
               tagline: 'BUILD',
-              header: (
-                <>
-                  REST <strong>API</strong>
-                </>
-              ),
-              body: 'Deploy and manage VMs programatically with our well-documented API. Scale up/down instantly.',
+              header: <>Documented API</>,
+              body: 'Deploy and manage VMs programatically with our well-documented API.',
             },
             {
-              image: MoneyImage,
-              alt: 'Save',
-              icon: 'i-tabler-bulb',
-              tagline: 'SAVE',
-              header: (
-                <>
-                  H100s, <strong>$2.50/hr</strong>
-                </>
-              ),
-              body: '...a price-to-performance ratio only available on long-term contracts from other suppliers.',
+              image: DeploymentsImage,
+              alt: 'Deployments',
+              icon: 'i-tabler-rocket',
+              tagline: 'DEPLOY',
+              header: <>Dead-simple deployments</>,
+              body: 'Our virtualization software makes it easy to get up and running in minutes.',
             },
           ].map(({ image, alt, icon, tagline, header, body }, idx) => (
             <li key={tagline} className="grid items-center lg:grid-cols-2">
@@ -100,17 +77,17 @@ export default function BodySection() {
             {
               icon: 'i-tabler-brand-ubuntu',
               header: 'Configurable OS',
-              body: 'Select from a range of operating systems depending on your needs, from Ubuntu to Windows. Provide custom images to us, and scale your AI inference application.',
+              body: 'Select from a range of operating systems depending on your needs, from Ubuntu to Windows.',
             },
             {
               icon: 'i-tabler-lock',
               header: 'Secure',
-              body: `We operate out of security tier 2 and 3 data centers equipped with 24/7 onsite CCTV and armed security guards, ensuring the physical security of your data.`,
+              body: `${SHORT_COMPANY_NAME} has a team dedicated to ensuring that the contents of your VMs are safe and secure.`,
             },
             {
               icon: 'i-tabler-server',
               header: 'Reliable',
-              body: `We've operated physical hardware for 6 years across a dozen data center facilities. Our well-experienced team is available to resolve any problem, hardware or otherwise. `,
+              body: `Choose from a variety of GPU models all at affordable prices, and all simple to deploy on ${SHORT_COMPANY_NAME}.`,
             },
           ].map(({ icon, header, body }) => (
             <div

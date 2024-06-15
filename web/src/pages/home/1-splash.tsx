@@ -157,28 +157,19 @@ export default function SplashSection() {
         <div className="relative grid mx-auto items-center gap-x-16 gap-y-12 overflow-hidden pt-28 container xl:grid-cols-2 xl:h-screen xl:max-h-2xl xl:min-h-140">
           <div className="flex flex-col px-2 text-center xl:text-left">
             <h2 className="select-none text-3xl text-white font-light font-display drop-shadow-md lg:text-4xl xl:text-5xl">
-              <div>
-                The H100 cloud &mdash;{' '}
-                <strong className="mt-2 inline-block font-bold">
-                  $2.50/hr
-                </strong>
-                .
-              </div>
-              <div className="mt-1">
-                On demand{` `}
-                <ReactTyped
-                  className="typed-text fw-bold"
-                  strings={['AI', 'HPC', 'image gen', 'ML', 'acceleration']}
-                  typeSpeed={50}
-                  loop={true}
-                  backDelay={1500}
-                />
-                .
-              </div>
+              The{` `}
+              <ReactTyped
+                className="fw-bold"
+                strings={['ML', 'acceleration', 'hpc', 'rendering']}
+                typeSpeed={50}
+                loop={true}
+                backDelay={1500}
+              />
+              cloud
             </h2>
             <p className="mt-4 text-xl text-white/75 font-300">
-              {SHORT_COMPANY_NAME} gives you access to the industry's most
-              powerful GPUs for your most demanding HPC workloads
+              {SHORT_COMPANY_NAME} operates a massive, scalable NVIDIA GPU cloud
+              for your most demanding HPC workloads
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-x-1 gap-y-6 md:flex-row md:items-stretch xl:justify-start">
               <Link

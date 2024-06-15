@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { COMPANY_NAME, SHORT_COMPANY_NAME } from '../../constants/branding';
+import { COMPANY_NAME, FOOTER_TEXT } from '../../constants/branding';
 import {
   ABOUT_URL,
   COMPANY_HOME_URL,
@@ -16,12 +16,7 @@ export default function FooterSection() {
           <h3 className="px-4 text-xl text-white font-display">
             {COMPANY_NAME}
           </h3>
-          <p className="mt-4 max-w-prose px-4 text-white/40">
-            {SHORT_COMPANY_NAME} provides startups, AI labs, and enterprises
-            access to a massive NVIDIA GPU cloud colocated in the heart of the
-            United States managed by Strategic Infrastructure Holdings,
-            completely on-demand.
-          </p>
+          <p className="mt-4 max-w-prose px-4 text-white/40">{FOOTER_TEXT}</p>
         </div>
         <div className="px-4">
           <ul className="grid grid-cols-2 mt-4 text-white/40">
