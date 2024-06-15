@@ -85,7 +85,7 @@ function roundValue(value: number) {
   return Math.round(value * 1000) / 1000;
 }
 
-function calculateVMPrice(
+export function calculateVMPrice(
   {
     gpuPrice,
     ramPrice,
@@ -107,9 +107,10 @@ function calculateVMPrice(
   };
 
   // TODO: Increase granularity of rounding for merging purposes
-  const total = Object.values(resourcePrices)
-    .reduce((acc, curr) => acc + roundValue(curr), 0)
-    .toFixed(4);
+  const total = Object.values(resourcePrices).reduce(
+    (acc, curr) => acc + roundValue(curr),
+    0
+  );
 
   return {
     ...resourcePrices,
@@ -134,7 +135,7 @@ function sortLocations(locations: Record<string, LocationInfo>) {
 
       if (reservedDiff) return reservedDiff;
 
-      return Number(locationA.price) - Number(locationB.price);
+      return locationA.price - locationB.price;
     })
   );
 }
@@ -142,7 +143,7 @@ function sortLocations(locations: Record<string, LocationInfo>) {
 export interface LocationInfo {
   availability: string;
   location: string;
-  price: string;
+  price: number;
   gpuType: constants.GpuModel;
   stock: number;
   cpuType: string;
@@ -296,12 +297,31 @@ export const deploySchema = z
         'Password must contain at least 1 uppercase letter, symbol, or number'
       ),
     serverName: z.string().min(1, 'Please name your server'),
-    portForwards: z.array(
-      z.object({
-        from: portSchema({ min: 20019, max: 20099 }),
-        to: portSchema({ min: 0, max: 65535 }),
-      })
-    ),
+    portForwards: z
+      .array(
+        z.object({
+          from: portSchema(),
+          to: portSchema({ min: 0, max: 65535 }),
+        })
+      )
+      .superRefine((forwards, ctx) => {
+        const externalPortsSet = new Set(forwards.map(({ from }) => from));
+        console.log('hello!');
+        if (externalPortsSet.size === forwards.length) return;
+
+        forwards.forEach(({ from }, idx) => {
+          if (
+            forwards.find(
+              ({ from: from2 }, idx2) => from === from2 && idx !== idx2
+            )
+          )
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: 'Duplicate external ports not allowed',
+              path: [idx, 'from'],
+            });
+        });
+      }),
     cloudinitScript: z.string(),
   })
   .superRefine(({ os, specs }, ctx) => {

@@ -12,7 +12,7 @@ export default function useHostnodes(
         ...p,
         domain: import.meta.env.VITE_WHITELABEL_CUSTOM_DOMAIN as string,
       }),
-    { revalidateOnFocus: false, keepPreviousData: true }
+    { revalidateOnFocus: false }
   );
 
   return {
