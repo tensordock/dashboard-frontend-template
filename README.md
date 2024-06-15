@@ -1,4 +1,4 @@
-# TensorDock Whitelabel Template
+# TensorDock Storefront Template
 
 ## Updating content
 
