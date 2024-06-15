@@ -15,9 +15,10 @@ import ConfirmAccountPage from './confirm';
 import ResetPasswordPage from './auth/reset-password';
 import ChangePasswordPage from './auth/change-password';
 import LayoutRequireLogin from './dash/layout-require-login';
+import NotFoundPage from './notfound';
 
 const router = createBrowserRouter([
-  // { path: '/', element: <HomePage /> },
+  { path: '*', element: <NotFoundPage /> },
   { path: '/', element: <HomePage /> },
   {
     element: <DashLayout />,
