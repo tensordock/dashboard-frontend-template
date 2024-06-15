@@ -308,7 +308,6 @@ export const deploySchema = z
       )
       .superRefine((forwards, ctx) => {
         const externalPortsSet = new Set(forwards.map(({ from }) => from));
-        console.log('hello!');
         if (externalPortsSet.size === forwards.length) return;
 
         forwards.forEach(({ from }, idx) => {
@@ -328,8 +327,6 @@ export const deploySchema = z
   })
   .superRefine(({ os, specs }, ctx) => {
     const minStorage = constants.OS_INFO[os].minStorageGB;
-    console.log('min storage: ', minStorage);
-    console.log('specs: ', specs);
     if (minStorage === undefined || specs?.storage === undefined) return;
 
     if (specs.storage < minStorage) {
@@ -396,8 +393,6 @@ export async function deploy(
     if (value === undefined) return;
     formData.append(key, `${value}`);
   });
-
-  console.log(formData);
 
   const res = await axios.post(
     `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/deploy/single`,
