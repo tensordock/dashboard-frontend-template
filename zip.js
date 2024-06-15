@@ -34,11 +34,11 @@ async function main() {
   // Zip `content` folder
   console.log('\nCreating a new ZIP file...');
 
-  const archive = archiver('site.zip', { zlib: { level: 9 } });
+  const archive = archiver('content.zip', { zlib: { level: 9 } });
   archive.directory('content/', false);
 
   await archive.finalize();
-  console.log('🎉 ZIP file "site.zip" created successfully!');
+  console.log('🎉 ZIP file "content.zip" created successfully!');
 }
 
 main();
