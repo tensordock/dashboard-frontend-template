@@ -1,76 +1,78 @@
 <!doctype html>
 <html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+      }
 
-<head>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      color: #333;
-    }
+      .container {
+        width: 80%;
+        margin: auto;
+        background: white;
+        padding: 20px;
+      }
 
-    .container {
-      width: 80%;
-      margin: auto;
-      background: white;
-      padding: 20px;
-    }
+      .header {
+        color: #444;
+      }
 
-    .header {
-      color: #444;
-    }
+      .content {
+        margin-top: 20px;
+      }
 
-    .content {
-      margin-top: 20px;
-    }
+      .footer {
+        margin-top: 40px;
+        font-size: 12px;
+        color: #666;
+      }
 
-    .footer {
-      margin-top: 40px;
-      font-size: 12px;
-      color: #666;
-    }
+      a {
+        color: #1a0dab;
+        text-decoration: none;
+      }
 
-    a {
-      color: #1a0dab;
-      text-decoration: none;
-    }
+      .button {
+        background-color: #4caf50;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+      }
 
-    .button {
-      background-color: #4caf50;
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 16px;
-      margin: 4px 2px;
-      cursor: pointer;
-      border-radius: 8px;
-    }
+      .discord-link {
+        background-color: #7289da;
+      }
+    </style>
+  </head>
 
-    .discord-link {
-      background-color: #7289da;
-    }
-  </style>
-</head>
-
-<body>
-  <div class="container">
-    <h1 class="header">Servers Deleted, Low Balance</h1>
-    <p>
-      <strong>Unfortunately, because your balance (<strong>{{ balance }}</strong>) went negative, we sadly automatically deleted your servers.</strong>
-    </p>
-    <p>
-      To provision a new machine, you can top-up your account directly from our dashboard homepage using the following link:
-    </p>
-    <a href="http://{{ whitelabel_site }}/deploy" class="button">Deploy VM</a>
-    <p class="footer">
-      Beep boop, I'm a bot. But reply to me, and I'll connect you to a real
-      person :)<br />
-      <a href="http://{{ whitelabel_site }}">{{ whitelabel_site }}</a>
-    </p>
-  </div>
-</body>
-
+  <body>
+    <div class="container">
+      <h1 class="header">Servers Deleted, Low Balance</h1>
+      <p>
+        <strong
+          >Unfortunately, because your balance (<strong>{{ balance }}</strong>)
+          went negative, we sadly automatically deleted your servers.</strong
+        >
+      </p>
+      <p>
+        To provision a new machine, you can top-up your account directly from
+        our dashboard homepage using the following link:
+      </p>
+      <a href="http://{{ whitelabel_site }}/deploy" class="button">Deploy VM</a>
+      <p class="footer">
+        Beep boop, I'm a bot. But reply to me, and I'll connect you to a real
+        person :)<br />
+        <a href="http://{{ whitelabel_site }}">{{ whitelabel_site }}</a>
+      </p>
+    </div>
+  </body>
 </html>

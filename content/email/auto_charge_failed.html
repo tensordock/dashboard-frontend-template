@@ -1,74 +1,82 @@
 <!doctype html>
 <html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+      }
 
-<head>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      color: #333;
-    }
+      .container {
+        width: 80%;
+        margin: auto;
+        background: white;
+        padding: 20px;
+      }
 
-    .container {
-      width: 80%;
-      margin: auto;
-      background: white;
-      padding: 20px;
-    }
+      .header {
+        color: #444;
+      }
 
-    .header {
-      color: #444;
-    }
+      .content {
+        margin-top: 20px;
+      }
 
-    .content {
-      margin-top: 20px;
-    }
+      .footer {
+        margin-top: 40px;
+        font-size: 12px;
+        color: #666;
+      }
 
-    .footer {
-      margin-top: 40px;
-      font-size: 12px;
-      color: #666;
-    }
+      a {
+        color: #1a0dab;
+        text-decoration: none;
+      }
 
-    a {
-      color: #1a0dab;
-      text-decoration: none;
-    }
+      .button {
+        background-color: #4caf50;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+      }
 
-    .button {
-      background-color: #4caf50;
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 16px;
-      margin: 4px 2px;
-      cursor: pointer;
-      border-radius: 8px;
-    }
+      .discord-link {
+        background-color: #7289da;
+      }
+    </style>
+  </head>
 
-    .discord-link {
-      background-color: #7289da;
-    }
-  </style>
-</head>
-
-<body>
-  <div class="container">
-    <h1 class="header">Important: Credit Card Failed</h1>
-    <p>
-      Thank you so much for your continued business. This is a notification that one of your cards was attempted to be charged <strong>{{ charge }}</strong> due to your custom threshold action with threshold of <strong>${{ threshold }}</strong>, but the transaction failed. This may be because your card requires authentication every time it is used, or because an unexpected error occurred. Please deposit funds manually for now and contact support for more information. This automation has been disabled until your re-configuration. To change or delete your automatic charge threshold, visit the link below:
-    </p>
-    <br />
-    <a href="http://{{ whitelabel_site }}/automations" class="button">Manage Automations</a>
-    <p class="footer">
-      Beep boop, I'm a bot. But reply to me, and I'll connect you to a real
-      person :)<br />
-      <a href="http://{{ whitelabel_site }}">{{ whitelabel_site }}</a>
-    </p>
-  </div>
-</body>
-
+  <body>
+    <div class="container">
+      <h1 class="header">Important: Credit Card Failed</h1>
+      <p>
+        Thank you so much for your continued business. This is a notification
+        that one of your cards was attempted to be charged
+        <strong>{{ charge }}</strong> due to your custom threshold action with
+        threshold of <strong>${{ threshold }}</strong>, but the transaction
+        failed. This may be because your card requires authentication every time
+        it is used, or because an unexpected error occurred. Please deposit
+        funds manually for now and contact support for more information. This
+        automation has been disabled until your re-configuration. To change or
+        delete your automatic charge threshold, visit the link below:
+      </p>
+      <br />
+      <a href="http://{{ whitelabel_site }}/automations" class="button"
+        >Manage Automations</a
+      >
+      <p class="footer">
+        Beep boop, I'm a bot. But reply to me, and I'll connect you to a real
+        person :)<br />
+        <a href="http://{{ whitelabel_site }}">{{ whitelabel_site }}</a>
+      </p>
+    </div>
+  </body>
 </html>

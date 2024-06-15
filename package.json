@@ -4,7 +4,8 @@
   "description": "Template for TensorDock whitelabel sites",
   "scripts": {
     "build": "npm run build --workspace=web",
-    "zip": "node zip.js"
+    "zip": "node zip.js",
+    "format": "prettier -w ."
   },
   "repository": {
     "type": "git",
@@ -24,7 +25,7 @@
     "trailingComma": "es5"
   },
   "devDependencies": {
-    "prettier": "^3.2.5"
+    "prettier": "^3.3.2"
   },
   "workspaces": [
     "web"
