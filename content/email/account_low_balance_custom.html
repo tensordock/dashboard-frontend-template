@@ -51,7 +51,7 @@
       <h1 class="header">Critical Low Balance Alert</h1>
       <p>
         Hi! This is a friendly reminder that your {{ org_title }} account
-        balance is below <strong>$3</strong>.
+        balance is below <strong>${{ threshold }}</strong>.
       </p>
       <p class="content">
         You can top up your account directly from the account dashboard.
@@ -64,11 +64,12 @@
       <p>
         <strong>Warning:</strong> If your account balance reaches $0, your
         servers will be automatically deleted, and any associated data will be
-        lost. We highly recommend setting up a
+        lost. We highly recommend setting up an
         <strong
-          >custom action
-          <!-- TODO: setup this page + link here -->
-          <a target="_blank" href="{{ app_base_url }}/">here</a></strong
+          >automation
+          <a target="_blank" href="{{ app_base_url }}/automations"
+            >here</a
+          ></strong
         >
         to automatically refill your credit whenever it runs below a safe
         buffer, so that you always have time to rectify payment issues.

@@ -6,6 +6,12 @@ const emailTemplates = [
   'deposit_confirmation',
   'account_low_balance_3',
   'account_low_balance_5',
+  'account_low_balance_custom',
+  'auto_charge',
+  'auto_charge_failed',
+  'alert_servers_stopped',
+  'alert_servers_deleted',
+  'forgot_password',
 ];
 
 async function main() {
@@ -28,11 +34,11 @@ async function main() {
   // Zip `content` folder
   console.log('\nCreating a new ZIP file...');
 
-  const archive = archiver('site.zip', { zlib: { level: 9 } });
+  const archive = archiver('content.zip', { zlib: { level: 9 } });
   archive.directory('content/', false);
 
   await archive.finalize();
-  console.log('🎉 ZIP file "site.zip" created successfully!');
+  console.log('🎉 ZIP file "content.zip" created successfully!');
 }
 
 main();

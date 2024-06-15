@@ -7,29 +7,35 @@
         background-color: #f4f4f4;
         color: #333;
       }
+
       .container {
         width: 80%;
         margin: auto;
         background: white;
         padding: 20px;
       }
+
       .header {
         color: #444;
       }
+
       .content {
         margin-top: 20px;
       }
+
       .footer {
         margin-top: 40px;
         font-size: 12px;
         color: #666;
       }
+
       a {
         color: #1a0dab;
         text-decoration: none;
       }
+
       .button {
-        background-color: #39467f;
+        background-color: #4caf50;
         border: none;
         color: white;
         padding: 10px 20px;
@@ -41,38 +47,27 @@
         cursor: pointer;
         border-radius: 8px;
       }
+
       .discord-link {
         background-color: #7289da;
       }
     </style>
   </head>
+
   <body>
     <div class="container">
-      <h1 class="header">Critical Low Balance Alert</h1>
+      <h1 class="header">Servers Deleted, Low Balance</h1>
       <p>
-        Hi! This is a friendly reminder that your {{ org_title }} account
-        balance is below <strong>$3</strong>.
-      </p>
-      <p class="content">
-        You can top up your account directly from the account dashboard.
-      </p>
-      <br />
-      <a href="{{ app_base_url }}/account" class="button"
-        >Deposit Additional Funds</a
-      >
-      <br />
-      <p>
-        <strong>Warning:</strong> If your account balance reaches $0, your
-        servers will be automatically deleted, and any associated data will be
-        lost. We highly recommend setting up a
         <strong
-          >custom action
-          <!-- TODO: setup this page + link here -->
-          <a target="_blank" href="{{ app_base_url }}/">here</a></strong
+          >Unfortunately, because your balance (<strong>{{ balance }}</strong>)
+          went negative, we sadly automatically deleted your servers.</strong
         >
-        to automatically refill your credit whenever it runs below a safe
-        buffer, so that you always have time to rectify payment issues.
       </p>
+      <p>
+        To provision a new machine, you can top-up your account directly from
+        our dashboard homepage using the following link:
+      </p>
+      <a href="http://{{ whitelabel_site }}/deploy" class="button">Deploy VM</a>
       <p class="footer">
         Beep boop, I'm a bot. But reply to me, and I'll connect you to a real
         person :)<br />
