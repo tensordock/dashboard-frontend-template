@@ -154,10 +154,7 @@ export default function DeployPage() {
       <Head title={`Deploy a cloud GPU`} />
       <DashBlock header="Deploy a new cloud GPU">
         <div className="mt-4 text-gray-500 font-400">
-          <p>
-            Customize your own server, fully a la carte. Deploy in 2 tier 3 data
-            centers in the US and EU.
-          </p>
+          <p>Customize your own server, fully a la carte.</p>
           <Link
             to={constants.INFRASTRUCTURE_URL}
             target="_blank"
@@ -167,7 +164,7 @@ export default function DeployPage() {
           </Link>
         </div>
       </DashBlock>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="relative space-y-4">
         {constants.GPU_SWITCHING_ALLOWED && (
           <DashBlock>
             <h3 className="text-xl font-display">Select an available GPU</h3>
@@ -187,27 +184,28 @@ export default function DeployPage() {
               control={control}
               name="specs.gpu_model"
               render={({ field: { value, onChange } }) => (
-                <ul className="flex gap-4 overflow-x-scroll overflow-y-auto p-1px">
+                <div className="flex flex-wrap items-stretch gap-4">
                   {constants.ALLOWED_GPUS.map((gpu) => {
                     const isSelected = gpu === value;
                     return (
-                      <li key={gpu}>
-                        <button
-                          type="button"
-                          className={`flex flex-col items-start px-4 text-lg font-display py-4 rounded-lg transition-colors text-left ${isSelected ? 'bg-primary-500 text-white ring-primary-300' : 'bg-primary-500/10'}`}
-                          onClick={() => onChange(gpu)}
-                        >
-                          {constants.GPU_INFO[gpu].shortName}
+                      <button
+                        key={gpu}
+                        type="button"
+                        className={`min-w-48 flex flex-grow-1 flex-col items-start px-4 text-lg font-display py-8 rounded-lg transition-colors text-left ${isSelected ? 'bg-primary-500 text-white ring-primary-300' : 'bg-primary-500/10'}`}
+                        onClick={() => onChange(gpu)}
+                      >
+                        {constants.GPU_INFO[gpu].shortName}
+                        <div className="mt-auto pt-2">
                           <div
-                            className={`mt-2 px-3 py-1 bg-primary-500/20 rounded text-base ${isSelected ? 'text-white ring-1 ring-white/30' : 'text-primary-500'}`}
+                            className={`px-3 py-1 bg-primary-500/20 rounded text-base ${isSelected ? 'text-white ring-1 ring-white/30' : 'text-primary-500'}`}
                           >
                             {api.getVRAM(gpu)}GB
                           </div>
-                        </button>
-                      </li>
+                        </div>
+                      </button>
                     );
                   })}
-                </ul>
+                </div>
               )}
             />
           </DashBlock>

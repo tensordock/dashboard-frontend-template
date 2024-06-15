@@ -11,8 +11,13 @@ export const DEFAULT_DEPLOY_SPECS = {
 
 export const ALLOWED_GPUS: GpuModel[] = [
   'h100-sxm5-80gb',
+  'a100-pcie-80gb',
+  'a100-pcie-40gb',
+  'a100-nvlink-40gb',
   'geforcertx4090-pcie-24gb',
   'geforcertx3090-pcie-24gb',
+  'geforcertx3070ti-pcie-8gb',
+  'geforcertx3060-pcie-12gb',
 ];
 
 export const GPU_SWITCHING_ALLOWED = ALLOWED_GPUS.length > 1;

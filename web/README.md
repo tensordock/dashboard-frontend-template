@@ -7,7 +7,7 @@ This template uses TypeScript React in Vite with HMR and includes some ESLint ru
 There are a couple key places to modify across the template:
 
 - `.env.production` and `.env.development` – set `VITE_WHITELABEL_SUBDOMAIN` to the subdomain you set in your storefront panel
-- `src/constants/branding.ts` – add/remove GPUs you have in stock from `ALLOWED_GPUS`
+- `src/constants/hardware-software.ts` – add/remove GPUs you have in stock from `ALLOWED_GPUS`
 
 And to update your branding:
 

@@ -1,27 +1,28 @@
 import { AnimatePresence, m } from 'framer-motion';
-import { HTMLProps, forwardRef } from 'react';
+import { HTMLProps } from 'react';
 import { RefCallBack } from 'react-hook-form';
 
 import { DashBlock } from '../dash-block';
 
-export default forwardRef<
-  HTMLSelectElement,
-  Omit<HTMLProps<HTMLSelectElement>, 'className' | 'ref'> & {
-    options: number[];
-    label?: string;
-    errorMessage?: string;
-    transformValues?: (v: number) => string;
-    field: {
-      onChange: (v: number) => void;
-      value: number;
-      disabled?: boolean;
-      ref: RefCallBack;
-    };
-  }
->(function DeploySpecInput(
-  { options, label, errorMessage, transformValues = (v) => v, field, ...props },
-  ref
-) {
+export default function DeploySpecInput({
+  options,
+  label,
+  errorMessage,
+  transformValues = (v) => v.toFixed(0),
+  field,
+  ...props
+}: Omit<HTMLProps<HTMLSelectElement>, 'className' | 'ref'> & {
+  options: number[];
+  label?: string;
+  errorMessage?: string;
+  transformValues?: (v: number) => string;
+  field: {
+    onChange: (v: number) => void;
+    value: number;
+    disabled?: boolean;
+    ref: RefCallBack;
+  };
+}) {
   return (
     <DashBlock>
       <label className="flex flex-col">
@@ -36,7 +37,7 @@ export default forwardRef<
             field.onChange(parseInt(evt.target.value));
           }}
           value={field.value?.toFixed(0)}
-          ref={ref}
+          ref={field.ref}
           className={`rounded px-3 py-2 disabled:bg-gray-100 disabled:text-gray-500 bg-transparent ${errorMessage ? `ring-red-500 ring-2` : 'ring-gray-300 ring-1'}`}
         >
           {options.map((value) => (
@@ -62,4 +63,4 @@ export default forwardRef<
       </label>
     </DashBlock>
   );
-});
+}
