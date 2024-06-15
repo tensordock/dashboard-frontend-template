@@ -225,6 +225,11 @@ export default function VirtualMachinePanel({
                     </p>
                   ))}
                 </div>
+                <p className="select-none">Connection Instructions</p>
+                <div>
+                  <pre>{`ssh user@${vm.ip_address}`}</pre> and log in with the
+                  password you set
+                </div>
               </div>
             </m.div>
           )}
