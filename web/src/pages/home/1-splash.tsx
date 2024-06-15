@@ -160,7 +160,7 @@ export default function SplashSection() {
               The{` `}
               <ReactTyped
                 className="fw-bold"
-                strings={['ML', 'acceleration', 'hpc', 'rendering']}
+                strings={['ML', 'acceleration', 'HPC', 'rendering']}
                 typeSpeed={50}
                 loop={true}
                 backDelay={1500}
