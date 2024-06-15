@@ -5,7 +5,6 @@ import {
   ABOUT_URL,
   COMPANY_HOME_URL,
   CONTACT_EMAIL,
-  DOCUMENTATION_URL,
 } from '../../constants/external';
 import { ROUTES } from '../../constants/pages';
 
@@ -30,11 +29,6 @@ export default function FooterSection() {
               { text: 'About', href: ABOUT_URL, external: true },
               { text: 'Deploy', href: ROUTES.deploy },
               { text: 'Contact', href: `mailto:${CONTACT_EMAIL}` },
-              {
-                text: 'Documentation',
-                href: DOCUMENTATION_URL,
-                external: true,
-              },
             ].map(({ text, href, external }) => (
               <li key={text}>
                 <Link

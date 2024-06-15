@@ -62,98 +62,29 @@ export default function VirtualMachinePanel({
       <h3 className="block rounded-t-xl bg-primary-500 px-8 py-4 text-xl text-white font-display">
         {vm.name}
       </h3>
-      <div className="flex flex-col gap-6 px-8 py-4 lg:flex-row">
-        <div>
-          <div className="text-sm text-gray-500">
+      <div className="my-4 flex flex-col gap-6 px-8 lg:flex-row">
+        <div className="text-sm text-gray-500">
+          <p>
+            <span className="i-tabler-map-pin mr-2 inline-block translate-y-[0.12em]" />
+            {vm.city}, {vm.state}, {vm.country}
+          </p>
+          <p className="mt-1">
+            <span className="i-tabler-cloud-computing mr-2 inline-block translate-y-[0.12em]" />
+            {vm.specs.gpu.type} ({vm.specs.gpu.amount})
+          </p>
+          <div className="mt-1 flex flex-wrap gap-4">
             <p>
-              <span className="i-tabler-map-pin mr-2 inline-block translate-y-[0.12em]" />
-              {vm.city}, {vm.state}, {vm.country}
+              <span className="i-tabler-cpu mr-1 inline-block translate-y-[0.12em]" />
+              {vm.specs.vcpus} vCPUs
             </p>
-            <p className="mt-1">
-              <span className="i-tabler-cloud-computing mr-2 inline-block translate-y-[0.12em]" />
-              {vm.specs.gpu.type} ({vm.specs.gpu.amount})
+            <p>
+              <span className="i-tabler-stack-2 mr-1 inline-block translate-y-[0.12em]" />
+              {vm.specs.ram} GB RAM
             </p>
-            <div className="mt-1 flex flex-wrap gap-4">
-              <p>
-                <span className="i-tabler-cpu mr-1 inline-block translate-y-[0.12em]" />
-                {vm.specs.vcpus} vCPUs
-              </p>
-              <p>
-                <span className="i-tabler-stack-2 mr-1 inline-block translate-y-[0.12em]" />
-                {vm.specs.ram} GB RAM
-              </p>
-              <p>
-                <span className="i-tabler-database mr-1 inline-block translate-y-[0.12em]" />
-                {vm.specs.storage} GB Storage
-              </p>
-            </div>
-            <button onClick={() => setDetailsOpen((o) => !o)} className="mt-4">
-              <span
-                className={`i-tabler-chevron-down inline-block translate-y-[.15em] mr-2 transition-transform ${detailsOpen ? '' : '-rotate-90'}`}
-              />
-              Details
-            </button>
-            <AnimatePresence>
-              {detailsOpen && (
-                <motion.div
-                  initial={{ height: 0 }}
-                  animate={{ height: 'auto' }}
-                  exit={{ height: 0 }}
-                  className="overflow-hidden"
-                >
-                  <div className="grid grid-cols-2 mt-2 gap-x-4 gap-y-1">
-                    <p className="select-none">Compute cost</p>
-                    <p className="tabular-nums">
-                      ${parseFloat(vm.compute_price).toFixed(4)}/hour
-                    </p>
-
-                    <p className="select-none">Storage cost</p>
-                    <p className="tabular-nums">
-                      ${parseFloat(vm.storage_price).toFixed(4)}/hour
-                    </p>
-
-                    <p className="select-none">When running</p>
-                    <p className="tabular-nums">
-                      ${parseFloat(vm.total_price).toFixed(4)}/hour
-                    </p>
-
-                    <p className="select-none text-gray-700 font-medium">
-                      Currently
-                    </p>
-                    <p className="text-gray-700 font-medium tabular-nums">
-                      $
-                      {(vm.status === 'Running' || vm.status === 'Stopped'
-                        ? parseFloat(vm.total_price)
-                        : parseFloat(vm.storage_price)
-                      ).toFixed(4)}
-                      /hour
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-2 mt-2 gap-x-4 gap-y-1">
-                    <p className="select-none">OS</p>
-                    <p>{vm.operating_system}</p>
-
-                    <p className="select-none">IP Address</p>
-                    <p>{vm.ip_address}</p>
-
-                    <p className="select-none">Dedicated IP</p>
-                    <p>{vm.dedicated_ip_address || 'N/A'}</p>
-
-                    <p className="select-none">Port Forwards</p>
-                    <div>
-                      {Object.entries(vm.port_forwards).map(([from, to]) => (
-                        <p key={`${from}..${to}`}>
-                          {from}{' '}
-                          <span className="i-tabler-arrow-right mr-1 inline-block translate-y-[0.12em]" />{' '}
-                          {to}
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <p>
+              <span className="i-tabler-database mr-1 inline-block translate-y-[0.12em]" />
+              {vm.specs.storage} GB Storage
+            </p>
           </div>
         </div>
         <div className="flex flex-col lg:ml-auto lg:items-end lg:text-end">
@@ -226,6 +157,78 @@ export default function VirtualMachinePanel({
             </>
           )}
         </div>
+      </div>
+      <div className="my-4 px-8 text-sm text-gray-500">
+        <button onClick={() => setDetailsOpen((o) => !o)}>
+          <span
+            className={`i-tabler-chevron-down inline-block translate-y-[.15em] mr-2 transition-transform ${detailsOpen ? '' : '-rotate-90'}`}
+          />
+          Details
+        </button>
+        <AnimatePresence>
+          {detailsOpen && (
+            <motion.div
+              initial={{ height: 0 }}
+              animate={{ height: 'auto' }}
+              exit={{ height: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="grid grid-cols-2 mt-2 gap-x-4 gap-y-1">
+                <p className="select-none">Compute cost</p>
+                <p className="tabular-nums">
+                  ${parseFloat(vm.compute_price).toFixed(4)}/hour
+                </p>
+
+                <p className="select-none">Storage cost</p>
+                <p className="tabular-nums">
+                  ${parseFloat(vm.storage_price).toFixed(4)}/hour
+                </p>
+
+                <p className="select-none">When running</p>
+                <p className="tabular-nums">
+                  ${parseFloat(vm.total_price).toFixed(4)}/hour
+                </p>
+
+                <p className="select-none text-gray-700 font-medium">
+                  Currently
+                </p>
+                <p className="text-gray-700 font-medium tabular-nums">
+                  $
+                  {(vm.status === 'Running' || vm.status === 'Stopped'
+                    ? parseFloat(vm.total_price)
+                    : parseFloat(vm.storage_price)
+                  ).toFixed(4)}
+                  /hour
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 mt-4 gap-x-4 gap-y-1">
+                <p className="select-none">Machine ID</p>
+                <p className="font-mono">{vm.id}</p>
+
+                <p className="select-none">Operating System</p>
+                <p>{vm.operating_system}</p>
+
+                <p className="select-none">IP Address</p>
+                <p className="font-mono">{vm.ip_address}</p>
+
+                <p className="select-none">Dedicated IP</p>
+                <p>{vm.dedicated_ip_address || 'N/A'}</p>
+
+                <p className="select-none">Port Forwards</p>
+                <div>
+                  {Object.entries(vm.port_forwards).map(([from, to]) => (
+                    <p key={`${from}..${to}`} className="font-mono">
+                      {from}{' '}
+                      <span className="i-tabler-arrow-right mr-1 inline-block translate-y-[0.12em]" />{' '}
+                      {to}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </li>
   );

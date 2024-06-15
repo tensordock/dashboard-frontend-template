@@ -5,7 +5,3 @@ export const INFRASTRUCTURE_URL = 'https://strategicinfra.com/';
 
 export const CONTACT_EMAIL = 'hello@h100cloud.com';
 export const SALES_EMAIL = 'sales@h100cloud.com';
-
-// probably don't need this
-export const DOCUMENTATION_URL =
-  'https://tensordock.gitbook.io/whitelabeled-storefronts-tensordock/';

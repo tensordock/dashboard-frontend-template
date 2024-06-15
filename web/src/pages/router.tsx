@@ -14,6 +14,7 @@ import HomePage from './home';
 import ConfirmAccountPage from './confirm';
 import ResetPasswordPage from './auth/reset-password';
 import ChangePasswordPage from './auth/change-password';
+import LayoutRequireLogin from './dash/layout-require-login';
 
 const router = createBrowserRouter([
   // { path: '/', element: <HomePage /> },
@@ -22,11 +23,16 @@ const router = createBrowserRouter([
     element: <DashLayout />,
     children: [
       { path: 'deploy', element: <DeployPage /> },
-      { path: 'automations', element: <AutomationsPage /> },
-      { path: 'automations/add', element: <AddAutomationPage /> },
-      { path: 'account', element: <AccountPage /> },
-      { path: 'account/deposit', element: <DepositFundsPage /> },
-      { path: 'list', element: <VirtualMachinesPage /> },
+      {
+        element: <LayoutRequireLogin />,
+        children: [
+          { path: 'automations', element: <AutomationsPage /> },
+          { path: 'automations/add', element: <AddAutomationPage /> },
+          { path: 'account', element: <AccountPage /> },
+          { path: 'account/deposit', element: <DepositFundsPage /> },
+          { path: 'list', element: <VirtualMachinesPage /> },
+        ],
+      },
     ],
   },
   {

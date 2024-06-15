@@ -43,6 +43,7 @@ export default function SignupPage() {
     try {
       await signup(email, org_name, password);
       navigate(ROUTES.account, { replace: true });
+      toast.success('Check your email to verify your account!');
     } catch (err) {
       if (err instanceof Error) toast.error(`${err.message}.`);
     }
@@ -77,7 +78,7 @@ export default function SignupPage() {
         <TextInput
           {...register('org_name')}
           label="Organization Name"
-          placeholder="John's Hosting LLC"
+          placeholder="JohnML LLC"
           errorMessage={errors.org_name?.message}
         />
         <TextInput

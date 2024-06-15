@@ -12,7 +12,7 @@ All remote info is dynamically fetched client-side. You can see a good example o
 
 Since emails can't fetch data dynamically, we instead use templating. All emails have the following base template variables, which you probably won't need but are here just in case:
 
-- `whitelabel_site`: Whitelabel hostname, i.e. `h100cloud.com`
+- `whitelabel_site`: Whitelabel hostname, i.e. `gpufleet.com`
 - `org_title`: Organization name
 
 Templating uses `{{ variablename }}` format.

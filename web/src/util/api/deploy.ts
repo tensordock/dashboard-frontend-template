@@ -53,7 +53,7 @@ export interface FetchHostnodesParams {
   minStorage: number;
   minVRAM?: number;
   requiresRTX?: boolean;
-  domain?: string;
+  subdomain?: string;
 }
 
 /**
@@ -67,7 +67,7 @@ export async function fetchHostnodeStock(params: FetchHostnodesParams) {
     minStorage: params.minStorage.toFixed(0),
     ...(params.minVRAM && { minVRAM: params.minVRAM.toFixed(0) }),
     ...(params.requiresRTX && { requiresRTX: `${params.requiresRTX}` }),
-    ...(params.domain && { domain: params.domain }),
+    ...(params.subdomain && { subdomain: params.subdomain }),
   });
 
   return fetcher<{

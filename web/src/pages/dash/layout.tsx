@@ -7,14 +7,8 @@ import useAuth from '../../hooks/use-auth';
 import { ROUTES } from '../../constants/pages';
 
 export default function DashLayout() {
-  const { loginInfo, isLoading, logout } = useAuth();
+  const { loginInfo, logout } = useAuth();
   const navigate = useNavigate();
-
-  // redirect to login page if not logged in
-  useEffect(() => {
-    if (!isLoading && !loginInfo?.loggedIn)
-      navigate(ROUTES.login, { replace: true });
-  }, [isLoading, loginInfo, navigate]);
 
   return (
     <div className="min-h-screen bg-primary-50">
@@ -34,19 +28,28 @@ export default function DashLayout() {
             </div>
             <div className="flex flex-col items-start">
               <p className="text-sm text-gray-700">
-                {loginInfo?.loggedIn ? loginInfo.email : '...'}
+                {loginInfo?.loggedIn ? loginInfo.email : 'Not logged in'}
               </p>
-              <button
-                type="button"
-                onClick={() => {
-                  logout();
-                  toast.success('Logged out!');
-                  navigate(ROUTES.home, { replace: true });
-                }}
-                className="text-xs text-gray-500"
-              >
-                Logout
-              </button>
+              {loginInfo?.loggedIn ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    logout();
+                    toast.success('Logged out!');
+                    navigate(ROUTES.home, { replace: true });
+                  }}
+                  className="text-xs text-gray-500 hover:text-gray-600"
+                >
+                  Logout
+                </button>
+              ) : (
+                <Link
+                  to={ROUTES.login}
+                  className="text-xs text-gray-500 hover:text-gray-600"
+                >
+                  Log In
+                </Link>
+              )}
             </div>
           </div>
           <ul className="mt-4 flex flex-col select-none">
@@ -54,7 +57,7 @@ export default function DashLayout() {
               { icon: 'i-tabler-arrow-back-up', text: 'Home', to: ROUTES.home },
               {
                 icon: 'i-tabler-rocket',
-                text: 'Deploy a new H100',
+                text: 'Deploy servers',
                 to: ROUTES.deploy,
               },
               {

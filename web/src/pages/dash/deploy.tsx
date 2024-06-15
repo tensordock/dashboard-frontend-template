@@ -23,6 +23,7 @@ import * as constants from '../../constants';
 import useHostnodes from '../../hooks/use-hostnodes';
 import useUserInfo from '../../hooks/use-user-info';
 import * as api from '../../util/api';
+import useAuth from '../../hooks/use-auth';
 
 type DeployFormValues = z.infer<typeof api.deploySchema>;
 
@@ -146,14 +147,16 @@ export default function DeployPage() {
 
   const [isAdvancedOpen, setAdvancedOpen] = useState(false);
 
+  const { loginInfo } = useAuth();
+
   return (
     <>
       <Head title={`Deploy a cloud GPU`} />
-      <DashBlock header="Deploy a cloud H100 SXM5 GPU">
+      <DashBlock header="Deploy a new cloud GPU">
         <div className="mt-4 text-gray-500 font-400">
           <p>
-            Premium OEM-manufactured servers. Tier 3 data centers. NVSwitch
-            fabric passed through when you deploy 8 GPUs.
+            Customize your own server, fully a la carte. Deploy in 2 tier 3 data
+            centers in the US and EU.
           </p>
           <Link
             to={constants.INFRASTRUCTURE_URL}
@@ -475,7 +478,9 @@ runcmd:
               <p className="mt-8 flex font-bold font-display">
                 Account Balance
                 <span className="ml-auto font-sans tabular-nums">
-                  ${info?.balance?.toFixed(2)}
+                  {loginInfo?.loggedIn
+                    ? `$${info?.balance?.toFixed(2)}`
+                    : 'N/A'}
                 </span>
               </p>
               <p className="mt-1 text-sm text-gray-500">
@@ -496,15 +501,25 @@ runcmd:
                 if you are interested in committing to a monthly or longer
                 contract. Save up to 30%.
               </p>
-              <button
-                type="submit"
-                disabled={accountBalanceTooLow}
-                className={`mt-8 rounded px-4 py-2 font-medium font-display transition-colors ${accountBalanceTooLow ? 'ring-1 ring-gray-300 text-blue-500' : 'bg-primary-500 hover:bg-primary-600 text-white'}`}
-              >
-                {accountBalanceTooLow
-                  ? `Balance of $${info?.balance} too low`
-                  : 'Deploy Server'}
-              </button>
+              {loginInfo?.loggedIn && (
+                <button
+                  type="submit"
+                  disabled={accountBalanceTooLow}
+                  className={`mt-8 rounded px-4 py-2 font-medium font-display transition-colors ${accountBalanceTooLow ? 'ring-1 ring-gray-300 text-blue-500' : 'bg-primary-500 hover:bg-primary-600 text-white'}`}
+                >
+                  {accountBalanceTooLow
+                    ? `Balance of $${info?.balance} too low`
+                    : 'Deploy Server'}
+                </button>
+              )}
+              {loginInfo?.loggedIn === false && (
+                <Link
+                  to={constants.ROUTES.login}
+                  className="mt-8 rounded px-4 py-2 font-medium font-display bg-primary-500 hover:bg-primary-600 text-white text-center transition-colors"
+                >
+                  Log In to Deploy
+                </Link>
+              )}
             </div>
           ) : (
             <p className="mt-4 text-gray-500">

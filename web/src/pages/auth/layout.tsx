@@ -4,12 +4,12 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/use-auth';
 import { ROUTES } from '../../constants/pages';
 
-import { DOCUMENTATION_URL } from '../../constants/external';
 import {
   BG_IMAGE_URL,
   LOGO_TEXT,
   SHORT_COMPANY_NAME,
 } from '../../constants/branding';
+import { INFRASTRUCTURE_URL } from '../../constants';
 
 export default function AuthLayout() {
   const { loginInfo } = useAuth();
@@ -38,7 +38,7 @@ export default function AuthLayout() {
           <ul className="ml-8 hidden flex font-medium font-display">
             {[
               { text: 'Deploy', to: ROUTES.deploy },
-              { text: 'Documentation', to: DOCUMENTATION_URL },
+              { text: 'Infrastructure', to: INFRASTRUCTURE_URL },
             ].map(({ text, to }) => (
               <li key={to}>
                 <Link

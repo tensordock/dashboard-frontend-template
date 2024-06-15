@@ -10,7 +10,6 @@ import {
 } from '../../constants/branding';
 import {
   CUSTOM_REQUESTS_URL,
-  DOCUMENTATION_URL,
   INFRASTRUCTURE_URL,
 } from '../../constants/external';
 import useAuth from '../../hooks/use-auth';
@@ -21,7 +20,6 @@ import DeployImage from '../../assets/img/deploy.jpg';
 const navLinks = [
   { text: 'Deploy', to: ROUTES.deploy },
   { text: 'Infrastructure', to: INFRASTRUCTURE_URL },
-  { text: 'Documentation', to: DOCUMENTATION_URL },
 ];
 
 export default function SplashSection() {
