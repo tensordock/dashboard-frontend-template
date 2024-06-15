@@ -18,7 +18,7 @@ export default function OperatingSystemSelectInput({
   return (
     <>
       <div className="grid overflow-hidden rounded-xl md:grid-cols-2">
-        {[...constants.ALLOWED_OS.values()].map((os, idx) => {
+        {constants.ALLOWED_OS.map((os, idx) => {
           const isSelected = value === os;
 
           const { features, forAI, minStorageGB } = constants.OS_INFO[os];

@@ -282,7 +282,7 @@ export const deploySchema = z
     }),
     hostnode: z.string(),
     // @ts-expect-error it's an array we're fiine
-    os: z.enum([...constants.ALLOWED_OS.values()], {
+    os: z.enum(constants.ALLOWED_OS, {
       message: 'Please select an operating system',
     }) as z.ZodSchema<constants.OperatingSystem>,
     adminPassword: z

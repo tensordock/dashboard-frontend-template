@@ -5,14 +5,14 @@ import axios from '../axios';
 /**
  * Fetches the current user's authentication status. Uses localStorage to store the token.
  */
-export async function fetchAuth() {
+export async function fetchAuth(subdomain: string) {
   if (!localStorage.getItem('whitelabelToken'))
     return { loggedIn: false as const, detail: 'Not logged in' };
 
   const res = await axios.post(
     `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/token_verify`,
     undefined,
-    { validateStatus: (status) => status < 500 }
+    { params: { subdomain }, validateStatus: (status) => status < 500 }
   );
 
   if (res.status !== 200)

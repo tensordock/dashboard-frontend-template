@@ -188,7 +188,7 @@ export default function DeployPage() {
               name="specs.gpu_model"
               render={({ field: { value, onChange } }) => (
                 <ul className="flex gap-4 overflow-x-scroll overflow-y-auto p-1px">
-                  {[...constants.ALLOWED_GPUS].map((gpu) => {
+                  {constants.ALLOWED_GPUS.map((gpu) => {
                     const isSelected = gpu === value;
                     return (
                       <li key={gpu}>

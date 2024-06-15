@@ -10,7 +10,9 @@ export default function useAuth() {
     isLoading,
     isValidating,
     mutate,
-  } = useSWR('/api/v0/client/whitelabel/token_verify', api.fetchAuth);
+  } = useSWR('/api/v0/client/whitelabel/token_verify', () =>
+    api.fetchAuth(import.meta.env.VITE_WHITELABEL_SUBDOMAIN)
+  );
 
   const login = useCallback(
     (email: string, password: string) =>

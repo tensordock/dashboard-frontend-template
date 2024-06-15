@@ -9,13 +9,13 @@ export const DEFAULT_DEPLOY_SPECS = {
   storage: 20,
 } satisfies Partial<z.infer<typeof api.deploySchema>['specs']>;
 
-export const ALLOWED_GPUS = new Set<GpuModel>([
+export const ALLOWED_GPUS: GpuModel[] = [
   'h100-sxm5-80gb',
   'geforcertx4090-pcie-24gb',
   'geforcertx3090-pcie-24gb',
-]);
+];
 
-export const GPU_SWITCHING_ALLOWED = ALLOWED_GPUS.size > 1;
+export const GPU_SWITCHING_ALLOWED = ALLOWED_GPUS.length > 1;
 
 export const ALLOWED_OS: OperatingSystem[] = [
   'Ubuntu 20.04 LTS',
