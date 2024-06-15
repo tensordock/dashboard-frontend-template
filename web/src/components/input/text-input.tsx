@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m } from 'framer-motion';
 import { HTMLProps, forwardRef } from 'react';
 
 export default forwardRef<
@@ -22,7 +22,7 @@ export default forwardRef<
       />
       <AnimatePresence>
         {errorMessage && (
-          <motion.div
+          <m.div
             className="overflow-hidden"
             initial={{ height: 0 }}
             animate={{ height: 'auto' }}
@@ -31,7 +31,7 @@ export default forwardRef<
             <div className="select-none pt-1 text-sm text-red-500">
               {errorMessage}.
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </label>

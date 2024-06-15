@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ReactTyped } from 'react-typed';
@@ -126,7 +126,7 @@ export default function SplashSection() {
           <AnimatePresence>
             {/* Mobile navbar */}
             {menuOpen && (
-              <motion.div
+              <m.div
                 className="mx-auto overflow-hidden px-4 container lg:hidden"
                 initial={{ height: 0 }}
                 animate={{ height: 'auto' }}
@@ -149,7 +149,7 @@ export default function SplashSection() {
                     </li>
                   ))}
                 </ul>
-              </motion.div>
+              </m.div>
             )}
           </AnimatePresence>
         </nav>

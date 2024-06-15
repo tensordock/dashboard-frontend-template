@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m } from 'framer-motion';
 import { RefCallBack } from 'react-hook-form';
 
 import * as constants from '../../constants';
@@ -127,14 +127,14 @@ export default function DeployLocationInput({
       {/* TODO: suggested locations */}
       <AnimatePresence>
         {errorMessage && (
-          <motion.div
+          <m.div
             className="overflow-auto"
             initial={{ height: 0 }}
             animate={{ height: 'auto' }}
             exit={{ height: 0 }}
           >
             <div className="mt-1 text-sm text-red-500">{errorMessage}.</div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>

@@ -10,6 +10,7 @@ import {
   SHORT_COMPANY_NAME,
 } from '../../constants/branding';
 import { INFRASTRUCTURE_URL } from '../../constants';
+import PageLoader from '../../components/page-loader';
 
 export default function AuthLayout() {
   const { loginInfo } = useAuth();
@@ -62,7 +63,9 @@ export default function AuthLayout() {
                 </h2>
               </Link>
               <div className="px-8 py-4">
-                <Outlet />
+                <PageLoader>
+                  <Outlet />
+                </PageLoader>
               </div>
             </div>
           </main>

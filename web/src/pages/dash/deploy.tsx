@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m } from 'framer-motion';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Controller,
@@ -373,7 +373,7 @@ export default function DeployPage() {
                           </select>
                           <AnimatePresence>
                             {errors.portForwards?.[idx]?.from?.message && (
-                              <motion.div
+                              <m.div
                                 className="overflow-auto"
                                 initial={{ height: 0 }}
                                 animate={{ height: 'auto' }}
@@ -382,7 +382,7 @@ export default function DeployPage() {
                                 <div className="mt-1 text-sm text-red-500">
                                   {errors.portForwards?.[idx]?.from?.message}.
                                 </div>
-                              </motion.div>
+                              </m.div>
                             )}
                           </AnimatePresence>
                         </label>
@@ -429,7 +429,7 @@ export default function DeployPage() {
           </button>
           <AnimatePresence>
             {isAdvancedOpen && (
-              <motion.div
+              <m.div
                 initial={{ height: 0 }}
                 animate={{ height: 'auto' }}
                 exit={{ height: 0 }}
@@ -453,7 +453,7 @@ runcmd:
                     rows={11}
                   />
                 </label>
-              </motion.div>
+              </m.div>
             )}
           </AnimatePresence>
         </DashBlock>

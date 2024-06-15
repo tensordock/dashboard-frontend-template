@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m } from 'framer-motion';
 import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -167,7 +167,7 @@ export default function VirtualMachinePanel({
         </button>
         <AnimatePresence>
           {detailsOpen && (
-            <motion.div
+            <m.div
               initial={{ height: 0 }}
               animate={{ height: 'auto' }}
               exit={{ height: 0 }}
@@ -226,7 +226,7 @@ export default function VirtualMachinePanel({
                   ))}
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </div>

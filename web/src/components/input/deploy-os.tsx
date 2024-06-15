@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m } from 'framer-motion';
 import { RefCallBack } from 'react-hook-form';
 
 import * as constants from '../../constants';
@@ -42,7 +42,7 @@ export default function OperatingSystemSelectInput({
               )}
               <AnimatePresence>
                 {isSelected && (
-                  <motion.div
+                  <m.div
                     initial={{ height: 0 }}
                     animate={{ height: 'auto' }}
                     exit={{ height: 0 }}
@@ -55,7 +55,7 @@ export default function OperatingSystemSelectInput({
                     <p className="mt-2 text-sm">
                       {minStorageGB}GB storage required
                     </p>
-                  </motion.div>
+                  </m.div>
                 )}
               </AnimatePresence>
             </button>
@@ -64,14 +64,14 @@ export default function OperatingSystemSelectInput({
       </div>
       <AnimatePresence>
         {errorMessage && (
-          <motion.div
+          <m.div
             className="overflow-auto"
             initial={{ height: 0 }}
             animate={{ height: 'auto' }}
             exit={{ height: 0 }}
           >
             <div className="mt-1 text-sm text-red-500">{errorMessage}.</div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>

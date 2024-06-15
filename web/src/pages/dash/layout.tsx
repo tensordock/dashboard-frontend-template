@@ -4,6 +4,7 @@ import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { LOGO_TEXT } from '../../constants/branding';
 import { ROUTES } from '../../constants/pages';
 import useAuth from '../../hooks/use-auth';
+import PageLoader from '../../components/page-loader';
 
 export default function DashLayout() {
   const { loginInfo, logout } = useAuth();
@@ -86,7 +87,9 @@ export default function DashLayout() {
           </ul>
         </nav>
         <div className="z-0 mb-24 mt-6 flex flex-col gap-y-4 rounded-xl bg-primary-50">
-          <Outlet />
+          <PageLoader>
+            <Outlet />
+          </PageLoader>
         </div>
       </main>
     </div>

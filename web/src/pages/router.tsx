@@ -1,16 +1,19 @@
+/* eslint-disable react-refresh/only-export-components */
+
 import { createBrowserRouter } from 'react-router-dom';
+import React from 'react';
 
 import AuthLayout from './auth/layout';
 import LoginPage from './auth/login';
-import SignupPage from './auth/signup';
+const SignupPage = React.lazy(() => import('./auth/signup'));
 import AccountPage from './dash/account';
-import DepositFundsPage from './dash/account-deposit';
+const DepositFundsPage = React.lazy(() => import('./dash/account-deposit'));
 import AutomationsPage from './dash/automations';
 import AddAutomationPage from './dash/automations-add';
-import DeployPage from './dash/deploy';
+const DeployPage = React.lazy(() => import('./dash/deploy'));
 import DashLayout from './dash/layout';
 import VirtualMachinesPage from './dash/virtual-machines';
-import HomePage from './home';
+const HomePage = React.lazy(() => import('./home'));
 import ConfirmAccountPage from './confirm';
 import ResetPasswordPage from './auth/reset-password';
 import ChangePasswordPage from './auth/change-password';
@@ -19,7 +22,10 @@ import NotFoundPage from './notfound';
 
 const router = createBrowserRouter([
   { path: '*', element: <NotFoundPage /> },
-  { path: '/', element: <HomePage /> },
+  {
+    path: '/',
+    element: <HomePage />,
+  },
   {
     element: <DashLayout />,
     children: [
