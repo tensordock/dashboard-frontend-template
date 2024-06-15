@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { DashBlock } from '../../components/dash-block';
 import Head from '../../components/head';
+import { SUPPORT_EMAIL } from '../../constants';
 import { SHORT_COMPANY_NAME } from '../../constants/branding';
 import { ROUTES } from '../../constants/pages';
 import useUserInfo from '../../hooks/use-user-info';
@@ -28,9 +29,8 @@ export default function AccountPage() {
       <DashBlock header="Account Settings">
         <div className="mt-4 text-gray-500 font-400">
           <p className="md:inline">Manage your {SHORT_COMPANY_NAME} account.</p>
-          {/* TODO: make this variable */}
           <Link
-            to={`mailto:support@tensordock.com`}
+            to={`mailto:${SUPPORT_EMAIL}`}
             className="mt-2 inline-block select-none rounded px-3 py-1 text-primary-500 font-300 font-display ring-1 ring-gray-300 md:ml-4 md:mt-0"
           >
             Need help? Email support

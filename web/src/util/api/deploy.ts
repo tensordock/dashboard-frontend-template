@@ -81,6 +81,9 @@ function formatLocationAvailability(stock: number) {
   return 'Low Stock';
 }
 
+/**
+ * Rounds numbers to nearest 1000th
+ */
 function roundValue(value: number) {
   return Math.round(value * 1000) / 1000;
 }
@@ -251,7 +254,6 @@ export function generateLocations(
   };
 }
 
-// TODO: remove if not needed
 const portSchema = ({ min, max }: { min?: number; max?: number } = {}) =>
   z
     .string()
@@ -344,8 +346,11 @@ export const deploySchema = z
 
 export async function deploy(
   values: z.infer<typeof deploySchema>,
-  hostnodes: Record<string, HostnodeEntry>
+  hostnodes: Record<string, HostnodeEntry>,
+  validate?: boolean
 ) {
+  if (validate) deploySchema.parse(values);
+
   const {
     specs,
     hostnode,
@@ -360,7 +365,6 @@ export async function deploy(
   const internalPorts = portForwards.map(({ to }) => to);
 
   // validate that this hostnode is available
-  // TODO: maybe don't need this
   if (!(hostnode in hostnodes)) throw new Error('Selected hostnode not listed');
 
   // validate that we use only available ports
@@ -376,7 +380,6 @@ export async function deploy(
     vcpus: specs.vcpu,
     storage: specs.storage,
     ram: specs.ram,
-    country: 'United States', // TODO: check w someone what this means
     gpu_count: specs.gpu_count,
     gpu_model: specs.gpu_model,
     operating_system: os,
