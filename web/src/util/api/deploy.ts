@@ -117,11 +117,33 @@ function calculateVMPrice(
   };
 }
 
-interface LocationInfo {
+export function getVRAM(model: constants.GpuModel) {
+  const gpuSplit = model.split('-');
+  return Number(gpuSplit[gpuSplit.length - 1].replace('gb', ''));
+}
+
+function sortLocations(locations: Record<string, LocationInfo>) {
+  return Object.fromEntries(
+    Object.entries(locations).sort((a, b) => {
+      const [, locationA] = a;
+      const [, locationB] = b;
+
+      const reservedDiff =
+        (locationA.hostnodes?.find((node) => node.reserved) ? 0 : 1) -
+        (locationB.hostnodes?.find((node) => node.reserved) ? 0 : 1);
+
+      if (reservedDiff) return reservedDiff;
+
+      return Number(locationA.price) - Number(locationB.price);
+    })
+  );
+}
+
+export interface LocationInfo {
   availability: string;
   location: string;
   price: string;
-  gpuType: string;
+  gpuType: constants.GpuModel;
   stock: number;
   cpuType: string;
   hostnodes: [
@@ -136,7 +158,7 @@ interface LocationInfo {
 }
 
 /**
- * Step 2: generate location
+ * Step 2: generate location information
  */
 export function generateLocations(
   selectedSpecs: z.infer<typeof deploySchema>['specs'],
@@ -166,16 +188,11 @@ export function generateLocations(
 
       const currentLocationId = hostnode.location.id + vmPrice.toString();
 
-      let gpuVRAM: number;
-      {
-        const gpuSplit = selectedSpecs.gpu_model.split('-');
-        gpuVRAM = Number(gpuSplit[gpuSplit.length - 1].replace('gb', ''));
-      }
-
       // Validate each GPU individually, as the returned hostnodes may have GPUs not matching the criteria
       if (
         hostnode.specs.gpu[hostnodeGPU].amount < selectedSpecs.gpu_count ||
-        hostnode.specs.gpu[hostnodeGPU].vram < gpuVRAM ||
+        hostnode.specs.gpu[hostnodeGPU].vram <
+          getVRAM(selectedSpecs.gpu_model) ||
         (constants.GPU_INFO[selectedSpecs.gpu_model].displayName.includes(
           'RTX'
         ) &&
@@ -211,7 +228,7 @@ export function generateLocations(
           ),
           location: `${hostnode.location.city}, ${hostnode.location.region}, ${hostnode.location.country}`,
           price: vmPrice,
-          gpuType: hostnodeGPU,
+          gpuType: hostnodeGPU as constants.GpuModel,
           stock: hostnode.specs.gpu[hostnodeGPU].amount,
           cpuType: hostnode.specs.cpu.type,
           hostnodes: [
@@ -228,8 +245,8 @@ export function generateLocations(
     }
   }
   return {
-    locations,
-    suggestedLocations,
+    locations: sortLocations(locations),
+    suggestedLocations: sortLocations(suggestedLocations),
   };
 }
 
@@ -289,6 +306,8 @@ export const deploySchema = z
   })
   .superRefine(({ os, specs }, ctx) => {
     const minStorage = constants.OS_INFO[os].minStorageGB;
+    console.log('min storage: ', minStorage);
+    console.log('specs: ', specs);
     if (minStorage === undefined || specs?.storage === undefined) return;
 
     if (specs.storage < minStorage) {

@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Controller,
   SubmitHandler,
@@ -14,6 +14,7 @@ import { z } from 'zod';
 
 import { DashBlock } from '../../components/dash-block';
 import Head from '../../components/head';
+import DeployLocationInput from '../../components/input/deploy-location';
 import OperatingSystemSelectInput from '../../components/input/deploy-os';
 import DeploySpecInput from '../../components/input/deploy-spec';
 import TextInput from '../../components/input/text-input';
@@ -32,6 +33,7 @@ export default function DeployPage() {
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<DeployFormValues>({
     resolver: zodResolver(api.deploySchema),
     defaultValues: {
@@ -45,13 +47,17 @@ export default function DeployPage() {
 
   const specs = useWatch({ control, name: 'specs' });
 
+  useEffect(() => {
+    setValue('hostnode', undefined!);
+  }, [specs.gpu_model, setValue]);
+
   const { hostnodes } = useHostnodes({
     minGPUCount: specs.gpu_count,
     minRAM: specs.ram,
     minStorage: specs.storage,
     minvCPUs: specs.vcpu,
-    minVRAM: 1,
-    requiresRTX: false,
+    minVRAM: api.getVRAM(specs.gpu_model),
+    requiresRTX: specs.gpu_model.includes('rtx'),
   });
 
   const { info } = useUserInfo();
@@ -60,11 +66,9 @@ export default function DeployPage() {
     [info]
   );
 
-  console.log(hostnodes);
-
   const { locations, suggestedLocations } = useMemo(
     () =>
-      hostnodes
+      hostnodes && specs
         ? api.generateLocations(specs, hostnodes)
         : { locations: undefined, suggestedLocations: undefined },
     [hostnodes, specs]
@@ -124,40 +128,110 @@ export default function DeployPage() {
                 Email us
               </Link>
             </div>
+            <Controller
+              control={control}
+              name="specs.gpu_model"
+              render={({ field: { value, onChange } }) => (
+                <ul className="flex gap-4 overflow-x-scroll overflow-y-auto p-1px">
+                  {[...constants.ALLOWED_GPUS].map((gpu) => {
+                    const isSelected = gpu === value;
+                    return (
+                      <li key={gpu}>
+                        <button
+                          type="button"
+                          className={`flex flex-col items-start px-4 text-lg font-display py-4 rounded-lg transition-colors text-left ${isSelected ? 'bg-primary-500 text-white ring-primary-300' : 'bg-primary-500/10'}`}
+                          onClick={() => onChange(gpu)}
+                        >
+                          {constants.GPU_INFO[gpu].shortName}
+                          <div
+                            className={`mt-2 px-3 py-1 bg-primary-500/20 rounded text-base ${isSelected ? 'text-white ring-1 ring-white/30' : 'text-primary-500'}`}
+                          >
+                            {api.getVRAM(gpu)}GB
+                          </div>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            />
           </DashBlock>
         )}
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <DeploySpecInput
-            {...register('specs.gpu_count')}
-            label="GPU Count"
-            errorMessage={errors.specs?.gpu_count?.message}
-            options={constants.ALLOWED_GPU_COUNT}
-            disabled={constants.ALLOWED_GPU_COUNT.length === 1}
+          <Controller
+            control={control}
+            name="specs.gpu_count"
+            render={({ field }) => (
+              <DeploySpecInput
+                field={field}
+                label="GPU Count"
+                errorMessage={errors.specs?.gpu_count?.message}
+                options={constants.ALLOWED_GPU_COUNT}
+                disabled={constants.ALLOWED_GPU_COUNT.length === 1}
+              />
+            )}
           />
-          <DeploySpecInput
-            {...register('specs.ram')}
-            label="RAM"
-            errorMessage={errors.specs?.ram?.message}
-            options={constants.ALLOWED_RAM_GB}
-            disabled={constants.ALLOWED_RAM_GB.length === 1}
-            transformValues={(ram) => `${ram} GB`}
+          <Controller
+            control={control}
+            name="specs.ram"
+            render={({ field }) => (
+              <DeploySpecInput
+                field={field}
+                label="RAM"
+                errorMessage={errors.specs?.ram?.message}
+                options={constants.ALLOWED_RAM_GB}
+                disabled={constants.ALLOWED_RAM_GB.length === 1}
+                transformValues={(ram) => `${ram} GB`}
+              />
+            )}
           />
-          <DeploySpecInput
-            {...register('specs.vcpu')}
-            label="vCPU Count"
-            errorMessage={errors.specs?.vcpu?.message}
-            disabled={constants.ALLOWED_VCPU_COUNT.length === 1}
-            options={constants.ALLOWED_VCPU_COUNT}
+          <Controller
+            control={control}
+            name="specs.vcpu"
+            render={({ field }) => (
+              <DeploySpecInput
+                field={field}
+                label="vCPU Count"
+                errorMessage={errors.specs?.vcpu?.message}
+                options={constants.ALLOWED_VCPU_COUNT}
+                disabled={constants.ALLOWED_VCPU_COUNT.length === 1}
+              />
+            )}
           />
-          <DeploySpecInput
-            {...register('specs.storage')}
-            label="NVMe SSD"
-            errorMessage={errors.specs?.vcpu?.message}
-            options={constants.ALLOWED_STORAGE_GB}
-            disabled={constants.ALLOWED_STORAGE_GB.length === 1}
-            transformValues={(v) => `${v} GB`}
+          <Controller
+            control={control}
+            name="specs.storage"
+            render={({ field }) => (
+              <DeploySpecInput
+                field={field}
+                label="NVMe SSD"
+                errorMessage={errors.specs?.storage?.message}
+                options={constants.ALLOWED_STORAGE_GB}
+                disabled={constants.ALLOWED_STORAGE_GB.length === 1}
+                transformValues={(ram) => `${ram} GB`}
+              />
+            )}
           />
         </div>
+        <DashBlock>
+          <h3 className="select-none text-xl font-display">
+            Select a location
+          </h3>
+          {locations && suggestedLocations && (
+            <Controller
+              control={control}
+              name="hostnode"
+              render={({ field }) => (
+                <DeployLocationInput
+                  field={field}
+                  locations={locations}
+                  suggestedLocations={suggestedLocations}
+                  selectedGpuModel={specs.gpu_model}
+                />
+              )}
+            />
+          )}
+        </DashBlock>
         <DashBlock>
           <h3 className="mb-6 select-none text-xl font-display">
             Select an operating system
@@ -173,29 +247,6 @@ export default function DeployPage() {
                 />
               );
             }}
-          />
-        </DashBlock>
-        <DashBlock>
-          <h3 className="select-none text-xl font-display">
-            Select a location
-          </h3>
-          <Controller
-            control={control}
-            name={'hostnode'}
-            render={({ field: { value, onChange } }) => (
-              <div>
-                {locations &&
-                  Object.entries(locations).map(([id, loc]) => {
-                    const isSelected = value === id;
-                    // TODO
-                    return (
-                      <button type="button" onClick={() => onChange(id)}>
-                        {loc.location}
-                      </button>
-                    );
-                  })}
-              </div>
-            )}
           />
         </DashBlock>
         <DashBlock>
@@ -309,7 +360,7 @@ runcmd:
 
         <DashBlock>
           <h3 className="select-none text-xl font-display">Your Server</h3>
-          {specs ? (
+          {specs.gpu_model ? (
             <div className="mt-4 flex flex-col">
               <p className="text-sm text-gray-500">
                 Your actual charge will be pro-rated to the millisecond your

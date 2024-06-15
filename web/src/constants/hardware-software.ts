@@ -2,22 +2,29 @@ import { z } from 'zod';
 import type * as api from '../util/api';
 
 export const DEFAULT_DEPLOY_SPECS = {
+  gpu_model: 'geforcertx4090-pcie-24gb',
   gpu_count: 1,
   ram: 4,
   vcpu: 2,
   storage: 20,
 } satisfies Partial<z.infer<typeof api.deploySchema>['specs']>;
 
-export const ALLOWED_GPUS = new Set<GpuModel>(['h100-sxm5-80gb']);
+export const ALLOWED_GPUS = new Set<GpuModel>([
+  'h100-sxm5-80gb',
+  'geforcertx4090-pcie-24gb',
+  'geforcertx3090-pcie-24gb',
+]);
 
 export const GPU_SWITCHING_ALLOWED = ALLOWED_GPUS.size > 1;
 
-export const ALLOWED_OS = new Set<OperatingSystem>([
+export const ALLOWED_OS: OperatingSystem[] = [
+  'Ubuntu 20.04 LTS',
   'Ubuntu 22.04 LTS',
   'TensorML 20 Everything',
   'TensorML 20 PyTorch',
   'TensorML 20 TensorFlow',
-]);
+  'Windows 10',
+];
 
 export const ALLOWED_GPU_COUNT = [1, 2, 3, 4, 5, 6, 7, 8];
 
@@ -40,44 +47,90 @@ export const ALLOWED_STORAGE_GB = [
 export type GpuModel = keyof typeof GPU_INFO;
 
 export const GPU_INFO = {
-  'a100-sxm4-80gb': { displayName: 'A100 80GB SXM4' },
-  'a100-pcie-80gb': { displayName: 'A100 80GB PCIE' },
-  'a100-pcie-40gb': { displayName: 'A100 40GB PCIE' },
-  'a100-nvlink-40gb': { displayName: 'A100 40GB NVLink' },
-  'l40s-pcie-48gb': { displayName: 'L40S 48GB PCIE' },
-  'l40-pcie-48gb': { displayName: 'L40 48GB PCIE' },
-  'v100-sxm2-16gb': { displayName: 'V100 16GB SXM2' },
-  'v100-nvlink-16gb': { displayName: 'V100 16GB NVLink' },
-  'rtx6000ada-pcie-48gb': { displayName: 'RTX 6000 ADA 48GB' },
-  'rtx5000ada-pcie-32gb': { displayName: 'RTX 5000 ADA 32GB' },
-  'rtx4500ada-pcie-24gb': { displayName: 'RTX 4500 ADA 24GB' },
-  'rtx4000ada-pcie-20gb': { displayName: 'RTX 4000 ADA 20GB' },
-  'rtx4000sffada-pcie-20gb': { displayName: 'RTX 4000 SFF ADA 20GB' },
-  'rtxa6000-pcie-48gb': { displayName: 'RTX A6000 48GB' },
-  'rtxa5000-pcie-24gb': { displayName: 'RTX A5000 24GB' },
-  'rtxa4000-pcie-16gb': { displayName: 'RTX A4000 16GB' },
-  'geforcertx4090-pcie-24gb': { displayName: 'GeForce RTX 4090 24GB' },
-  'geforcertx3090-pcie-24gb': { displayName: 'GeForce RTX 3090 24GB' },
-  'geforcertx3080ti-pcie-12gb': { displayName: 'GeForce RTX 3080 Ti 12GB' },
-  'geforcertx3080-pcie-10gb': { displayName: 'GeForce RTX 3080 10GB' },
-  'geforcertx3070ti-pcie-8gb': { displayName: 'GeForce RTX 3070 Ti 8GB' },
-  'geforcertx3060-pcie-12gb': { displayName: 'GeForce RTX 3060 12GB' },
-  'quadrortx4000-pcie-8gb': { displayName: 'Quadro RTX 4000 8GB' },
-  'quadrortx5000-pcie-16gb': { displayName: 'Quadro RTX 5000 16GB' },
-  'h100-sxm5-80gb': { displayName: 'H100 SXM5 80GB' },
-} as const satisfies Record<string, { displayName: string }>;
+  'a100-sxm4-80gb': { displayName: 'A100 80GB SXM4', shortName: 'A100 SXM4' },
+  'a100-pcie-80gb': { displayName: 'A100 80GB PCIE', shortName: 'A100' },
+  'a100-pcie-40gb': { displayName: 'A100 40GB PCIE', shortName: 'A100' },
+  'a100-nvlink-40gb': {
+    displayName: 'A100 40GB NVLink',
+    shortName: 'A100 NVLink',
+  },
+  'l40s-pcie-48gb': { displayName: 'L40S 48GB PCIE', shortName: 'L40S' },
+  'l40-pcie-48gb': { displayName: 'L40 48GB PCIE', shortName: 'L40' },
+  'v100-sxm2-16gb': { displayName: 'V100 16GB SXM2', shortName: 'V100 SXM2' },
+  'v100-nvlink-16gb': {
+    displayName: 'V100 16GB NVLink',
+    shortName: 'V100 NVLink',
+  },
+  'rtx6000ada-pcie-48gb': {
+    displayName: 'RTX 6000 ADA 48GB',
+    shortName: 'RTX 6000 Ada',
+  },
+  'rtx5000ada-pcie-32gb': {
+    displayName: 'RTX 5000 ADA 32GB',
+    shortName: 'RTX 6000 Ada',
+  },
+  'rtx4500ada-pcie-24gb': {
+    displayName: 'RTX 4500 ADA 24GB',
+    shortName: 'RTX 4500 Ada',
+  },
+  'rtx4000ada-pcie-20gb': {
+    displayName: 'RTX 4000 ADA 20GB',
+    shortName: 'RTX 4000 Ada',
+  },
+  'rtx4000sffada-pcie-20gb': {
+    displayName: 'RTX 4000 SFF ADA 20GB',
+    shortName: 'RTX 4000 SFF Ada',
+  },
+  'rtxa6000-pcie-48gb': {
+    displayName: 'RTX A6000 48GB',
+    shortName: 'RTX A6000',
+  },
+  'rtxa5000-pcie-24gb': {
+    displayName: 'RTX A5000 24GB',
+    shortName: 'RTX A5000',
+  },
+  'rtxa4000-pcie-16gb': {
+    displayName: 'RTX A4000 16GB',
+    shortName: 'RTX A4000',
+  },
+  'geforcertx4090-pcie-24gb': {
+    displayName: 'GeForce RTX 4090 24GB',
+    shortName: 'RTX 4090',
+  },
+  'geforcertx3090-pcie-24gb': {
+    displayName: 'GeForce RTX 3090 24GB',
+    shortName: 'RTX 3090',
+  },
+  'geforcertx3080ti-pcie-12gb': {
+    displayName: 'GeForce RTX 3080 Ti 12GB',
+    shortName: 'RTX 3080ti',
+  },
+  'geforcertx3080-pcie-10gb': {
+    displayName: 'GeForce RTX 3080 10GB',
+    shortName: 'RTX 3080',
+  },
+  'geforcertx3070ti-pcie-8gb': {
+    displayName: 'GeForce RTX 3070 Ti 8GB',
+    shortName: 'RTX 3070ti',
+  },
+  'geforcertx3060-pcie-12gb': {
+    displayName: 'GeForce RTX 3060 12GB',
+    shortName: 'RTX 3060ti',
+  },
+  'quadrortx4000-pcie-8gb': {
+    displayName: 'Quadro RTX 4000 8GB',
+    shortName: 'Quadro RTX 4000',
+  },
+  'quadrortx5000-pcie-16gb': {
+    displayName: 'Quadro RTX 5000 16GB',
+    shortName: 'Quadro RTX 5000',
+  },
+  'h100-sxm5-80gb': { displayName: 'H100 SXM5 80GB', shortName: 'H100 SXM5' },
+} as const satisfies Record<string, { displayName: string; shortName: string }>;
 
 export type OperatingSystem = keyof typeof OS_INFO;
 
-export const OS_INFO: Record<
-  string,
-  {
-    displayName: string;
-    features: string;
-    minStorageGB?: number;
-    forAI?: boolean;
-  }
-> = {
+export const OS_INFO = {
   'TensorML 20 TensorFlow': {
     displayName: 'TensorML 20.04 LTS TensorFlow',
     features: 'Docker, Jupyter, TensorFlow, Keras, CUDA',
@@ -100,16 +153,33 @@ export const OS_INFO: Record<
   'Ubuntu 22.04 LTS': {
     displayName: 'Ubuntu 22.04 LTS',
     features: 'Docker',
+    minStorageGB: 20,
+    forAI: false,
   },
-  'Ubuntu 20.04 LTS': { displayName: 'Ubuntu 20.04 LTS', features: 'Docker' },
+  'Ubuntu 20.04 LTS': {
+    displayName: 'Ubuntu 20.04 LTS',
+    features: 'Docker',
+    minStorageGB: 20,
+    forAI: false,
+  },
   'TensorML 20 RAPIDS': {
     displayName: 'TensorML 20.04 LTS RAPIDS',
     features: 'Docker, Jupyter, RAPIDS', // TODO: might be wrong lol
     minStorageGB: 40,
+    forAI: false,
   },
   'Windows 10': {
     displayName: 'Windows 10',
-    features: 'NVIDIA drivers preinstalled, 30GB size. Bring Your Own License.',
+    features: 'NVIDIA drivers preinstalled. Bring Your Own License.',
     minStorageGB: 90,
+    forAI: false,
   },
-} as const;
+} as const satisfies Record<
+  string,
+  {
+    displayName: string;
+    features: string;
+    minStorageGB: number;
+    forAI: boolean;
+  }
+>;

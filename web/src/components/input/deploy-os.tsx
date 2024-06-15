@@ -20,7 +20,9 @@ export default function OperatingSystemSelectInput({
       <div className="grid overflow-hidden rounded-xl md:grid-cols-2">
         {[...constants.ALLOWED_OS.values()].map((os, idx) => {
           const isSelected = value === os;
-          const { features, forAI } = constants.OS_INFO[os];
+
+          const { features, forAI, minStorageGB } = constants.OS_INFO[os];
+
           return (
             <button
               key={os}
@@ -49,6 +51,9 @@ export default function OperatingSystemSelectInput({
                     <p className="pt-3 text-sm">
                       <span className="i-tabler-check mr-2 inline-block translate-y-1 text-lg" />
                       {features}
+                    </p>
+                    <p className="mt-2 text-sm">
+                      {minStorageGB}GB storage required
                     </p>
                   </motion.div>
                 )}

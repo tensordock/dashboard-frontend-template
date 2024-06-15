@@ -1,5 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { HTMLProps, forwardRef } from 'react';
+import { RefCallBack } from 'react-hook-form';
+
 import { DashBlock } from '../dash-block';
 
 export default forwardRef<
@@ -9,9 +11,15 @@ export default forwardRef<
     label?: string;
     errorMessage?: string;
     transformValues?: (v: number) => string;
+    field: {
+      onChange: (v: number) => void;
+      value: number;
+      disabled?: boolean;
+      ref: RefCallBack;
+    };
   }
 >(function DeploySpecInput(
-  { options, label, errorMessage, transformValues = (v) => v, ...props },
+  { options, label, errorMessage, transformValues = (v) => v, field, ...props },
   ref
 ) {
   return (
@@ -24,6 +32,10 @@ export default forwardRef<
         )}
         <select
           {...props}
+          onChange={(evt) => {
+            field.onChange(parseInt(evt.target.value));
+          }}
+          value={field.value?.toFixed(0)}
           ref={ref}
           className={`rounded px-3 py-2 disabled:bg-gray-100 disabled:text-gray-500 bg-transparent ${errorMessage ? `ring-red-500 ring-2` : 'ring-gray-300 ring-1'}`}
         >
