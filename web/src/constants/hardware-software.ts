@@ -9,6 +9,7 @@ export const DEFAULT_DEPLOY_SPECS = {
   storage: 20,
 } satisfies Partial<z.infer<typeof api.deploySchema>['specs']>;
 
+// Update this list to match the GPUs you want to rent out.
 export const ALLOWED_GPUS: GpuModel[] = [
   'h100-sxm5-80gb',
   'a100-pcie-80gb',
@@ -50,6 +51,8 @@ export const ALLOWED_STORAGE_GB = [
 ];
 
 export type GpuModel = keyof typeof GPU_INFO;
+
+// Shouldn't have to update anything below here
 
 export const GPU_INFO = {
   'a100-sxm4-80gb': { displayName: 'A100 80GB SXM4', shortName: 'A100 SXM4' },

@@ -7,6 +7,7 @@ export default defineConfig({
     presetWebFonts({
       provider: 'google',
       fonts: {
+        // You can swap these out for any existing Google fonts!
         sans: [
           { name: 'Open Sans', weights: ['300', '400', '500', '600', '700'] },
           {
