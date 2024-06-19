@@ -46,5 +46,15 @@ export default defineConfig({
       //   '950': '#450a0a',
       // },
     },
+    borderRadius: {
+      // Input field corner radius
+      input: '.25rem',
+      // Button corner radius
+      btn: '.5rem',
+      // Larger buttons with more content inside
+      bigbtn: '.75rem',
+      // General "card" UI corner radius
+      card: '1rem',
+    },
   },
 });

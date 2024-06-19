@@ -54,7 +54,7 @@ export default function AccountPage() {
               <label className="text-sm text-gray-500 font-400 tracking-wide font-display">
                 {description}
               </label>
-              <div className="mt-1 flex items-center rounded bg-gray-50/50 px-4 py-2 shadow-inner ring-1 ring-gray-200">
+              <div className="mt-1 flex items-center rounded-input bg-gray-50/50 px-4 py-2 shadow-inner ring-1 ring-gray-200">
                 {value ?? 'Loading...'}
                 {value !== undefined && (
                   <button

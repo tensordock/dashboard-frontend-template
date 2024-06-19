@@ -1,5 +1,5 @@
 export const buttonBaseClassName =
-  'inline-block rounded px-6 py-2 font-display transition-colors';
+  'inline-block rounded-btn px-6 py-2 font-display transition-colors';
 
 export const buttonScaleUp = 'sm:px-10 md:px-14';
 

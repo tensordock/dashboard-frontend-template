@@ -95,7 +95,7 @@ export default function DashLayout() {
             ))}
           </ul>
         </nav>
-        <div className="z-0 mb-24 mt-6 flex flex-col gap-y-4 rounded-xl bg-gray-50">
+        <div className="z-0 mb-24 mt-6 flex flex-col gap-y-4 rounded-card bg-gray-50">
           <PageLoader>
             <Outlet />
           </PageLoader>

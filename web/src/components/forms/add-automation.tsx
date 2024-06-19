@@ -78,7 +78,7 @@ export default function AddAutomationForm({
       <label className="inline-flex flex-col">
         <div className="mb-1 text-sm text-gray-500">Automation Type</div>
         <select
-          className="cursor-pointer rounded bg-white px-3 py-2 ring-1 ring-gray-300 focus-visible:ring-blue-500"
+          className="cursor-pointer rounded-input bg-white px-3 py-2 ring-1 ring-gray-300 focus-visible:ring-blue-500"
           {...register('actionType')}
         >
           {[

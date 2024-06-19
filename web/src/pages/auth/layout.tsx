@@ -56,7 +56,7 @@ export default function AuthLayout() {
       <div className="relative">
         <div className="absolute inset-0 overflow-auto">
           <main className="mx-auto min-h-screen flex flex-col justify-center px-4 py-6 container 2xl:max-w-2xl xl:max-w-xl lg:py-12">
-            <div className="overflow-hidden rounded-xl bg-white shadow-lg">
+            <div className="overflow-hidden rounded-card bg-white shadow-lg">
               <Link to={ROUTES.home}>
                 <h2 className="select-none bg-primary-500 py-4 text-center text-3xl text-white font-bold font-display">
                   {SHORT_COMPANY_NAME}

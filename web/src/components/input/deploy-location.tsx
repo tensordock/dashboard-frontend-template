@@ -27,7 +27,7 @@ export default function DeployLocationInput({
         Available {constants.GPU_INFO[selectedGpuModel].displayName} servers
       </h4>
 
-      <div className="grid mt-2 overflow-clip rounded-lg bg-primary-500/10 lg:grid-cols-2">
+      <div className="grid mt-2 overflow-clip rounded-bigbtn bg-primary-500/10 lg:grid-cols-2">
         {Object.keys(locations).length > 0 &&
           Object.entries(locations).map(([id, loc], idx) => {
             const isSelected = !!loc.hostnodes.find(
@@ -58,7 +58,7 @@ export default function DeployLocationInput({
                     {loc.location}
                   </p>
                   <p
-                    className={`ml-auto min-w-max rounded px-3 py-1 text-lg font-medium transition-colors ${isSelected ? 'ring-1 ring-white-300' : 'bg-primary-500/10 text-primary-500'}`}
+                    className={`ml-auto min-w-max rounded-btn px-3 py-1 text-lg font-medium transition-colors ${isSelected ? 'ring-1 ring-white-300' : 'bg-primary-500/10 text-primary-500'}`}
                   >
                     ${loc.price.toFixed(4)}/hr
                   </p>
@@ -119,7 +119,7 @@ export default function DeployLocationInput({
           })}
       </div>
       {Object.keys(locations).length === 0 && (
-        <div className="select-none rounded-lg bg-primary-500/10 py-12 text-center font-display">
+        <div className="select-none rounded-bigbtn bg-primary-500/10 py-12 text-center font-display">
           All matching {constants.GPU_INFO[selectedGpuModel].shortName} servers
           are currently busy!
         </div>
