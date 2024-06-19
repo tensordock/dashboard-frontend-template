@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
+import Button from '../../components/common/button';
 import Head from '../../components/head';
 import TextInput from '../../components/input/text-input';
 import { ROUTES } from '../../constants/pages';
@@ -95,13 +96,9 @@ export default function SignupPage() {
           placeholder="••••••••"
           errorMessage={errors.confirm_password?.message}
         />
-        <button
-          type="submit"
-          className="mt-6 inline-flex justify-center rounded bg-primary-500 py-3 text-white font-semibold font-display transition-colors disabled:cursor-default disabled:bg-primary-300 hover:bg-primary-600"
-          disabled={isSubmitting}
-        >
+        <Button type="submit" disabled={isSubmitting} className="mt-4 self-end">
           Submit
-        </button>
+        </Button>
       </form>
     </>
   );

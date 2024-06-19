@@ -1,6 +1,6 @@
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
 
+import ButtonLink from '../../components/common/button-link';
 import { DashBlock } from '../../components/dash-block';
 import Head from '../../components/head';
 import { SUPPORT_EMAIL } from '../../constants';
@@ -29,12 +29,14 @@ export default function AccountPage() {
       <DashBlock header="Account Settings">
         <div className="mt-4 text-gray-500 font-400">
           <p className="md:inline">Manage your {SHORT_COMPANY_NAME} account.</p>
-          <Link
+          <ButtonLink
             to={`mailto:${SUPPORT_EMAIL}`}
-            className="mt-2 inline-block select-none rounded px-3 py-1 text-primary-500 font-300 font-display ring-1 ring-gray-300 md:ml-4 md:mt-0"
+            variant="secondary"
+            scaleUp={false}
+            className="md:ml-6"
           >
             Need help? Email support
-          </Link>
+          </ButtonLink>
         </div>
       </DashBlock>
       <DashBlock>
@@ -68,18 +70,9 @@ export default function AccountPage() {
           ))}
         </ul>
         <div className="mt-6 flex flex-wrap justify-end gap-4">
-          <Link
-            className="rounded px-5 py-2 text-primary-500 font-display shadow-md ring-1 ring-gray-200"
-            to={ROUTES.accountDeposit}
-          >
+          <ButtonLink variant="secondary" to={ROUTES.accountDeposit}>
             Deposit Funds
-          </Link>
-          {/* <button
-            className="rounded px-5 py-2 text-primary-500 font-display shadow-md ring-1 ring-gray-200"
-            onClick={() => setMode('customaction')}
-          >
-            Add Custom Action
-          </button> */}
+          </ButtonLink>
         </div>
       </DashBlock>
     </>

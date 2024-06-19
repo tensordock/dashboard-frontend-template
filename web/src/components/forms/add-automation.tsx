@@ -7,6 +7,7 @@ import PaymentMethodSelector from '../../components/input/payment-method';
 import TextInput from '../../components/input/text-input';
 import useAutomations from '../../hooks/use-automations';
 import * as api from '../../util/api';
+import Button from '../common/button';
 
 type AddAutomationFormValues = z.infer<typeof api.addAutomationSchema>;
 
@@ -136,18 +137,12 @@ export default function AddAutomationForm({
         </>
       )}
       {actionType !== undefined && (
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="mt-6 rounded bg-primary-500 px-4 py-2 text-white font-display shadow transition-colors sm:self-end disabled:bg-primary-300 sm:px-12 hover:enabled:bg-primary-600"
-        >
-          {
-            <div
-              className={`mr-1 h-[1ch] inline-flex items-center text-xl ${isSubmitting ? 'i-tabler-loader-2 animate-spin' : 'i-tabler-automation'}`}
-            />
-          }
+        <Button type="submit" disabled={isSubmitting} className="self-end">
+          <div
+            className={`mr-1 h-[1ch] inline-flex items-center text-xl ${isSubmitting ? 'i-tabler-loader-2 animate-spin' : 'i-tabler-automation'}`}
+          />
           Create Automation
-        </button>
+        </Button>
       )}
     </form>
   );

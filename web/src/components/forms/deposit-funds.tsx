@@ -10,6 +10,7 @@ import axios from '../../util/axios';
 import getStripe from '../../util/stripe';
 import TextInput from '../input/text-input';
 import StripeDepositForm from './stripe-deposit';
+import Button from '../common/button';
 
 const depositFormSchema = z.object({
   amount: z
@@ -112,13 +113,13 @@ export default function DepositFundsForm({
             )}
           />
         </div>
-        <button
+        <Button
           type="submit"
           disabled={stripeInfo !== null || isSubmitting}
-          className="rounded bg-primary-500 px-4 py-2 text-white font-display shadow transition-colors sm:self-end disabled:bg-primary-300 sm:px-12 hover:enabled:bg-primary-600"
+          className="self-end"
         >
           Confirm
-        </button>
+        </Button>
       </form>
       {stripeInfo !== null && (
         <Elements

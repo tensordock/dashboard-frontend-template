@@ -1,15 +1,13 @@
 import toast from 'react-hot-toast';
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Outlet } from 'react-router-dom';
 
+import PageLoader from '../../components/page-loader';
 import { LOGO_TEXT } from '../../constants/branding';
 import { ROUTES } from '../../constants/pages';
 import useAuth from '../../hooks/use-auth';
-import PageLoader from '../../components/page-loader';
 
 export default function DashLayout() {
   const { loginInfo, logout } = useAuth();
-  const navigate = useNavigate();
-
   return (
     <div className="min-h-screen bg-primary-50">
       <main className="grid mx-auto px-4 container xl:grid-cols-[20rem_1fr]">
@@ -36,7 +34,6 @@ export default function DashLayout() {
                   onClick={() => {
                     logout();
                     toast.success('Logged out!');
-                    navigate(ROUTES.home, { replace: true });
                   }}
                   className="text-xs text-gray-500 hover:text-gray-600"
                 >

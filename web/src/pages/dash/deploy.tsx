@@ -24,6 +24,8 @@ import useAuth from '../../hooks/use-auth';
 import useHostnodes from '../../hooks/use-hostnodes';
 import useUserInfo from '../../hooks/use-user-info';
 import * as api from '../../util/api';
+import ButtonLink from '../../components/common/button-link';
+import Button from '../../components/common/button';
 
 type DeployFormValues = z.infer<typeof api.deploySchema>;
 
@@ -155,13 +157,15 @@ export default function DeployPage() {
       <DashBlock header="Deploy a new cloud GPU">
         <div className="mt-4 text-gray-500 font-400">
           <p>Customize your own server, fully a la carte.</p>
-          <Link
+          <ButtonLink
             to={constants.INFRASTRUCTURE_URL}
+            variant="secondary"
+            scaleUp={false}
             target="_blank"
-            className="mt-2 inline-block select-none rounded px-3 py-1 text-primary-500 font-300 font-display ring-1 ring-gray-300"
+            className="mt-2"
           >
             Our Infrastructure
-          </Link>
+          </ButtonLink>
         </div>
       </DashBlock>
       <form onSubmit={handleSubmit(onSubmit)} className="relative space-y-4">
@@ -172,13 +176,15 @@ export default function DeployPage() {
               <span className="block text-gray-500 md:inline">
                 Need InfiniBand or custom deployments?
               </span>
-              <Link
+              <ButtonLink
                 to={`mailto:${constants.CONTACT_EMAIL}`}
                 target="_blank"
-                className="inline-block select-none rounded px-3 py-1 text-primary-500 font-300 font-display ring-1 ring-gray-300 md:ml-4"
+                variant="secondary"
+                scaleUp={false}
+                className="md:ml-4"
               >
                 Email us
-              </Link>
+              </ButtonLink>
             </div>
             <Controller
               control={control}
@@ -500,23 +506,24 @@ runcmd:
                 contract. Save up to 30%.
               </p>
               {loginInfo?.loggedIn && (
-                <button
+                <Button
                   type="submit"
                   disabled={accountBalanceTooLow}
-                  className={`mt-8 rounded px-4 py-2 font-medium font-display transition-colors ${accountBalanceTooLow ? 'ring-1 ring-gray-300 text-blue-500' : 'bg-primary-500 hover:bg-primary-600 text-white'}`}
+                  variant={accountBalanceTooLow ? 'secondary' : 'primary'}
+                  className="mt-8"
                 >
                   {accountBalanceTooLow
                     ? `Balance of $${info?.balance} too low`
                     : 'Deploy Server'}
-                </button>
+                </Button>
               )}
               {loginInfo?.loggedIn === false && (
-                <Link
+                <ButtonLink
                   to={constants.ROUTES.login}
-                  className="mt-8 rounded bg-primary-500 px-4 py-2 text-center text-white font-medium font-display transition-colors hover:bg-primary-600"
+                  className="mt-8 text-center"
                 >
                   Log In to Deploy
-                </Link>
+                </ButtonLink>
               )}
             </div>
           ) : (
