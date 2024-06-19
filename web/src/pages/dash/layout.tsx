@@ -78,11 +78,6 @@ export default function DashLayout() {
                 text: 'Automations',
                 to: ROUTES.automations,
               },
-              { 
-                icon: 'i-tabler-user', 
-                text: 'Invite', 
-                to: ROUTES.invite 
-              },
             ].map(({ icon, text, to }) => (
               <li key={to}>
                 <NavLink
