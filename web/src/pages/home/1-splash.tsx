@@ -5,15 +5,17 @@ import { ReactTyped } from 'react-typed';
 
 import {
   BG_IMAGE_URL,
+  HOME_LOGO_IMAGE,
   LOGO_TEXT,
   SHORT_COMPANY_NAME,
+  USE_LOGO_IMAGE,
 } from '../../constants/branding';
 import {
   CUSTOM_REQUESTS_URL,
   INFRASTRUCTURE_URL,
 } from '../../constants/external';
-import useAuth from '../../hooks/use-auth';
 import { ROUTES } from '../../constants/pages';
+import useAuth from '../../hooks/use-auth';
 
 import DeployImage from '../../assets/img/deploy.jpg';
 
@@ -74,7 +76,15 @@ export default function SplashSection() {
                 to={ROUTES.home}
                 className="select-none text-3xl text-white font-extrabold font-display"
               >
-                {LOGO_TEXT}
+                {USE_LOGO_IMAGE ? (
+                  <img
+                    src={HOME_LOGO_IMAGE}
+                    alt={LOGO_TEXT}
+                    className="h-[.9em] py-[.05em]"
+                  />
+                ) : (
+                  LOGO_TEXT
+                )}
               </Link>
             </h1>
             <ul className="ml-8 hidden font-medium font-display lg:flex">
