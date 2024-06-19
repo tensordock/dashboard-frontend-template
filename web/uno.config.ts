@@ -49,7 +49,7 @@ export default defineConfig({
     borderRadius: {
       // Input field corner radius
       input: '.25rem',
-      // Button corner radius
+      // Button corner radius - set to '100rem' for fully rounded buttons!
       btn: '.5rem',
       // Larger buttons with more content inside
       bigbtn: '.75rem',
