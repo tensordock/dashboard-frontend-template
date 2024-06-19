@@ -54,7 +54,10 @@ export default function DashLayout() {
           </div>
           <ul className="mt-4 flex flex-col select-none">
             {[
-              { icon: 'i-tabler-arrow-back-up', text: 'Home', to: ROUTES.home },
+              { icon: 'i-tabler-arrow-back-up', 
+                text: 'Home', 
+                to: ROUTES.home 
+              },
               {
                 icon: 'i-tabler-rocket',
                 text: 'Deploy servers',
@@ -65,11 +68,20 @@ export default function DashLayout() {
                 text: 'Virtual machines',
                 to: ROUTES.list,
               },
-              { icon: 'i-tabler-user', text: 'Account', to: ROUTES.account },
+              { 
+                icon: 'i-tabler-user', 
+                text: 'Account', 
+                to: ROUTES.account 
+              },
               {
                 icon: 'i-tabler-automation',
                 text: 'Automations',
                 to: ROUTES.automations,
+              },
+              { 
+                icon: 'i-tabler-user', 
+                text: 'Invite', 
+                to: ROUTES.invite 
               },
             ].map(({ icon, text, to }) => (
               <li key={to}>

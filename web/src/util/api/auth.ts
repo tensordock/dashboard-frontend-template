@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import axios from '../axios';
+import toast from 'react-hot-toast';
 
 /**
  * Fetches the current user's authentication status. Uses localStorage to store the token.
@@ -195,4 +196,43 @@ export async function changePassword(
     | { success: false; error: string };
 
   if (!data.success) throw new Error(data.error);
+}
+
+/**
+ * `zod` validation schema for user invite form.
+ */
+export const inviteSchema = z.object({
+  email: z.string().min(1, 'Email is required').email(),
+})
+
+export async function invite (
+  { email: receiverEmail }: z.infer<typeof inviteSchema>,
+  { email: senderEmail }: z.infer<typeof inviteSchema>,
+  org_name: string
+  ) {
+    if (!senderEmail || !receiverEmail) throw new Error ('Invalid sender or receiver')
+    
+    const formData = new FormData();
+    formData.append('receiver', receiverEmail);
+    formData.append('sender', senderEmail);
+    formData.append('org_name', org_name);
+    formData.append('app_base_url', 
+        import.meta.env.MODE == 'development' ? 'http://localhost:5173' : 
+        `${import.meta.env.WHITELABEL_SUBDOMAIN}.consoledock.com`
+    );
+
+    const res = await axios.postForm(
+      `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/invite`,
+      formData,
+      { validateStatus: (status) => status < 500}
+    );
+
+    const data = res.data as
+    | { success: true }
+    | { success: false; error: string };
+
+    if (!data.success) throw new Error(data.error);
+    else {
+      toast.success("Email Invitation Sent!");
+    }
 }
