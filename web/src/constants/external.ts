@@ -1,3 +1,5 @@
+// Update these!
+
 export const COMPANY_HOME_URL = 'https://gpufleet.com';
 export const ABOUT_URL = 'https://strategicinfra.com/';
 export const CUSTOM_REQUESTS_URL = 'https://gpufleet.com';
