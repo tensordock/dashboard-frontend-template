@@ -19,6 +19,7 @@ import ResetPasswordPage from './auth/reset-password';
 import ChangePasswordPage from './auth/change-password';
 import LayoutRequireLogin from './dash/layout-require-login';
 import NotFoundPage from './notfound';
+import InvitePage from './dash/invite';
 
 const router = createBrowserRouter([
   { path: '*', element: <NotFoundPage /> },
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
           { path: 'account', element: <AccountPage /> },
           { path: 'account/deposit', element: <DepositFundsPage /> },
           { path: 'list', element: <VirtualMachinesPage /> },
+          { path: 'invite', element: <InvitePage /> }
         ],
       },
     ],

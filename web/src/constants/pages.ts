@@ -10,4 +10,5 @@ export const ROUTES = {
   accountDeposit: '/account/deposit',
   list: '/list',
   confirm: '/confirm',
+  invite: '/invite',
 };
