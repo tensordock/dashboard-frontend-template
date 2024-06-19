@@ -7,6 +7,13 @@ import { SUPPORT_EMAIL } from '../../constants';
 import { SHORT_COMPANY_NAME } from '../../constants/branding';
 import { ROUTES } from '../../constants/pages';
 import useUserInfo from '../../hooks/use-user-info';
+import * as api from '../../util/api';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import TextInput from '../../components/input/text-input';
+
+type InviteFormValues = z.infer<typeof api.inviteSchema>;
 
 export default function AccountPage() {
   const { info } = useUserInfo();
@@ -22,6 +29,29 @@ export default function AccountPage() {
 
   const formattedBalance =
     balance !== undefined ? `$${balance.toFixed(2)}` : undefined;
+
+  const {
+      register,
+      handleSubmit,
+  formState: { isSubmitting, errors },
+  } = useForm<InviteFormValues>({
+      resolver: zodResolver(api.inviteSchema),
+      defaultValues: { email: '' },
+  });
+
+  const onSubmit: SubmitHandler<InviteFormValues> = async ({email}) => {
+      try {
+        console.log(info?.organization)
+          await api.invite(
+              {email: email ?? ""}, 
+              {email: info?.email ?? ""},
+              info?.organization_name ?? "",
+              info?.organization ?? "",
+          );
+      } catch (err) {
+          if (err instanceof Error) toast.error(`${err.message}.`);
+      }
+  };
 
   return (
     <>
@@ -81,6 +111,27 @@ export default function AccountPage() {
             Add Custom Action
           </button> */}
         </div>
+      </DashBlock>
+      <DashBlock>
+        <h3 className="text-xl font-display">Invite A User</h3>
+        <form
+            className="mb-2 mt-4 flex flex-col gap-4"
+            onSubmit={handleSubmit(onSubmit)}
+        >
+            <TextInput
+                {...register('email')}
+                label="Email"
+                placeholder="johnny@appleseed.com"
+                errorMessage={errors.email?.message}
+            />
+            <button
+                type="submit"
+                className="mt-2 inline-flex justify-center rounded bg-primary-500 py-3 text-white font-semibold font-display transition-colors disabled:cursor-default disabled:bg-primary-300 hover:bg-primary-600"
+                disabled={isSubmitting}
+            >
+                Submit
+            </button>
+        </form>
       </DashBlock>
     </>
   );

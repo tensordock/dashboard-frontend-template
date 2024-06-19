@@ -16,12 +16,12 @@ export default function InvitePage() {
     const { loginInfo } = useAuth();
 
     const {
-    register,
-    handleSubmit,
+        register,
+        handleSubmit,
     formState: { isSubmitting, errors },
     } = useForm<InviteFormValues>({
-    resolver: zodResolver(api.inviteSchema),
-    defaultValues: { email: '' },
+        resolver: zodResolver(api.inviteSchema),
+        defaultValues: { email: '' },
     });
 
     const onSubmit: SubmitHandler<InviteFormValues> = async ({email}) => {
@@ -40,25 +40,25 @@ export default function InvitePage() {
     <>
         <Head title="Invite" />
         <div className="flex items-center">
-        <h1 className="text-2xl font-medium font-display">Invite A User</h1>
+            <h1 className="text-2xl font-medium font-display">Invite A User</h1>
         </div>
         <form
-        className="mb-2 mt-4 flex flex-col gap-4"
-        onSubmit={handleSubmit(onSubmit)}
+            className="mb-2 mt-4 flex flex-col gap-4"
+            onSubmit={handleSubmit(onSubmit)}
         >
-        <TextInput
-            {...register('email')}
-            label="Email"
-            placeholder="johnny@appleseed.com"
-            errorMessage={errors.email?.message}
-        />
-        <button
-            type="submit"
-            className="mt-2 inline-flex justify-center rounded bg-primary-500 py-3 text-white font-semibold font-display transition-colors disabled:cursor-default disabled:bg-primary-300 hover:bg-primary-600"
-            disabled={isSubmitting}
-        >
-            Submit
-        </button>
+            <TextInput
+                {...register('email')}
+                label="Email"
+                placeholder="johnny@appleseed.com"
+                errorMessage={errors.email?.message}
+            />
+            <button
+                type="submit"
+                className="mt-2 inline-flex justify-center rounded bg-primary-500 py-3 text-white font-semibold font-display transition-colors disabled:cursor-default disabled:bg-primary-300 hover:bg-primary-600"
+                disabled={isSubmitting}
+            >
+                Submit
+            </button>
         </form>
     </>
     );

@@ -208,18 +208,21 @@ export const inviteSchema = z.object({
 export async function invite (
   { email: receiverEmail }: z.infer<typeof inviteSchema>,
   { email: senderEmail }: z.infer<typeof inviteSchema>,
-  org_name: string
+  org_name: string,
+  org_uuid: string
   ) {
     if (!senderEmail || !receiverEmail) throw new Error ('Invalid sender or receiver')
-    
+
     const formData = new FormData();
     formData.append('receiver', receiverEmail);
     formData.append('sender', senderEmail);
     formData.append('org_name', org_name);
+    formData.append('org_uuid', org_uuid);
     formData.append('app_base_url', 
         import.meta.env.MODE == 'development' ? 'http://localhost:5173' : 
         `${import.meta.env.WHITELABEL_SUBDOMAIN}.consoledock.com`
     );
+
 
     const res = await axios.postForm(
       `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/invite`,
