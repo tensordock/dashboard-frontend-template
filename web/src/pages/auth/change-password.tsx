@@ -62,7 +62,7 @@ export default function ChangePasswordPage() {
     <>
       <Head title="Change Password" />
       <h1 className="text-2xl font-medium font-display">Change Password</h1>
-      <p className="mt-1 text-sm text-gray-500">
+      <p className="mt-1 text-sm text-gray-500 dark:text-neutral-400">
         Changing password for {searchParams.get('email')}
       </p>
       <form

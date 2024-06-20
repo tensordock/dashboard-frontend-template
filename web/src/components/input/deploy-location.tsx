@@ -111,7 +111,9 @@ export default function DeployLocationInput({
             animate={{ height: 'auto' }}
             exit={{ height: 0 }}
           >
-            <div className="mt-1 text-sm text-red-500">{errorMessage}.</div>
+            <div className="mt-1 text-sm text-red-500 dark:text-red-400">
+              {errorMessage}.
+            </div>
           </m.div>
         )}
       </AnimatePresence>

@@ -385,7 +385,7 @@ export default function DeployPage() {
                                 animate={{ height: 'auto' }}
                                 exit={{ height: 0 }}
                               >
-                                <div className="mt-1 text-sm text-red-500">
+                                <div className="mt-1 text-sm text-red-500 dark:text-red-400">
                                   {errors.portForwards?.[idx]?.from?.message}.
                                 </div>
                               </m.div>
