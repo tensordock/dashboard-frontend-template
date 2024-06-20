@@ -7,6 +7,7 @@ export default defineConfig({
     presetWebFonts({
       provider: 'google',
       fonts: {
+        // You can swap these out for any existing Google fonts!
         sans: [
           { name: 'Open Sans', weights: ['300', '400', '500', '600', '700'] },
           {
@@ -36,13 +37,24 @@ export default defineConfig({
         '600': 'rgb(37 99 235)',
         '950': 'rgb(11 23 39)',
       },
+      // Example: switching out theme colors
       // primary: {
-      //   '50': '#fffbeb',
-      //   '300': '#fcd34d',
-      //   '500': '#f59e0b',
-      //   '600': '#d97706',
-      //   '950': '#190601',
+      //   '50': '#fef2f2',
+      //   '300': '#fca5a5',
+      //   '500': '#ef4444',
+      //   '600': '#dc2626',
+      //   '950': '#450a0a',
       // },
+    },
+    borderRadius: {
+      // Input field corner radius
+      input: '.25rem',
+      // Button corner radius - set to '100rem' for fully rounded buttons!
+      btn: '.5rem',
+      // Larger buttons with more content inside
+      bigbtn: '.75rem',
+      // General "card" UI corner radius
+      card: '1rem',
     },
   },
 });

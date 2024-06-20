@@ -24,6 +24,8 @@ import useAuth from '../../hooks/use-auth';
 import useHostnodes from '../../hooks/use-hostnodes';
 import useUserInfo from '../../hooks/use-user-info';
 import * as api from '../../util/api';
+import ButtonLink from '../../components/common/button-link';
+import Button from '../../components/common/button';
 
 type DeployFormValues = z.infer<typeof api.deploySchema>;
 
@@ -155,13 +157,15 @@ export default function DeployPage() {
       <DashBlock header="Deploy a new cloud GPU">
         <div className="mt-4 text-gray-500 font-400">
           <p>Customize your own server, fully a la carte.</p>
-          <Link
+          <ButtonLink
             to={constants.INFRASTRUCTURE_URL}
+            variant="secondary"
+            scaleUp={false}
             target="_blank"
-            className="mt-2 inline-block select-none rounded px-3 py-1 text-primary-500 font-300 font-display ring-1 ring-gray-300"
+            className="mt-2"
           >
             Our Infrastructure
-          </Link>
+          </ButtonLink>
         </div>
       </DashBlock>
       <form onSubmit={handleSubmit(onSubmit)} className="relative space-y-4">
@@ -172,13 +176,15 @@ export default function DeployPage() {
               <span className="block text-gray-500 md:inline">
                 Need InfiniBand or custom deployments?
               </span>
-              <Link
+              <ButtonLink
                 to={`mailto:${constants.CONTACT_EMAIL}`}
                 target="_blank"
-                className="inline-block select-none rounded px-3 py-1 text-primary-500 font-300 font-display ring-1 ring-gray-300 md:ml-4"
+                variant="secondary"
+                scaleUp={false}
+                className="md:ml-4"
               >
                 Email us
-              </Link>
+              </ButtonLink>
             </div>
             <Controller
               control={control}
@@ -191,13 +197,13 @@ export default function DeployPage() {
                       <button
                         key={gpu}
                         type="button"
-                        className={`min-w-48 flex flex-grow-1 flex-col items-start px-4 text-lg font-display py-8 rounded-lg transition-colors text-left ${isSelected ? 'bg-primary-500 text-white ring-primary-300' : 'bg-primary-500/10'}`}
+                        className={`min-w-48 flex flex-grow-1 flex-col items-start px-4 text-lg font-display py-8 rounded-bigbtn transition-colors text-left ${isSelected ? 'bg-primary-500 text-white ring-primary-300' : 'bg-primary-500/10'}`}
                         onClick={() => onChange(gpu)}
                       >
                         {constants.GPU_INFO[gpu].shortName}
                         <div className="mt-auto pt-2">
                           <div
-                            className={`px-3 py-1 bg-primary-500/20 rounded text-base ${isSelected ? 'text-white ring-1 ring-white/30' : 'text-primary-500'}`}
+                            className={`px-3 py-1 bg-primary-500/20 rounded-btn text-base ${isSelected ? 'text-white ring-1 ring-white/30' : 'text-primary-500'}`}
                           >
                             {api.getVRAM(gpu)}GB
                           </div>
@@ -271,7 +277,7 @@ export default function DeployPage() {
             Select a location
           </h3>
           {!locations && (
-            <div className="mt-4 flex flex-col items-center rounded-xl bg-primary-500/10 py-8">
+            <div className="mt-4 flex flex-col items-center rounded-card bg-primary-500/10 py-8">
               <div className="i-tabler-loader-2 animate-spin text-4xl" />
             </div>
           )}
@@ -358,7 +364,7 @@ export default function DeployPage() {
                         <label className="flex flex-col">
                           <select
                             {...register(`portForwards.${idx}.from`)}
-                            className="rounded bg-white px-4 py-2 ring-1 ring-gray-300"
+                            className="rounded-input bg-white px-4 py-2 ring-1 ring-gray-300"
                           >
                             {swappablePorts.map((externalPort) => (
                               <option
@@ -407,7 +413,7 @@ export default function DeployPage() {
                     portForwardsFieldArray.append({ from: '', to: '' })
                   }
                   disabled={portForwards.length >= 64}
-                  className="rounded px-4 py-2 ring-1 ring-gray-300 transition-colors hover:bg-gray-100"
+                  className="rounded-btn px-4 py-2 ring-1 ring-gray-300 transition-colors hover:bg-gray-100"
                 >
                   <div className="i-tabler-plus mr-2 inline-block translate-y-[2px]" />
                   Add forwarding
@@ -447,7 +453,7 @@ export default function DeployPage() {
     owner: user:user 
 runcmd:
   - docker run -d --restart unless-stopped --stop-timeout 300 -v /home/user/cloudinit_website:/usr/share/nginx/html:ro -p 80:80 --name default_container nginx`}
-                    className="rounded px-2 py-1 text-sm font-mono ring-1 ring-gray-300"
+                    className="rounded-input px-2 py-1 text-sm font-mono ring-1 ring-gray-300"
                     rows={11}
                   />
                 </label>
@@ -500,23 +506,24 @@ runcmd:
                 contract. Save up to 30%.
               </p>
               {loginInfo?.loggedIn && (
-                <button
+                <Button
                   type="submit"
                   disabled={accountBalanceTooLow}
-                  className={`mt-8 rounded px-4 py-2 font-medium font-display transition-colors ${accountBalanceTooLow ? 'ring-1 ring-gray-300 text-blue-500' : 'bg-primary-500 hover:bg-primary-600 text-white'}`}
+                  variant={accountBalanceTooLow ? 'secondary' : 'primary'}
+                  className="mt-8"
                 >
                   {accountBalanceTooLow
                     ? `Balance of $${info?.balance} too low`
                     : 'Deploy Server'}
-                </button>
+                </Button>
               )}
               {loginInfo?.loggedIn === false && (
-                <Link
+                <ButtonLink
                   to={constants.ROUTES.login}
-                  className="mt-8 rounded bg-primary-500 px-4 py-2 text-center text-white font-medium font-display transition-colors hover:bg-primary-600"
+                  className="mt-8 text-center"
                 >
                   Log In to Deploy
-                </Link>
+                </ButtonLink>
               )}
             </div>
           ) : (

@@ -4,6 +4,7 @@ import Head from '../../components/head';
 import VirtualMachinePanel from '../../components/virtual-machine-panel';
 import useVirtualMachines from '../../hooks/use-virtual-machines';
 import { ROUTES } from '../../constants/pages';
+import Loader from '../../components/loader';
 
 export default function VirtualMachinesPage() {
   const { virtualmachines, error, isLoading } = useVirtualMachines();
@@ -37,6 +38,11 @@ export default function VirtualMachinesPage() {
             <div className="i-tabler-zoom-exclamation mb-4 text-4xl" />
             No virtual machines registered.
           </div>
+        </DashBlock>
+      )}
+      {isLoading && !error && (
+        <DashBlock>
+          <Loader />
         </DashBlock>
       )}
     </>

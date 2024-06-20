@@ -58,7 +58,7 @@ export default function VirtualMachinePanel({
   };
 
   return (
-    <li className="rounded-xl bg-gray-50 ring-1 ring-gray-200">
+    <li className="rounded-card bg-gray-50 ring-1 ring-gray-200">
       <h3 className="block rounded-t-xl bg-primary-500 px-8 py-4 text-xl text-white font-display">
         {vm.name}
       </h3>

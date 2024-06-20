@@ -91,7 +91,7 @@ export default function BodySection() {
             },
           ].map(({ icon, header, body }) => (
             <div
-              className="relative rounded bg-white px-4 pb-10 text-center shadow-lg ring-1 ring-gray-200"
+              className="relative rounded-card bg-white px-4 pb-10 text-center shadow-lg ring-1 ring-gray-200"
               key={icon}
             >
               <div className="absolute left-1/2 h-20 w-20 flex items-center justify-center rounded-full bg-white shadow-md ring-1 ring-gray-200 -translate-x-1/2 -translate-y-1/2">

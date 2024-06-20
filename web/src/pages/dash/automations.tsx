@@ -1,12 +1,13 @@
-import { Link } from 'react-router-dom';
-
+import ButtonLink from '../../components/common/button-link';
 import { DashBlock } from '../../components/dash-block';
+import Head from '../../components/head';
+import Loader from '../../components/loader';
 import { ROUTES } from '../../constants/pages';
 import useAutomations from '../../hooks/use-automations';
-import Head from '../../components/head';
 
 export default function AutomationsPage() {
-  const { automations, isValidating, deleteAutomation } = useAutomations();
+  const { automations, error, isLoading, isValidating, deleteAutomation } =
+    useAutomations();
 
   return (
     <>
@@ -51,7 +52,7 @@ export default function AutomationsPage() {
                         disabled={isValidating}
                         className="i-tabler-trash ml-auto text-red-500 disabled:text-red-300"
                       >
-                        <div className="sr-only">button</div>
+                        <div className="sr-only">Delete Automation</div>
                       </button>
                     </li>
                   )
@@ -68,13 +69,16 @@ export default function AutomationsPage() {
             </div>
           )}
           <div className="mt-6 flex flex-wrap justify-end gap-4">
-            <Link
-              to={ROUTES.automationsAdd}
-              className="flex items-center gap-2 rounded px-5 py-2 text-primary-500 font-display shadow-md ring-1 ring-gray-200"
-            >
-              <div className="i-tabler-plus" /> Add Automation
-            </Link>
+            <ButtonLink to={ROUTES.automationsAdd} variant="secondary">
+              <div className="i-tabler-plus inline-block translate-y-[0.125em]" />{' '}
+              Add Automation
+            </ButtonLink>
           </div>
+        </DashBlock>
+      )}
+      {isLoading && !error && (
+        <DashBlock>
+          <Loader />
         </DashBlock>
       )}
     </>

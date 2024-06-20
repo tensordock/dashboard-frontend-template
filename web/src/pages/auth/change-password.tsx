@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { z } from 'zod';
 
+import Button from '../../components/common/button';
 import Head from '../../components/head';
 import TextInput from '../../components/input/text-input';
 import { ROUTES } from '../../constants/pages';
@@ -80,13 +81,9 @@ export default function ChangePasswordPage() {
           label="Confirm Password"
           errorMessage={errors.confirmPassword?.message}
         />
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="rounded bg-primary-500 px-4 py-2 text-white font-display shadow transition-colors sm:self-end disabled:bg-primary-300 sm:px-12 hover:enabled:bg-primary-600"
-        >
+        <Button type="submit" disabled={isSubmitting} className="mt-4 self-end">
           Change Password
-        </button>
+        </Button>
       </form>
     </>
   );

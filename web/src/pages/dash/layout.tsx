@@ -1,17 +1,20 @@
+import { Suspense } from 'react';
 import toast from 'react-hot-toast';
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Outlet } from 'react-router-dom';
 
-import { LOGO_TEXT } from '../../constants/branding';
+import Loader from '../../components/loader';
+import {
+  LOGO_IMAGE,
+  LOGO_TEXT,
+  USE_LOGO_IMAGE,
+} from '../../constants/branding';
 import { ROUTES } from '../../constants/pages';
 import useAuth from '../../hooks/use-auth';
-import PageLoader from '../../components/page-loader';
 
 export default function DashLayout() {
   const { loginInfo, logout } = useAuth();
-  const navigate = useNavigate();
-
   return (
-    <div className="min-h-screen bg-primary-50">
+    <div className="min-h-screen bg-gray-50">
       <main className="grid mx-auto px-4 container xl:grid-cols-[20rem_1fr]">
         <nav className="sticky top-0 self-start pb-4 pt-6">
           <h1>
@@ -19,7 +22,15 @@ export default function DashLayout() {
               className="select-none text-3xl text-primary-500 font-bold font-display"
               to={ROUTES.home}
             >
-              {LOGO_TEXT}
+              {USE_LOGO_IMAGE ? (
+                <img
+                  src={LOGO_IMAGE}
+                  alt={LOGO_TEXT}
+                  className="h-[.9em] py-[.05em]"
+                />
+              ) : (
+                LOGO_TEXT
+              )}
             </Link>
           </h1>
           <div className="mt-4 flex items-center gap-3">
@@ -36,7 +47,6 @@ export default function DashLayout() {
                   onClick={() => {
                     logout();
                     toast.success('Logged out!');
-                    navigate(ROUTES.home, { replace: true });
                   }}
                   className="text-xs text-gray-500 hover:text-gray-600"
                 >
@@ -86,10 +96,10 @@ export default function DashLayout() {
             ))}
           </ul>
         </nav>
-        <div className="z-0 mb-24 mt-6 flex flex-col gap-y-4 rounded-xl bg-primary-50">
-          <PageLoader>
+        <div className="z-0 mb-24 mt-6 flex flex-col gap-y-4 rounded-card bg-gray-50">
+          <Suspense fallback={<Loader />}>
             <Outlet />
-          </PageLoader>
+          </Suspense>
         </div>
       </main>
     </div>
