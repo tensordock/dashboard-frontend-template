@@ -15,7 +15,7 @@ export default function VirtualMachinesPage() {
     <>
       <Head title="Your Virtual Machines" />
       <DashBlock header="Your Virtual Machines">
-        <p className="mt-4 text-gray-500 font-400">
+        <p className="mt-4 text-gray-500 font-400 dark:text-neutral-400">
           You can deploy a new virtual machine{' '}
           <Link to={ROUTES.deploy} className="underline hover:text-gray-700">
             here
@@ -24,13 +24,11 @@ export default function VirtualMachinesPage() {
         </p>
       </DashBlock>
       {virtualMachineEntries.length > 0 && (
-        <DashBlock>
-          <ul className="flex flex-col gap-4">
-            {virtualMachineEntries.map(([id, vm]) => (
-              <VirtualMachinePanel key={id} vm={{ ...vm, id }} />
-            ))}
-          </ul>
-        </DashBlock>
+        <ul className="flex flex-col gap-4">
+          {virtualMachineEntries.map(([id, vm]) => (
+            <VirtualMachinePanel key={id} vm={{ ...vm, id }} />
+          ))}
+        </ul>
       )}
       {!error && !isLoading && virtualMachineEntries.length === 0 && (
         <DashBlock>

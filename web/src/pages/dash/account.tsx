@@ -27,7 +27,7 @@ export default function AccountPage() {
     <>
       <Head title="Account Settings" />
       <DashBlock header="Account Settings">
-        <div className="mt-4 text-gray-500 font-400">
+        <div className="mt-4 text-gray-500 font-400 dark:text-neutral-400">
           <p className="md:inline">Manage your {SHORT_COMPANY_NAME} account.</p>
           <ButtonLink
             to={`mailto:${SUPPORT_EMAIL}`}
@@ -51,10 +51,10 @@ export default function AccountPage() {
             { description: 'Account Balance', value: formattedBalance },
           ].map(({ description, value }) => (
             <li key={description}>
-              <label className="text-sm text-gray-500 font-400 tracking-wide font-display">
+              <label className="text-sm text-gray-500 font-400 tracking-wide font-display dark:text-neutral-400">
                 {description}
               </label>
-              <div className="mt-1 flex items-center rounded-input bg-gray-50/50 px-4 py-2 shadow-inner ring-1 ring-gray-200">
+              <div className="mt-1 flex items-center rounded-input bg-gray-50/50 px-4 py-2 shadow-inner ring-1 ring-gray-200 dark:bg-neutral-800 dark:shadow-none dark:ring-none">
                 {value ?? 'Loading...'}
                 {value !== undefined && (
                   <button

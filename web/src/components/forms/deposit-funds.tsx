@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Elements } from '@stripe/react-stripe-js';
-import { Stripe } from '@stripe/stripe-js';
+import { Appearance, Stripe } from '@stripe/stripe-js';
 import { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -23,6 +23,10 @@ const depositFormSchema = z.object({
 });
 
 type DepositFormValues = z.infer<typeof depositFormSchema>;
+
+const lightAppearance: Appearance = {
+  theme: 'flat',
+};
 
 export default function DepositFundsForm({
   onSuccess,
@@ -126,6 +130,7 @@ export default function DepositFundsForm({
           stripe={stripeInfo.stripe}
           options={{
             clientSecret: stripeInfo.clientSecret,
+            appearance: lightAppearance,
           }}
         >
           <StripeDepositForm onSuccess={onSuccess} />

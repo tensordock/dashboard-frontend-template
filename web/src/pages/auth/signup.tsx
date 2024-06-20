@@ -55,12 +55,12 @@ export default function SignupPage() {
       <Head title="Sign Up" />
       <div className="flex items-center">
         <h1 className="text-2xl font-medium font-display">Sign Up</h1>
-        <div className="ml-auto text-sm text-gray-500">
+        <div className="ml-auto text-sm text-gray-500 dark:text-neutral-400">
           Already joined?{' '}
           <Link
             to={ROUTES.login}
             replace
-            className="text-primary-500 font-medium"
+            className="text-primary-500 font-medium dark:text-primary-300"
           >
             Log In
           </Link>

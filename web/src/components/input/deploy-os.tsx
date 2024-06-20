@@ -35,7 +35,7 @@ export default function OperatingSystemSelectInput({
               <h4 className="flex items-center font-display">{os}</h4>
               {forAI && (
                 <div
-                  className={`mt-2 w-max rounded-btn px-4 py-1 font-display transition-colors text-sm ${isSelected ? 'ring-1 ring-white/30' : 'bg-primary-500/20 text-primary-500'}`}
+                  className={`mt-2 w-max rounded-btn px-4 py-1 font-display transition-colors text-sm ${isSelected ? 'ring-1 ring-white/30' : 'bg-primary-500/20 text-primary-500 dark:text-primary-300'}`}
                 >
                   ML / AI
                 </div>
@@ -70,7 +70,9 @@ export default function OperatingSystemSelectInput({
             animate={{ height: 'auto' }}
             exit={{ height: 0 }}
           >
-            <div className="mt-1 text-sm text-red-500">{errorMessage}.</div>
+            <div className="mt-1 text-sm text-red-500 dark:text-red-400">
+              {errorMessage}.
+            </div>
           </m.div>
         )}
       </AnimatePresence>

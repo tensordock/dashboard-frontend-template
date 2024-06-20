@@ -49,7 +49,7 @@ export default function DeployLocationInput({
                 onClick={() => {
                   field.onChange(defaultHostnode.id);
                 }}
-                className={`inline-flex flex-col px-6 py-6 text-left transition-colors font-display ${isSelected ? 'bg-primary-500 text-white shadow-lg' : 'hover:bg-primary-500/10'}`}
+                className={`inline-flex flex-col px-6 py-6 text-left transition-all font-display ${isSelected ? 'bg-primary-500 text-white shadow-lg' : 'hover:bg-primary-500/10'}`}
                 ref={idx === 0 ? field.ref : undefined}
               >
                 <div className="flex flex-row items-center gap-2">
@@ -58,20 +58,20 @@ export default function DeployLocationInput({
                     {loc.location}
                   </p>
                   <p
-                    className={`ml-auto min-w-max rounded-btn px-3 py-1 text-lg font-medium transition-colors ${isSelected ? 'ring-1 ring-white-300' : 'bg-primary-500/10 text-primary-500'}`}
+                    className={`ml-auto min-w-max rounded-btn px-3 py-1 text-lg font-medium transition-all ${isSelected ? 'ring-1 ring-white-300' : 'bg-primary-500/10 text-primary-500 dark:text-primary-300'}`}
                   >
                     ${loc.price.toFixed(4)}/hr
                   </p>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-3 text-sm">
                   <p
-                    className={`rounded-full px-4 py-1 ring-1 ring-primary-500/30 ${isSelected ? 'ring-white/30' : 'text-primary-500'}`}
+                    className={`rounded-full px-4 py-1 ring-1 ring-primary-500/30 transition-all ${isSelected ? 'ring-white/30 dark:ring-primary-300' : 'text-primary-500 dark:text-primary-300 dark:ring-primary-300/40'}`}
                   >
                     <span className="i-tabler-clock mr-2 inline-block translate-y-[.125em]" />
                     {uptime}% uptime
                   </p>
                   <p
-                    className={`rounded-full px-4 py-1 ring-1 ${isSelected ? 'ring-white/30 ring-primary-500/30' : 'text-gray-500 ring-gray-300'}`}
+                    className={`rounded-full px-4 py-1 ring-1 transition-all ${isSelected ? 'ring-white/30 ring-primary-500/30 dark:ring-primary-300' : 'text-gray-500 dark:text-neutral-300 ring-gray-300 dark:ring-neutral-500'}`}
                   >
                     <span
                       className={`mr-2 inline-block translate-y-[.125em] ${
@@ -111,7 +111,9 @@ export default function DeployLocationInput({
             animate={{ height: 'auto' }}
             exit={{ height: 0 }}
           >
-            <div className="mt-1 text-sm text-red-500">{errorMessage}.</div>
+            <div className="mt-1 text-sm text-red-500 dark:text-red-400">
+              {errorMessage}.
+            </div>
           </m.div>
         )}
       </AnimatePresence>

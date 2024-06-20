@@ -4,17 +4,21 @@ import toast from 'react-hot-toast';
 
 import useVirtualMachines from '../hooks/use-virtual-machines';
 import { VirtualMachineEntry } from '../util/api';
+import { GPU_INFO, GpuModel } from '../constants';
 
 const VM_STATUS_INFO = new Map([
-  ['Running', { class: 'text-green-700', text: 'Running' }],
+  ['Running', { class: 'text-green-700 dark:text-green-300', text: 'Running' }],
   [
     'Stopped',
-    { class: 'text-red-700', text: 'Stopped with resources reserved' },
+    {
+      class: 'text-red-700 dark:text-red-300',
+      text: 'Stopped with resources reserved',
+    },
   ],
   [
     'StoppedDisassociated',
     {
-      class: 'text-red-700',
+      class: 'text-red-700 dark:text-red-300',
       text: 'Stopped with resources disassociated ',
     },
   ],
@@ -25,13 +29,13 @@ export default function VirtualMachinePanel({
 }: {
   vm: VirtualMachineEntry & { id: string };
 }) {
-  const [disableButtons, setDisableButtons] = useState(false);
+  const [mutating, setMutating] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
   const onButtonClick = useCallback(
     async (callback: () => Promise<unknown>, loadingText: string) => {
       const toastId = toast.loading(loadingText);
-      setDisableButtons(true);
+      setMutating(true);
 
       try {
         await callback();
@@ -44,13 +48,16 @@ export default function VirtualMachinePanel({
           { id: toastId }
         );
       } finally {
-        setDisableButtons(false);
+        setMutating(false);
       }
     },
     []
   );
 
-  const { startVM, stopVM, deleteVM } = useVirtualMachines();
+  const { isLoading, isValidating, startVM, stopVM, deleteVM } =
+    useVirtualMachines();
+
+  const disableButtons = mutating || isLoading || isValidating;
 
   const statusInfo = VM_STATUS_INFO.get(vm.status) || {
     class: '',
@@ -58,19 +65,20 @@ export default function VirtualMachinePanel({
   };
 
   return (
-    <li className="rounded-card bg-gray-50 ring-1 ring-gray-200">
-      <h3 className="block rounded-t-xl bg-primary-500 px-8 py-4 text-xl text-white font-display">
+    <li className="rounded-card bg-white shadow-lg dark:bg-neutral-700 dark:ring-2 dark:ring-neutral-600">
+      <h3 className="block rounded-t-card bg-primary-500 px-8 py-4 text-xl text-white font-display">
         {vm.name}
       </h3>
       <div className="my-4 flex flex-col gap-6 px-8 lg:flex-row">
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-gray-500 dark:text-neutral-400">
           <p>
             <span className="i-tabler-map-pin mr-2 inline-block translate-y-[0.12em]" />
             {vm.city}, {vm.state}, {vm.country}
           </p>
           <p className="mt-1">
             <span className="i-tabler-cloud-computing mr-2 inline-block translate-y-[0.12em]" />
-            {vm.specs.gpu.type} ({vm.specs.gpu.amount})
+            {GPU_INFO[vm.specs.gpu.type as GpuModel].displayName}
+            {vm.specs.gpu.amount > 1 && ` x${vm.specs.gpu.amount}`}
           </p>
           <div className="mt-1 flex flex-wrap gap-4">
             <p>
@@ -104,14 +112,14 @@ export default function VirtualMachinePanel({
                 );
               }}
               disabled={disableButtons}
-              className="ml-auto min-w-max rounded bg-red-500/0 px-4 py-1 text-sm text-red-500 font-display shadow ring-1 ring-red-500 transition-colors lg:ml-6 disabled:text-red-300 disabled:ring-red-300 hover:enabled:bg-red-500/100 hover:enabled:text-white"
+              className="ml-auto min-w-max rounded-btn bg-red-500/0 px-4 py-1 text-sm text-red-500 font-display shadow ring-2 ring-red-500 transition-colors lg:ml-6 dark:text-red-400 disabled:opacity-60 dark:ring-red-400 disabled:ring-red-300 hover:enabled:bg-red-500/100 hover:enabled:text-white dark:hover:enabled:bg-red-400 dark:hover:enabled:text-black"
             >
               <span className="i-tabler-trash mr-2 inline-block translate-y-0.5" />
               Delete
             </button>
           </div>
           {vm.status === 'Running' ? (
-            <div className="flex flex-col gap-[1px]">
+            <div className="flex flex-col gap-[2px]">
               <button
                 type="button"
                 onClick={() =>
@@ -121,7 +129,7 @@ export default function VirtualMachinePanel({
                   )
                 }
                 disabled={disableButtons}
-                className="rounded-t bg-orange-500/0 px-6 py-1 text-sm text-orange-500 font-display ring-1 ring-orange-500 transition-colors disabled:text-orange-300 disabled:ring-orange-300 hover:enabled:bg-orange-500/100 hover:enabled:text-white"
+                className="rounded-t-btn bg-orange-500/0 px-6 py-1 text-sm text-orange-500 font-display ring-2 ring-orange-500 transition-colors dark:text-orange-300 disabled:opacity-60 dark:ring-orange-300 disabled:ring-orange-300 hover:enabled:bg-orange-500/100 hover:enabled:text-white dark:hover:enabled:bg-orange-300 dark:hover:enabled:text-black"
               >
                 <span className="i-tabler-square mr-2 inline-block translate-y-0.5" />
                 Stop and release GPU
@@ -135,7 +143,7 @@ export default function VirtualMachinePanel({
                   )
                 }
                 disabled={disableButtons}
-                className="rounded-b bg-orange-500/0 px-6 py-1 text-sm text-orange-500 font-display ring-1 ring-orange-500 transition-colors disabled:text-orange-300 disabled:ring-orange-300 hover:enabled:bg-orange-500/100 hover:enabled:text-white"
+                className="rounded-b-btn bg-orange-500/0 px-6 py-1 text-sm text-orange-500 font-display ring-2 ring-orange-500 transition-colors dark:text-orange-300 disabled:opacity-60 dark:ring-orange-300 disabled:ring-orange-300 hover:enabled:bg-orange-500/100 hover:enabled:text-white dark:hover:enabled:bg-orange-300 dark:hover:enabled:text-black"
               >
                 <span className="i-tabler-square mr-2 inline-block translate-y-0.5" />
                 Stop and reserve GPU
@@ -158,7 +166,7 @@ export default function VirtualMachinePanel({
           )}
         </div>
       </div>
-      <div className="my-4 px-8 text-sm text-gray-500">
+      <div className="my-4 px-8 text-sm text-gray-500 dark:text-neutral-400">
         <button onClick={() => setDetailsOpen((o) => !o)}>
           <span
             className={`i-tabler-chevron-down inline-block translate-y-[.15em] mr-2 transition-transform ${detailsOpen ? '' : '-rotate-90'}`}
@@ -189,10 +197,10 @@ export default function VirtualMachinePanel({
                   ${parseFloat(vm.total_price).toFixed(4)}/hour
                 </p>
 
-                <p className="select-none text-gray-700 font-medium">
+                <p className="select-none text-gray-700 font-medium dark:text-neutral-300">
                   Currently
                 </p>
-                <p className="text-gray-700 font-medium tabular-nums">
+                <p className="text-gray-700 font-medium tabular-nums dark:text-neutral-300">
                   $
                   {(vm.status === 'Running' || vm.status === 'Stopped'
                     ? parseFloat(vm.total_price)
@@ -205,6 +213,9 @@ export default function VirtualMachinePanel({
               <div className="grid grid-cols-2 mt-4 gap-x-4 gap-y-1">
                 <p className="select-none">Machine ID</p>
                 <p className="font-mono">{vm.id}</p>
+
+                <p className="select-none">Hostnode ID</p>
+                <p className="font-mono">{vm.hostnode}</p>
 
                 <p className="select-none">Operating System</p>
                 <p>{vm.operating_system}</p>

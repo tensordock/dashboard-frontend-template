@@ -17,6 +17,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <RouterProvider router={router} />
       </LazyMotion>
     </Suspense>
-    <Toaster position="bottom-right" />
+    <Toaster
+      position="bottom-right"
+      toastOptions={{
+        className: 'font-sans dark:bg-neutral-700 dark:text-white',
+      }}
+    />
   </React.StrictMode>
 );
