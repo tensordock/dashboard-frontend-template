@@ -32,19 +32,20 @@ export default defineConfig({
   theme: {
     colors: {
       // Switch these out for alternative colors!
+      // See https://www.tailwindshades.com/ to generate your own palette.
       primary: {
         DEFAULT: '#3B82F6',
-        50: '#EBEDFE',
-        100: '#D7DEFD',
-        200: '#B0C1FB',
-        300: '#89A8FA',
-        400: '#6293F8',
+        50: '#EBF0FE',
+        100: '#D7E1FD',
+        200: '#B0C7FB',
+        300: '#89AEFA',
+        400: '#6297F8',
         500: '#3B82F6',
-        600: '#0B6BE9',
-        700: '#0858AF',
-        800: '#054174',
-        900: '#03233A',
-        950: '#01121C',
+        600: '#0B65E9',
+        700: '#0850AF',
+        800: '#053874',
+        900: '#031D3A',
+        950: '#010F1C',
       },
     },
     borderRadius: {
