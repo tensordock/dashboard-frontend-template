@@ -5,6 +5,7 @@
   "scripts": {
     "build": "npm run build --workspace=web",
     "zip": "node zip.js",
+    "export": "npm run build && npm run zip",
     "format": "prettier -w ."
   },
   "repository": {
