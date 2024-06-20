@@ -29,13 +29,13 @@ export default function VirtualMachinePanel({
 }: {
   vm: VirtualMachineEntry & { id: string };
 }) {
-  const [disableButtons, setDisableButtons] = useState(false);
+  const [mutating, setMutating] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
   const onButtonClick = useCallback(
     async (callback: () => Promise<unknown>, loadingText: string) => {
       const toastId = toast.loading(loadingText);
-      setDisableButtons(true);
+      setMutating(true);
 
       try {
         await callback();
@@ -48,13 +48,16 @@ export default function VirtualMachinePanel({
           { id: toastId }
         );
       } finally {
-        setDisableButtons(false);
+        setMutating(false);
       }
     },
     []
   );
 
-  const { startVM, stopVM, deleteVM } = useVirtualMachines();
+  const { isLoading, isValidating, startVM, stopVM, deleteVM } =
+    useVirtualMachines();
+
+  const disableButtons = mutating || isLoading || isValidating;
 
   const statusInfo = VM_STATUS_INFO.get(vm.status) || {
     class: '',
