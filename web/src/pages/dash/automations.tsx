@@ -1,11 +1,13 @@
 import ButtonLink from '../../components/common/button-link';
 import { DashBlock } from '../../components/dash-block';
 import Head from '../../components/head';
+import Loader from '../../components/loader';
 import { ROUTES } from '../../constants/pages';
 import useAutomations from '../../hooks/use-automations';
 
 export default function AutomationsPage() {
-  const { automations, isValidating, deleteAutomation } = useAutomations();
+  const { automations, error, isLoading, isValidating, deleteAutomation } =
+    useAutomations();
 
   return (
     <>
@@ -72,6 +74,11 @@ export default function AutomationsPage() {
               Add Automation
             </ButtonLink>
           </div>
+        </DashBlock>
+      )}
+      {isLoading && !error && (
+        <DashBlock>
+          <Loader />
         </DashBlock>
       )}
     </>

@@ -1,7 +1,8 @@
+import { Suspense } from 'react';
 import toast from 'react-hot-toast';
 import { Link, NavLink, Outlet } from 'react-router-dom';
 
-import PageLoader from '../../components/page-loader';
+import Loader from '../../components/loader';
 import {
   LOGO_IMAGE,
   LOGO_TEXT,
@@ -96,9 +97,9 @@ export default function DashLayout() {
           </ul>
         </nav>
         <div className="z-0 mb-24 mt-6 flex flex-col gap-y-4 rounded-card bg-gray-50">
-          <PageLoader>
+          <Suspense fallback={<Loader />}>
             <Outlet />
-          </PageLoader>
+          </Suspense>
         </div>
       </main>
     </div>
