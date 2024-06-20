@@ -2,13 +2,11 @@
 
 ## Updating content
 
-Make sure to `npm install` in this folder. To update your whitelabel site, `npm run zip`. This will create `site.zip`, which you can upload to [dashboard.tensordock.com/organization/storefront/panel](https://dashboard.tensordock.com/organization/storefront/panel).
+Make sure to `npm install` in this folder. To update your whitelabel site, `npm run export`. This will create `site.zip`, which you can upload to [dashboard.tensordock.com/organization/storefront/panel](https://dashboard.tensordock.com/organization/storefront/panel).
 
 ## React SPA Template
 
 The `web` folder is a single-page React application. See the inner [README](./web/README.md) for more details.
-
-This should be hosted at the domain you've set in your organization storefront dashboard.
 
 ## Email templates
 

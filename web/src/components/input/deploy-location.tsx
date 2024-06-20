@@ -27,7 +27,7 @@ export default function DeployLocationInput({
         Available {constants.GPU_INFO[selectedGpuModel].displayName} servers
       </h4>
 
-      <div className="grid mt-2 overflow-clip rounded-bigbtn bg-primary-500/10 lg:grid-cols-2">
+      <div className="grid mt-2 overflow-clip rounded-bigbtn bg-primary-500/10 2xl:grid-cols-3 xl:grid-cols-2">
         {Object.keys(locations).length > 0 &&
           Object.entries(locations).map(([id, loc], idx) => {
             const isSelected = !!loc.hostnodes.find(
@@ -54,7 +54,7 @@ export default function DeployLocationInput({
               >
                 <div className="flex flex-row items-center gap-2">
                   <p>
-                    <span className="i-tabler-map-pin mr-2 inline-block translate-y-[.125em]" />
+                    <span className="i-tabler-map-pin mr-3 inline-block translate-y-[.125em]" />
                     {loc.location}
                   </p>
                   <p
@@ -63,30 +63,16 @@ export default function DeployLocationInput({
                     ${loc.price.toFixed(4)}/hr
                   </p>
                 </div>
-                <div
-                  className={`grid mt-4 max-w-2xl gap-1.5 leading-tight text-sm transition-colors font-sans ${isSelected ? 'text-white' : 'text-gray-500'}`}
-                >
-                  <p>
-                    <span className="i-tabler-cpu mr-2 inline-block translate-y-[.125em]" />
-                    {defaultHostnode.specs.cpu.amount}x {loc.cpuType} vCPUs
+                <div className="mt-4 flex flex-wrap gap-3 text-sm">
+                  <p
+                    className={`rounded-full px-4 py-1 ring-1 ring-primary-500/30 ${isSelected ? 'ring-white/30' : 'text-primary-500'}`}
+                  >
+                    <span className="i-tabler-clock mr-2 inline-block translate-y-[.125em]" />
+                    {uptime}% uptime
                   </p>
-                  <div className="flex gap-4">
-                    <p>
-                      <span className="i-tabler-server mr-2 inline-block translate-y-[.125em]" />
-                      {defaultHostnode.specs.gpu[loc.gpuType].amount}x{' '}
-                      {constants.GPU_INFO[loc.gpuType].shortName}
-                    </p>
-                    <p>
-                      <span className="i-tabler-stack-2 mr-2 inline-block translate-y-[.125em]" />
-                      {defaultHostnode.specs.ram.amount} GB RAM
-                    </p>
-                  </div>
-                  <p>
-                    <span className="i-tabler-database mr-2 inline-block translate-y-[.125em]" />
-                    {defaultHostnode.specs.storage.amount}GB NVMe SSD
-                  </p>
-
-                  <p>
+                  <p
+                    className={`rounded-full px-4 py-1 ring-1 ${isSelected ? 'ring-white/30 ring-primary-500/30' : 'text-gray-500 ring-gray-300'}`}
+                  >
                     <span
                       className={`mr-2 inline-block translate-y-[.125em] ${
                         {
@@ -97,14 +83,6 @@ export default function DeployLocationInput({
                       }`}
                     />
                     {loc.availability}
-                  </p>
-                </div>
-                <div className="mt-4 flex gap-2 text-sm">
-                  <p
-                    className={`rounded-full px-4 py-1 ring-1 ring-primary-500/30 ${isSelected ? 'ring-white/30' : 'text-primary-500'}`}
-                  >
-                    <span className="i-tabler-clock mr-2 inline-block translate-y-[.125em]" />
-                    {uptime}% uptime
                   </p>
                   {reservedHostnode && (
                     <p
