@@ -35,7 +35,7 @@ export default function OperatingSystemSelectInput({
               <h4 className="flex items-center font-display">{os}</h4>
               {forAI && (
                 <div
-                  className={`mt-2 w-max rounded-btn px-4 py-1 font-display transition-colors text-sm ${isSelected ? 'ring-1 ring-white/30' : 'bg-primary-500/20 text-primary-500'}`}
+                  className={`mt-2 w-max rounded-btn px-4 py-1 font-display transition-colors text-sm ${isSelected ? 'ring-1 ring-white/30' : 'bg-primary-500/20 text-primary-500 dark:text-primary-300'}`}
                 >
                   ML / AI
                 </div>

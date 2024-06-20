@@ -2,7 +2,8 @@ import { defineConfig, presetIcons, presetUno, presetWebFonts } from 'unocss';
 
 export default defineConfig({
   presets: [
-    presetUno(),
+    // To force dark/light mode, set this to { dark: 'class' } and (for dark mode) add the `dark` class to `body` in `index.html`.
+    presetUno({ dark: 'media' }),
     presetIcons(),
     presetWebFonts({
       provider: 'google',
@@ -30,25 +31,25 @@ export default defineConfig({
   ],
   theme: {
     colors: {
+      // Switch these out for alternative colors!
       primary: {
-        '50': 'rgb(239 246 255)',
-        '300': 'rgb(147 197 253)',
-        '500': 'rgb(59 130 246)',
-        '600': 'rgb(37 99 235)',
-        '950': 'rgb(11 23 39)',
+        DEFAULT: '#3B82F6',
+        50: '#EBEDFE',
+        100: '#D7DEFD',
+        200: '#B0C1FB',
+        300: '#89A8FA',
+        400: '#6293F8',
+        500: '#3B82F6',
+        600: '#0B6BE9',
+        700: '#0858AF',
+        800: '#054174',
+        900: '#03233A',
+        950: '#01121C',
       },
-      // Example: switching out theme colors
-      // primary: {
-      //   '50': '#fef2f2',
-      //   '300': '#fca5a5',
-      //   '500': '#ef4444',
-      //   '600': '#dc2626',
-      //   '950': '#450a0a',
-      // },
     },
     borderRadius: {
       // Input field corner radius
-      input: '.25rem',
+      input: '.5rem',
       // Button corner radius - set to '100rem' for fully rounded buttons!
       btn: '.5rem',
       // Larger buttons with more content inside

@@ -50,10 +50,12 @@ export default function StripeDepositForm({
   };
 
   return (
-    <form className="mt-8 flex flex-col gap-6" onSubmit={handleSubmit}>
-      <PaymentElement />
-      <AddressElement options={{ mode: 'billing' }} />
-      <Button type="submit" disabled={isSubmitting} className="self-end">
+    <form className="mt-8 flex flex-col" onSubmit={handleSubmit}>
+      <div className="flex flex-col gap-6 rounded-card bg-white px-6 pb-6 pt-2">
+        <PaymentElement />
+        <AddressElement options={{ mode: 'billing' }} />
+      </div>
+      <Button type="submit" disabled={isSubmitting} className="mt-4 self-end">
         Complete Deposit
       </Button>
     </form>

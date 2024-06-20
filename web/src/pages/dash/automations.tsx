@@ -13,7 +13,7 @@ export default function AutomationsPage() {
     <>
       <Head title="Automations" />
       <DashBlock header="Manage Automations">
-        <p className="mt-4 text-gray-500 font-400">
+        <p className="mt-4 text-neutral-400 font-400">
           Automatically get an alert or recharge your account funds when your
           balance reaches a threshold.
         </p>

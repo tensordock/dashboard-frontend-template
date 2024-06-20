@@ -38,7 +38,7 @@ export default function DeploySpecInput({
           }}
           value={field.value?.toFixed(0)}
           ref={field.ref}
-          className={`rounded-input px-3 py-2 disabled:bg-gray-100 disabled:text-gray-500 bg-transparent ${errorMessage ? `ring-red-500 ring-2` : 'ring-gray-300 ring-1'}`}
+          className={`rounded-input px-3 py-2 disabled:bg-gray-100 disabled:text-gray-500 dark:disabled:text-neutral-400 bg-transparent ${errorMessage ? `ring-red-500 ring-2` : 'ring-gray-300 ring-1 dark:ring-0 dark:bg-neutral-800'}`}
         >
           {options.map((value) => (
             <option key={value} value={value}>
