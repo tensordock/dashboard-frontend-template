@@ -51,7 +51,7 @@ export default function StripeDepositForm({
 
   return (
     <form className="mt-8 flex flex-col" onSubmit={handleSubmit}>
-      <div className="flex flex-col gap-6 rounded-card bg-white px-6 pb-6 pt-2">
+      <div className="flex flex-col gap-6 rounded-card bg-white px-6 py-6">
         <PaymentElement />
         <AddressElement options={{ mode: 'billing' }} />
       </div>

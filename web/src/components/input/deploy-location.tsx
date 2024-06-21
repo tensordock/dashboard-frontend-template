@@ -27,7 +27,11 @@ export default function DeployLocationInput({
         Available {constants.GPU_INFO[selectedGpuModel].displayName} servers
       </h4>
 
-      <div className="grid mt-2 overflow-clip rounded-bigbtn bg-primary-500/10 2xl:grid-cols-3 xl:grid-cols-2">
+      <div
+        className={`grid mt-2 overflow-clip rounded-bigbtn bg-primary-500/10 ${
+          Object.keys(locations).length > 1 ? 'xl:grid-cols-2' : ''
+        } ${Object.keys(locations).length > 2 ? '2xl:grid-cols-3' : ''}`}
+      >
         {Object.keys(locations).length > 0 &&
           Object.entries(locations).map(([id, loc], idx) => {
             const isSelected = !!loc.hostnodes.find(

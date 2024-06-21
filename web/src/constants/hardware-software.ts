@@ -21,7 +21,7 @@ export const ALLOWED_GPUS: GpuModel[] = [
   'geforcertx3060-pcie-12gb',
 ];
 
-export const GPU_SWITCHING_ALLOWED = ALLOWED_GPUS.length > 1;
+export const SINGLE_LOCATION = false;
 
 export const ALLOWED_OS: OperatingSystem[] = [
   'Ubuntu 20.04 LTS',
@@ -53,6 +53,8 @@ export const ALLOWED_STORAGE_GB = [
 export type GpuModel = keyof typeof GPU_INFO;
 
 // Shouldn't have to update anything below here
+
+export const GPU_SWITCHING_ALLOWED = ALLOWED_GPUS.length > 1;
 
 export const GPU_INFO = {
   'a100-sxm4-80gb': { displayName: 'A100 80GB SXM4', shortName: 'A100 SXM4' },

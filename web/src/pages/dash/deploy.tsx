@@ -274,7 +274,9 @@ export default function DeployPage() {
         </div>
         <DashBlock>
           <h3 className="select-none text-xl font-display">
-            Select a location
+            {constants.SINGLE_LOCATION
+              ? 'Confirm server availability'
+              : 'Select a location'}
           </h3>
           {!locations && (
             <div className="mt-4 flex flex-col items-center rounded-card bg-primary-500/10 py-8">
