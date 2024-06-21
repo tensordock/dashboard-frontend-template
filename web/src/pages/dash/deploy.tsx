@@ -9,7 +9,7 @@ import {
   useWatch,
 } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { z } from 'zod';
 
 import { DashBlock } from '../../components/dash-block';
@@ -151,23 +151,33 @@ export default function DeployPage() {
 
   const { loginInfo } = useAuth();
 
+  // scroll us into view if we enter the page with '?scroll=true'
+  const [searchParams] = useSearchParams();
+  useEffect(() => {
+    if (searchParams.get('scroll') && window.innerWidth < 1280) {
+      document.getElementById('form')?.scrollIntoView();
+    }
+  }, [searchParams]);
+
   return (
     <>
       <Head title={`Deploy a cloud GPU`} />
-      <DashBlock header="Deploy a new cloud GPU">
-        <div className="mt-4 text-gray-500 font-400 dark:text-neutral-400">
-          <p>Customize your own server, fully a la carte.</p>
-          <ButtonLink
-            to={constants.INFRASTRUCTURE_URL}
-            variant="secondary"
-            scaleUp={false}
-            target="_blank"
-            className="mt-2"
-          >
-            Our Infrastructure
-          </ButtonLink>
-        </div>
-      </DashBlock>
+      <div id="form">
+        <DashBlock header="Deploy a new cloud GPU">
+          <div className="mt-4 text-gray-500 font-400 dark:text-neutral-400">
+            <p>Customize your own server, fully a la carte.</p>
+            <ButtonLink
+              to={constants.INFRASTRUCTURE_URL}
+              variant="secondary"
+              scaleUp={false}
+              target="_blank"
+              className="mt-2"
+            >
+              Our Infrastructure
+            </ButtonLink>
+          </div>
+        </DashBlock>
+      </div>
       <form onSubmit={handleSubmit(onSubmit)} className="relative space-y-4">
         {constants.GPU_SWITCHING_ALLOWED && (
           <DashBlock>

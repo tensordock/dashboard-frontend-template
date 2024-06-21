@@ -18,7 +18,7 @@ export default function ActionSection() {
         </h2>
         <div className="flex items-center gap-1">
           <Link
-            to={ROUTES.deploy}
+            to={ROUTES.deployForm}
             className="inline-block select-none rounded-btn bg-white px-6 py-2 text-gray-6 font-medium font-display transition-colors hover:bg-gray-6 hover:text-white"
           >
             Get Started

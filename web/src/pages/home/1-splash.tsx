@@ -20,7 +20,7 @@ import useAuth from '../../hooks/use-auth';
 import DeployImage from '../../assets/img/deploy.jpg';
 
 const navLinks = [
-  { text: 'Deploy', to: ROUTES.deploy },
+  { text: 'Deploy', to: ROUTES.deployForm },
   { text: 'Infrastructure', to: INFRASTRUCTURE_URL },
 ];
 
@@ -183,7 +183,7 @@ export default function SplashSection() {
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-x-1 gap-y-6 md:flex-row xl:justify-start">
               <Link
-                to={ROUTES.deploy}
+                to={ROUTES.deployForm}
                 className="inline-block select-none rounded-btn bg-white px-6 py-2.5 text-gray-6 font-medium font-display transition-colors hover:bg-gray-6 hover:text-white"
               >
                 Deploy a GPU Server
@@ -198,7 +198,7 @@ export default function SplashSection() {
             </div>
           </div>
           <Link
-            to={ROUTES.deploy}
+            to={ROUTES.deployForm}
             className="mx-auto block h-12 px-2 container lg:h-30 md:h-24 sm:h-16 xl:h-auto xl:max-w-xl"
           >
             <img

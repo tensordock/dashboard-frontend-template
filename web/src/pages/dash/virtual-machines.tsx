@@ -17,7 +17,10 @@ export default function VirtualMachinesPage() {
       <DashBlock header="Your Virtual Machines">
         <p className="mt-4 text-gray-500 font-400 dark:text-neutral-400">
           You can deploy a new virtual machine{' '}
-          <Link to={ROUTES.deploy} className="underline hover:text-gray-700">
+          <Link
+            to={ROUTES.deployForm}
+            className="underline hover:text-gray-700"
+          >
             here
           </Link>
           .

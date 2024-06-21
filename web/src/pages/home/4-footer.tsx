@@ -22,7 +22,7 @@ export default function FooterSection() {
           <ul className="grid grid-cols-2 mt-4 text-white/40">
             {[
               { text: 'About', href: ABOUT_URL, external: true },
-              { text: 'Deploy', href: ROUTES.deploy },
+              { text: 'Deploy', href: ROUTES.deployForm },
               { text: 'Contact', href: `mailto:${CONTACT_EMAIL}` },
             ].map(({ text, href, external }) => (
               <li key={text}>
