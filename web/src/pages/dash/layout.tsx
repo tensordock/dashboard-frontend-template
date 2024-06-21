@@ -1,17 +1,20 @@
+import { Suspense } from 'react';
 import toast from 'react-hot-toast';
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Outlet } from 'react-router-dom';
 
-import { LOGO_TEXT } from '../../constants/branding';
+import Loader from '../../components/loader';
+import {
+  LOGO_IMAGE,
+  LOGO_TEXT,
+  USE_LOGO_IMAGE,
+} from '../../constants/branding';
 import { ROUTES } from '../../constants/pages';
 import useAuth from '../../hooks/use-auth';
-import PageLoader from '../../components/page-loader';
 
 export default function DashLayout() {
   const { loginInfo, logout } = useAuth();
-  const navigate = useNavigate();
-
   return (
-    <div className="min-h-screen bg-primary-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-neutral-800">
       <main className="grid mx-auto px-4 container xl:grid-cols-[20rem_1fr]">
         <nav className="sticky top-0 self-start pb-4 pt-6">
           <h1>
@@ -19,15 +22,23 @@ export default function DashLayout() {
               className="select-none text-3xl text-primary-500 font-bold font-display"
               to={ROUTES.home}
             >
-              {LOGO_TEXT}
+              {USE_LOGO_IMAGE ? (
+                <img
+                  src={LOGO_IMAGE}
+                  alt={LOGO_TEXT}
+                  className="h-[.9em] py-[.05em]"
+                />
+              ) : (
+                LOGO_TEXT
+              )}
             </Link>
           </h1>
           <div className="mt-4 flex items-center gap-3">
-            <div className="h-12 w-12 flex items-center justify-center rounded-full bg-white shadow-sm">
+            <div className="h-12 w-12 flex items-center justify-center rounded-full bg-white shadow-sm dark:bg-neutral-700 dark:text-white">
               <div className="i-tabler-user" />
             </div>
             <div className="flex flex-col items-start">
-              <p className="text-sm text-gray-700">
+              <p className="text-sm text-gray-700 dark:text-neutral-300">
                 {loginInfo?.loggedIn ? loginInfo.email : 'Not logged in'}
               </p>
               {loginInfo?.loggedIn ? (
@@ -36,16 +47,15 @@ export default function DashLayout() {
                   onClick={() => {
                     logout();
                     toast.success('Logged out!');
-                    navigate(ROUTES.home, { replace: true });
                   }}
-                  className="text-xs text-gray-500 hover:text-gray-600"
+                  className="text-xs text-gray-500 dark:text-neutral-400 hover:text-gray-600 dark:hover:text-neutral-500"
                 >
                   Logout
                 </button>
               ) : (
                 <Link
                   to={ROUTES.login}
-                  className="text-xs text-gray-500 hover:text-gray-600"
+                  className="text-xs text-gray-500 dark:text-neutral-400 hover:text-gray-600 dark:hover:text-neutral-500"
                 >
                   Log In
                 </Link>
@@ -76,7 +86,7 @@ export default function DashLayout() {
                 <NavLink
                   to={to}
                   className={({ isActive }) =>
-                    `font-display text-sm inline-flex items-center gap-2 py-1.5 transition-colors ${isActive ? 'text-gray-900 drop-shadow-sm' : 'text-gray-500'}`
+                    `font-display text-sm inline-flex items-center gap-2 py-1.5 transition-colors ${isActive ? 'text-gray-900 drop-shadow-sm dark:text-neutral-200' : 'text-gray-500 dark:text-neutral-400'}`
                   }
                 >
                   <div className={`${icon}`} />
@@ -86,10 +96,10 @@ export default function DashLayout() {
             ))}
           </ul>
         </nav>
-        <div className="z-0 mb-24 mt-6 flex flex-col gap-y-4 rounded-xl bg-primary-50">
-          <PageLoader>
+        <div className="z-0 mb-24 mt-6 flex flex-col gap-y-4 rounded-card bg-gray-50 dark:bg-neutral-800">
+          <Suspense fallback={<Loader />}>
             <Outlet />
-          </PageLoader>
+          </Suspense>
         </div>
       </main>
     </div>

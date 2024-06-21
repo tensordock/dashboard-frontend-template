@@ -5,9 +5,11 @@ import {
   useStripe,
 } from '@stripe/react-stripe-js';
 import { FormEvent, useState } from 'react';
+import toast from 'react-hot-toast';
+
 import { ROUTES } from '../../constants/pages';
 import useAuth from '../../hooks/use-auth';
-import toast from 'react-hot-toast';
+import Button from '../common/button';
 
 export default function StripeDepositForm({
   onSuccess,
@@ -48,16 +50,14 @@ export default function StripeDepositForm({
   };
 
   return (
-    <form className="mt-8 flex flex-col gap-6" onSubmit={handleSubmit}>
-      <PaymentElement />
-      <AddressElement options={{ mode: 'billing' }} />
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="rounded bg-primary-500 px-4 py-2 text-white font-display shadow transition-colors sm:self-end disabled:bg-primary-300 sm:px-12 hover:enabled:bg-primary-600"
-      >
+    <form className="mt-8 flex flex-col" onSubmit={handleSubmit}>
+      <div className="flex flex-col gap-6 rounded-card bg-white px-6 py-6">
+        <PaymentElement />
+        <AddressElement options={{ mode: 'billing' }} />
+      </div>
+      <Button type="submit" disabled={isSubmitting} className="mt-4 self-end">
         Complete Deposit
-      </button>
+      </Button>
     </form>
   );
 }

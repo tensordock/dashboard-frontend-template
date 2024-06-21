@@ -31,7 +31,7 @@ export default forwardRef<
       <select
         {...props}
         ref={ref}
-        className="cursor-pointer rounded bg-white px-3 py-2 ring-1 ring-gray-300 focus-visible:ring-blue-500"
+        className="cursor-pointer rounded-input bg-white px-3 py-2 ring-1 ring-gray-300 dark:bg-neutral-800 dark:ring-none focus-visible:ring-blue-500"
       >
         {options.map(({ text, value }) => (
           <option key={value ?? 'undefined'} value={value}>

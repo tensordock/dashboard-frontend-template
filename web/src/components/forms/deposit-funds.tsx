@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Elements } from '@stripe/react-stripe-js';
-import { Stripe } from '@stripe/stripe-js';
+import { Appearance, Stripe } from '@stripe/stripe-js';
 import { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -10,6 +10,7 @@ import axios from '../../util/axios';
 import getStripe from '../../util/stripe';
 import TextInput from '../input/text-input';
 import StripeDepositForm from './stripe-deposit';
+import Button from '../common/button';
 
 const depositFormSchema = z.object({
   amount: z
@@ -22,6 +23,10 @@ const depositFormSchema = z.object({
 });
 
 type DepositFormValues = z.infer<typeof depositFormSchema>;
+
+const lightAppearance: Appearance = {
+  theme: 'flat',
+};
 
 export default function DepositFundsForm({
   onSuccess,
@@ -112,19 +117,20 @@ export default function DepositFundsForm({
             )}
           />
         </div>
-        <button
+        <Button
           type="submit"
           disabled={stripeInfo !== null || isSubmitting}
-          className="rounded bg-primary-500 px-4 py-2 text-white font-display shadow transition-colors sm:self-end disabled:bg-primary-300 sm:px-12 hover:enabled:bg-primary-600"
+          className="self-end"
         >
           Confirm
-        </button>
+        </Button>
       </form>
       {stripeInfo !== null && (
         <Elements
           stripe={stripeInfo.stripe}
           options={{
             clientSecret: stripeInfo.clientSecret,
+            appearance: lightAppearance,
           }}
         >
           <StripeDepositForm onSuccess={onSuccess} />

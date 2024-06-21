@@ -60,7 +60,7 @@ export default function DeploySummary({
           ${total.toFixed(4)}/hr
         </span>
       </p>
-      <p className="mt-1 text-sm text-gray-500">
+      <p className="mt-1 text-sm text-neutral-400">
         Cost per hour when the VM is running.
       </p>
       <p className="mt-6 flex font-bold font-display">
@@ -69,7 +69,7 @@ export default function DeploySummary({
           ${storageTotal.toFixed(4)}/hr
         </span>
       </p>
-      <p className="mt-1 text-sm text-gray-500">
+      <p className="mt-1 text-sm text-neutral-400">
         Stopped VMs incur reduced storage fees, but the availability of GPUs on
         the same node is not guaranteed.
       </p>

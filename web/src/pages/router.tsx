@@ -1,24 +1,25 @@
 /* eslint-disable react-refresh/only-export-components */
 
-import { createBrowserRouter } from 'react-router-dom';
 import React from 'react';
+import { createBrowserRouter } from 'react-router-dom';
 
+import ChangePasswordPage from './auth/change-password';
 import AuthLayout from './auth/layout';
 import LoginPage from './auth/login';
-const SignupPage = React.lazy(() => import('./auth/signup'));
+import ResetPasswordPage from './auth/reset-password';
+import ConfirmAccountPage from './confirm';
 import AccountPage from './dash/account';
-const DepositFundsPage = React.lazy(() => import('./dash/account-deposit'));
 import AutomationsPage from './dash/automations';
 import AddAutomationPage from './dash/automations-add';
-const DeployPage = React.lazy(() => import('./dash/deploy'));
 import DashLayout from './dash/layout';
-import VirtualMachinesPage from './dash/virtual-machines';
-const HomePage = React.lazy(() => import('./home'));
-import ConfirmAccountPage from './confirm';
-import ResetPasswordPage from './auth/reset-password';
-import ChangePasswordPage from './auth/change-password';
 import LayoutRequireLogin from './dash/layout-require-login';
+import VirtualMachinesPage from './dash/virtual-machines';
 import NotFoundPage from './notfound';
+
+const SignupPage = React.lazy(() => import('./auth/signup'));
+const DepositFundsPage = React.lazy(() => import('./dash/account-deposit'));
+const DeployPage = React.lazy(() => import('./dash/deploy'));
+const HomePage = React.lazy(() => import('./home'));
 
 const router = createBrowserRouter([
   { path: '*', element: <NotFoundPage /> },

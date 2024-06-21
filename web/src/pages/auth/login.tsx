@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
+import Button from '../../components/common/button';
 import Head from '../../components/head';
 import TextInput from '../../components/input/text-input';
 import { ROUTES } from '../../constants/pages';
@@ -41,12 +42,12 @@ export default function LoginPage() {
       <Head title="Log In" />
       <div className="flex items-center">
         <h1 className="text-2xl font-medium font-display">Login</h1>
-        <div className="ml-auto text-sm text-gray-500">
+        <div className="ml-auto text-sm text-gray-500 dark:text-neutral-400">
           New user?{' '}
           <Link
             to={ROUTES.signup}
             replace
-            className="text-primary-500 font-medium"
+            className="text-primary-500 font-medium dark:text-primary-300"
           >
             Sign Up
           </Link>
@@ -71,18 +72,14 @@ export default function LoginPage() {
         />
         <Link
           to={ROUTES.resetPassword}
-          className="text-sm text-gray-500 underline"
+          className="text-sm text-gray-500 underline dark:text-neutral-400"
         >
           <span className="i-tabler-help mr-1 inline-block translate-y-[.15em]" />
           Forgot your password?
         </Link>
-        <button
-          type="submit"
-          className="mt-2 inline-flex justify-center rounded bg-primary-500 py-3 text-white font-semibold font-display transition-colors disabled:cursor-default disabled:bg-primary-300 hover:bg-primary-600"
-          disabled={isSubmitting}
-        >
+        <Button type="submit" disabled={isSubmitting} className="mt-4 self-end">
           Submit
-        </button>
+        </Button>
       </form>
     </>
   );

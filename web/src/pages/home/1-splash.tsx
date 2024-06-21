@@ -5,20 +5,22 @@ import { ReactTyped } from 'react-typed';
 
 import {
   BG_IMAGE_URL,
+  HOME_LOGO_IMAGE,
   LOGO_TEXT,
   SHORT_COMPANY_NAME,
+  USE_LOGO_IMAGE,
 } from '../../constants/branding';
 import {
   CUSTOM_REQUESTS_URL,
   INFRASTRUCTURE_URL,
 } from '../../constants/external';
-import useAuth from '../../hooks/use-auth';
 import { ROUTES } from '../../constants/pages';
+import useAuth from '../../hooks/use-auth';
 
 import DeployImage from '../../assets/img/deploy.jpg';
 
 const navLinks = [
-  { text: 'Deploy', to: ROUTES.deploy },
+  { text: 'Deploy', to: ROUTES.deployForm },
   { text: 'Infrastructure', to: INFRASTRUCTURE_URL },
 ];
 
@@ -74,7 +76,15 @@ export default function SplashSection() {
                 to={ROUTES.home}
                 className="select-none text-3xl text-white font-extrabold font-display"
               >
-                {LOGO_TEXT}
+                {USE_LOGO_IMAGE ? (
+                  <img
+                    src={HOME_LOGO_IMAGE}
+                    alt={LOGO_TEXT}
+                    className="h-[.9em] py-[.05em]"
+                  />
+                ) : (
+                  LOGO_TEXT
+                )}
               </Link>
             </h1>
             <ul className="ml-8 hidden font-medium font-display lg:flex">
@@ -171,24 +181,24 @@ export default function SplashSection() {
               {SHORT_COMPANY_NAME} operates a massive, scalable NVIDIA GPU cloud
               for your most demanding HPC workloads
             </p>
-            <div className="mt-10 flex flex-col items-center justify-center gap-x-1 gap-y-6 md:flex-row md:items-stretch xl:justify-start">
+            <div className="mt-10 flex flex-col items-center justify-center gap-x-1 gap-y-6 md:flex-row xl:justify-start">
               <Link
-                to={ROUTES.deploy}
-                className="inline-block select-none rounded bg-white px-6 py-2.5 text-gray-6 font-medium font-display transition-colors hover:bg-gray-6 hover:text-white"
+                to={ROUTES.deployForm}
+                className="inline-block select-none rounded-btn bg-white px-6 py-2.5 text-gray-6 font-medium font-display transition-colors hover:bg-gray-6 hover:text-white"
               >
                 Deploy a GPU Server
               </Link>
               <a
                 target="_blank"
                 href={CUSTOM_REQUESTS_URL}
-                className="inline-block select-none border-2 border-white rounded px-6 py-2.5 text-white font-medium font-display transition-colors hover:bg-white hover:text-gray-6"
+                className="inline-block select-none rounded-btn px-6 py-2.5 text-white font-medium font-display ring-2 ring-white ring-inset transition-colors hover:bg-white hover:text-gray-6"
               >
                 Custom Servers
               </a>
             </div>
           </div>
           <Link
-            to={ROUTES.deploy}
+            to={ROUTES.deployForm}
             className="mx-auto block h-12 px-2 container lg:h-30 md:h-24 sm:h-16 xl:h-auto xl:max-w-xl"
           >
             <img
