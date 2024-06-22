@@ -19,7 +19,7 @@ const depositFormSchema = z.object({
     .refine((val) => !isNaN(val), 'Amount must be a number')
     .transform((val) => val || 0)
     .refine((val) => val >= 5, 'Must deposit at least $5')
-    .transform((val) => val.toFixed(2)),
+    .transform((val) => val.toFixed(0)),
 });
 
 type DepositFormValues = z.infer<typeof depositFormSchema>;
@@ -104,13 +104,13 @@ export default function DepositFundsForm({
                   onChange(
                     `$${parseFloat(
                       evt.target.value.trim().replace(/[^0-9.-]/g, '') || '0'
-                    ).toFixed(2)}`
+                    ).toFixed(0)}`
                   );
                   onBlur();
                 }}
                 ref={ref}
                 disabled={stripeInfo !== null || isSubmitting}
-                placeholder="$5.00"
+                placeholder="$5"
                 label="Amount"
                 errorMessage={error?.message}
               />
