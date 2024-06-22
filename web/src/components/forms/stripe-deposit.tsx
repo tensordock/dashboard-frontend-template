@@ -34,7 +34,7 @@ export default function StripeDepositForm({
       elements,
       confirmParams: {
         return_url: `${window.location.origin}${ROUTES.account}`,
-        receipt_email: loginInfo.email,
+        payment_method_data: { billing_details: { email: loginInfo.email } },
       },
       redirect: 'if_required',
     });
@@ -44,7 +44,9 @@ export default function StripeDepositForm({
     if (result.error) {
       toast.error(result.error.message ?? 'An unknown error occurred.');
     } else {
-      toast.success('Deposit successful!');
+      toast.success(
+        'Deposit successful! Please allow a minute for your balance to update.'
+      );
       if (onSuccess) onSuccess();
     }
   };
