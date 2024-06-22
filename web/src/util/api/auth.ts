@@ -218,3 +218,29 @@ export async function inviteUser(receiverEmail: string, validate?: boolean) {
 
   if (!data.success) throw new Error(data.error);
 }
+
+
+/**
+ * Fetches preset user info from invite-sign-up flow
+ */
+export async function getPresetInfo(userUUID: string | null) {
+  if (!userUUID) return;
+
+  const formData = new FormData();
+  formData.append('invitee', userUUID);
+
+  const res = await axios.postForm(
+    `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/getPresetInfo`,
+    formData,
+    { validateStatus: (status) => status < 500 }
+  );
+  const data = res.data as
+    | { success: true; organization: string; email: string }
+    | { success: false; error: string };
+
+  if (data.success) {
+    return data;
+  } else {
+    throw new Error(data.error);
+  }
+}

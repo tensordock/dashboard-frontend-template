@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
 import Button from '../../components/common/button';
@@ -10,6 +10,9 @@ import TextInput from '../../components/input/text-input';
 import { ROUTES } from '../../constants/pages';
 import useAuth from '../../hooks/use-auth';
 import * as api from '../../util/api';
+import { getPresetInfo } from '../../util/api';
+import { useEffect } from 'react';
+
 
 const signupSchema = api.signupSchema
   .and(
@@ -26,14 +29,35 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function SignupPage() {
   const { signup } = useAuth();
-  const navigate = useNavigate();
+  const navigate = useNavigate();  
+  const location = useLocation();
+  const newUserUUID = new URLSearchParams(location.search).get('invite');
+
+  useEffect(() => {
+    if (newUserUUID) {
+      console.log(newUserUUID)
+      getPresetInfo(newUserUUID)
+        .then(data => {
+          if (data && data.success) {
+            reset({ email: data.email, org_name: data.organization });
+          } else {
+            throw new Error('Failed to fetch preset info');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+  }, [newUserUUID]);
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { isSubmitting, errors },
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
-    defaultValues: { email: '', org_name: '', password: '' },
+    defaultValues: { email: '', org_name: '' },
   });
 
   const onSubmit: SubmitHandler<SignupFormValues> = async ({
