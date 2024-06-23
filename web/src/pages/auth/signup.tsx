@@ -11,7 +11,7 @@ import { ROUTES } from '../../constants/pages';
 import useAuth from '../../hooks/use-auth';
 import * as api from '../../util/api';
 import { getPresetInfo } from '../../util/api';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 
 const signupSchema = api.signupSchema
@@ -32,6 +32,7 @@ export default function SignupPage() {
   const navigate = useNavigate();  
   const location = useLocation();
   const newUserUUID = new URLSearchParams(location.search).get('invite');
+  const [orgUUID, setOrgUUID] = useState("");
 
   useEffect(() => {
     if (newUserUUID) {
@@ -40,6 +41,7 @@ export default function SignupPage() {
         .then(data => {
           if (data && data.success) {
             reset({ email: data.email, org_name: data.organization });
+            if (data.org_uuid) setOrgUUID(data.org_uuid);
           } else {
             throw new Error('Failed to fetch preset info');
           }
@@ -66,7 +68,7 @@ export default function SignupPage() {
     password,
   }) => {
     try {
-      await signup(email, org_name, password);
+      await signup(email, org_name, password, orgUUID);
       navigate(ROUTES.account, { replace: true });
       toast.success('Check your email to verify your account!');
     } catch (err) {

@@ -87,7 +87,8 @@ export const signupSchema = z.object({
  */
 export async function signup(
   values: z.infer<typeof signupSchema>,
-  validate?: boolean
+  org_uuid: string,
+  validate?: boolean,
 ) {
   if (validate) signupSchema.parse(values);
 
@@ -96,6 +97,7 @@ export async function signup(
   formData.append('organization_name', values.org_name);
   formData.append('password', values.password);
   formData.append('confirm_password', values.password);
+  formData.append('org_uuid', org_uuid);
 
   const res = await axios.postForm(
     `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/register`,
@@ -235,7 +237,7 @@ export async function getPresetInfo(userUUID: string | null) {
     { validateStatus: (status) => status < 500 }
   );
   const data = res.data as
-    | { success: true; organization: string; email: string }
+    | { success: true; organization: string; email: string, org_uuid: string }
     | { success: false; error: string };
 
   if (data.success) {
