@@ -47,7 +47,7 @@ export default function ConfirmAccountPage() {
   }, [token, confirmToken, navigate]);
 
   return (
-    <div className="h-screen max-h-[600px] min-h-max flex flex-col items-center justify-center text-xl font-semibold font-display">
+    <div className="h-screen max-h-[600px] min-h-max flex flex-col items-center justify-center text-xl font-semibold font-display dark:text-white">
       Validating...
     </div>
   );

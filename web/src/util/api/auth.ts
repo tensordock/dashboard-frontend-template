@@ -124,14 +124,13 @@ export async function confirmToken(
   token: string,
   { abortSignal }: { abortSignal?: AbortSignal } = {}
 ) {
+  const formData = new FormData();
+  formData.append('confirmToken', token);
+
   const res = await axios.post(
     `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/confirmEmail`,
-    undefined,
+    formData,
     {
-      params: {
-        confirmToken: token,
-        hostname: window.location.hostname,
-      },
       signal: abortSignal,
       validateStatus: (status) => status < 500,
     }

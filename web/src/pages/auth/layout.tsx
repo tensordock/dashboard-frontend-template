@@ -5,8 +5,10 @@ import Loader from '../../components/loader';
 import { INFRASTRUCTURE_URL } from '../../constants';
 import {
   BG_IMAGE_URL,
+  HOME_LOGO_IMAGE,
   LOGO_TEXT,
   SHORT_COMPANY_NAME,
+  USE_LOGO_IMAGE,
 } from '../../constants/branding';
 import { ROUTES } from '../../constants/pages';
 import useAuth from '../../hooks/use-auth';
@@ -32,7 +34,15 @@ export default function AuthLayout() {
               to={ROUTES.home}
               className="inline-block select-none py-4 text-3xl text-white font-extrabold font-display"
             >
-              {LOGO_TEXT}
+              {USE_LOGO_IMAGE ? (
+                <img
+                  src={HOME_LOGO_IMAGE}
+                  alt={LOGO_TEXT}
+                  className="h-[.9em] py-[.05em]"
+                />
+              ) : (
+                LOGO_TEXT
+              )}
             </Link>
           </h1>
           <ul className="ml-8 hidden flex font-medium font-display">
