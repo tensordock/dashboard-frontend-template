@@ -2,6 +2,7 @@ import toast from 'react-hot-toast';
 
 import ButtonLink from '../../components/common/button-link';
 import { DashBlock } from '../../components/dash-block';
+import InviteUserForm from '../../components/forms/invite-user';
 import Head from '../../components/head';
 import { SUPPORT_EMAIL } from '../../constants';
 import { SHORT_COMPANY_NAME } from '../../constants/branding';
@@ -74,6 +75,12 @@ export default function AccountPage() {
             Deposit Funds
           </ButtonLink>
         </div>
+      </DashBlock>
+      <DashBlock>
+        <h3 className="text-xl font-display">
+          Invite a user to your organization
+        </h3>
+        <InviteUserForm />
       </DashBlock>
     </>
   );

@@ -75,3 +75,11 @@ Sent when an org's balance is negative, and their servers are deleted.
 Sent when a user requests to reset their password.
 
 - `{{ link }}`: link to reset password
+
+### `invite_user`
+
+Sent when a user invites someone by email to their organization.
+
+- `{{ inviter }}`: Email of user who sent the invite
+- `{{ organization }}`: Organization name
+- `{{ link }}`: Link for the user to join

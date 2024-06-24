@@ -21,8 +21,12 @@ export default function useAuth() {
   );
 
   const signup = useCallback(
-    (email: string, org_name: string, password: string) =>
-      mutate(api.signup({ email, org_name, password }).then(() => undefined)),
+    (email: string, org_name: string, password: string, inviteUUID?: string) =>
+      mutate(
+        api
+          .signup({ email, org_name, password, inviteUUID })
+          .then(() => undefined)
+      ),
     [mutate]
   );
 

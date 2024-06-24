@@ -4,7 +4,7 @@ import axios from '../util/axios';
 
 export default function useUserInfo() {
   const { data, error, isLoading, isValidating } = useSWR(
-    '/api/vO/client/whitelabel/getUserInfo',
+    '/api/v0/client/whitelabel/getUserInfo',
     async (url) => {
       const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}${url}`);
       return res.data as {

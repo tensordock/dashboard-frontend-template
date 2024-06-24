@@ -1,15 +1,18 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { z } from 'zod';
 
+import { useEffect } from 'react';
+import useSWR from 'swr';
 import Button from '../../components/common/button';
 import Head from '../../components/head';
 import TextInput from '../../components/input/text-input';
 import { ROUTES } from '../../constants/pages';
 import useAuth from '../../hooks/use-auth';
 import * as api from '../../util/api';
+import { getInviteTokenInfo } from '../../util/api';
 
 const signupSchema = api.signupSchema
   .and(
@@ -27,14 +30,33 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 export default function SignupPage() {
   const { signup } = useAuth();
   const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
+  const newInviteUUID = searchParams.get('invite');
+
+  const { data: presetInfo } = useSWR(
+    newInviteUUID
+      ? `/api/v0/client/whitelabel/invitetoken?token=${newInviteUUID}`
+      : null,
+    () => getInviteTokenInfo(newInviteUUID!)
+  );
+
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { isSubmitting, errors },
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
-    defaultValues: { email: '', org_name: '', password: '' },
+    defaultValues: { email: '', org_name: '' },
   });
+
+  useEffect(() => {
+    if (!presetInfo) return;
+
+    setValue('email', presetInfo.email);
+    setValue('org_name', presetInfo.organization);
+  }, [presetInfo, setValue]);
 
   const onSubmit: SubmitHandler<SignupFormValues> = async ({
     email,
@@ -42,7 +64,7 @@ export default function SignupPage() {
     password,
   }) => {
     try {
-      await signup(email, org_name, password);
+      await signup(email, org_name, password, newInviteUUID ?? undefined);
       navigate(ROUTES.account, { replace: true });
       toast.success('Check your email to verify your account!');
     } catch (err) {
@@ -75,12 +97,14 @@ export default function SignupPage() {
           label="Email"
           placeholder="johnny@appleseed.com"
           errorMessage={errors.email?.message}
+          disabled={presetInfo !== undefined}
         />
         <TextInput
           {...register('org_name')}
           label="Organization Name"
           placeholder="JohnML LLC"
           errorMessage={errors.org_name?.message}
+          disabled={presetInfo !== undefined}
         />
         <TextInput
           {...register('password')}

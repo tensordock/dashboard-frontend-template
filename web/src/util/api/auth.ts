@@ -79,10 +79,14 @@ export const signupSchema = z.object({
     .min(1, 'Organization name is required')
     .min(3, 'Organization name must be at least 3 characters'),
   password: passwordSchema,
+  inviteUUID: z.string().optional(),
 });
 
 /**
  * Signs the user up and stores the token in localStorage.
+ *
+ * For users invited by email, the `inviteUUID` should be passed.
+ *
  * To confirm their email, the user will also need to `confirmToken` with the token sent to their email.
  */
 export async function signup(
@@ -96,6 +100,7 @@ export async function signup(
   formData.append('organization_name', values.org_name);
   formData.append('password', values.password);
   formData.append('confirm_password', values.password);
+  if (values.inviteUUID) formData.append('invite_uuid', values.inviteUUID);
 
   const res = await axios.postForm(
     `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/register`,
@@ -194,4 +199,43 @@ export async function changePassword(
     | { success: false; error: string };
 
   if (!data.success) throw new Error(data.error);
+}
+
+/**
+ * Attempts to send an invite email to a new user by email
+ */
+export async function inviteUser(receiverEmail: string, validate?: boolean) {
+  if (validate) z.string().parse(receiverEmail);
+
+  const formData = new FormData();
+  formData.append('receiver', receiverEmail);
+
+  const res = await axios.postForm(
+    `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/invite`,
+    formData,
+    { validateStatus: (status) => status < 500 }
+  );
+
+  const data = res.data as
+    | { success: true }
+    | { success: false; error: string };
+
+  if (!data.success) throw new Error(data.error);
+}
+
+/**
+ * Fetches preset user info from invite-sign-up flow
+ */
+export async function getInviteTokenInfo(token: string) {
+  const res = await axios.get(
+    `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/invitetoken?token=${token}`,
+    { validateStatus: (status) => status < 500 }
+  );
+  const data = res.data as
+    | { success: true; organization: string; email: string }
+    | { success: false; error: string };
+
+  if (!data.success) throw new Error(data.error);
+
+  return data;
 }

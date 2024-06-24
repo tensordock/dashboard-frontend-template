@@ -12,6 +12,7 @@ const emailTemplates = [
   'alert_servers_stopped',
   'alert_servers_deleted',
   'forgot_password',
+  'invite_user',
 ];
 
 async function main() {
