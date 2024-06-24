@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { z } from 'zod';
 
 import { useEffect } from 'react';
@@ -29,7 +29,6 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function SignupPage() {
   const { signup } = useAuth();
-  const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
   const newInviteUUID = searchParams.get('invite');
