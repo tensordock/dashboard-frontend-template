@@ -64,7 +64,7 @@ export default function SignupPage() {
     password,
   }) => {
     try {
-      await signup(email, org_name, password, newInviteUUID ?? '');
+      await signup(email, org_name, password, newInviteUUID ?? undefined);
       navigate(ROUTES.account, { replace: true });
       toast.success('Check your email to verify your account!');
     } catch (err) {

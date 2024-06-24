@@ -79,15 +79,18 @@ export const signupSchema = z.object({
     .min(1, 'Organization name is required')
     .min(3, 'Organization name must be at least 3 characters'),
   password: passwordSchema,
+  inviteUUID: z.string().optional(),
 });
 
 /**
  * Signs the user up and stores the token in localStorage.
+ *
+ * For users invited by email, the `inviteUUID` should be passed.
+ *
  * To confirm their email, the user will also need to `confirmToken` with the token sent to their email.
  */
 export async function signup(
   values: z.infer<typeof signupSchema>,
-  invite_uuid: string,
   validate?: boolean
 ) {
   if (validate) signupSchema.parse(values);
@@ -97,7 +100,7 @@ export async function signup(
   formData.append('organization_name', values.org_name);
   formData.append('password', values.password);
   formData.append('confirm_password', values.password);
-  formData.append('invite_uuid', invite_uuid);
+  if (values.inviteUUID) formData.append('invite_uuid', values.inviteUUID);
 
   const res = await axios.postForm(
     `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/register`,
