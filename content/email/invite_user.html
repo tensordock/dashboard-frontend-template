@@ -59,7 +59,7 @@
       <h1 class="header">Hello there,</h1>
       <p class="content">
         <strong>{{ inviter }}</strong> has invited you to join
-        <strong>{{ org_title }}</strong>.
+        <strong>{{ organization }}</strong>.
       </p>
       <p>
         Please click on the link below, and follow the instructions to join the
@@ -70,7 +70,7 @@
       <p class="footer">
         Beep boop, I'm a bot. But reply to me, and I'll connect you to a real
         person :)<br />
-        <a href="http://{{ whitelabel_site }}">{{ whitelabel_site }}</a>
+        <a href="{{ app_base_url }}">{{ app_base_url }}</a>
       </p>
     </div>
   </body>

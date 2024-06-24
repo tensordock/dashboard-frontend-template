@@ -12,7 +12,7 @@ import TextInput from '../../components/input/text-input';
 import { ROUTES } from '../../constants/pages';
 import useAuth from '../../hooks/use-auth';
 import * as api from '../../util/api';
-import { getPresetInfo } from '../../util/api';
+import { getInviteTokenInfo } from '../../util/api';
 
 const signupSchema = api.signupSchema
   .and(
@@ -36,9 +36,9 @@ export default function SignupPage() {
 
   const { data: presetInfo } = useSWR(
     newInviteUUID
-      ? `/api/v0/client/whitelabel/getPresetInfo?invite=${newInviteUUID}`
+      ? `/api/v0/client/whitelabel/invitetoken?token=${newInviteUUID}`
       : null,
-    () => getPresetInfo(newInviteUUID!)
+    () => getInviteTokenInfo(newInviteUUID!)
   );
 
   const {

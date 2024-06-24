@@ -226,13 +226,9 @@ export async function inviteUser(receiverEmail: string, validate?: boolean) {
 /**
  * Fetches preset user info from invite-sign-up flow
  */
-export async function getPresetInfo(userUUID: string) {
-  const formData = new FormData();
-  formData.append('invitee', userUUID);
-
-  const res = await axios.postForm(
-    `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/getPresetInfo`,
-    formData,
+export async function getInviteTokenInfo(token: string) {
+  const res = await axios.get(
+    `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/invitetoken?token=${token}`,
     { validateStatus: (status) => status < 500 }
   );
   const data = res.data as
