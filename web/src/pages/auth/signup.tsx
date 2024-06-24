@@ -11,7 +11,7 @@ import { ROUTES } from '../../constants/pages';
 import useAuth from '../../hooks/use-auth';
 import * as api from '../../util/api';
 import { getPresetInfo } from '../../util/api';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 
 const signupSchema = api.signupSchema
@@ -31,17 +31,15 @@ export default function SignupPage() {
   const { signup } = useAuth();
   const navigate = useNavigate();  
   const location = useLocation();
-  const newUserUUID = new URLSearchParams(location.search).get('invite');
-  const [orgUUID, setOrgUUID] = useState("");
+  const newInviteUUID = new URLSearchParams(location.search).get('invite');
 
   useEffect(() => {
-    if (newUserUUID) {
-      console.log(newUserUUID)
-      getPresetInfo(newUserUUID)
+    if (newInviteUUID) {
+      console.log(newInviteUUID)
+      getPresetInfo(newInviteUUID)
         .then(data => {
           if (data && data.success) {
             reset({ email: data.email, org_name: data.organization });
-            if (data.org_uuid) setOrgUUID(data.org_uuid);
           } else {
             throw new Error('Failed to fetch preset info');
           }
@@ -50,7 +48,7 @@ export default function SignupPage() {
           console.error(error);
         });
     }
-  }, [newUserUUID]);
+  }, [newInviteUUID]);
 
   const {
     register,
@@ -68,7 +66,7 @@ export default function SignupPage() {
     password,
   }) => {
     try {
-      await signup(email, org_name, password, orgUUID);
+      await signup(email, org_name, password, newInviteUUID ?? "");
       navigate(ROUTES.account, { replace: true });
       toast.success('Check your email to verify your account!');
     } catch (err) {
