@@ -114,7 +114,6 @@ export async function signup(
 
   if (!data.success) throw new Error(data.error);
 
-  localStorage.setItem('whitelabelToken', data.token);
 }
 
 /**
@@ -141,6 +140,8 @@ export async function confirmToken(
     | { success: false; error: string };
 
   if (!data.success) throw new Error(data.error);
+
+
 }
 
 /**

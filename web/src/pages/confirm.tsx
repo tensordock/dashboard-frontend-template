@@ -20,7 +20,7 @@ export default function ConfirmAccountPage() {
       try {
         await api.confirmToken(token, { abortSignal: abort.signal });
         toast.success('Confirmed token');
-        navigate(ROUTES.account, { replace: true });
+        navigate(ROUTES.login, { replace: true });
       } catch (err) {
         toast.error(
           (err instanceof Error && err.message) || 'An unknown error occurred.'
