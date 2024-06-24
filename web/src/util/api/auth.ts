@@ -88,7 +88,7 @@ export const signupSchema = z.object({
 export async function signup(
   values: z.infer<typeof signupSchema>,
   invite_uuid: string,
-  validate?: boolean,
+  validate?: boolean
 ) {
   if (validate) signupSchema.parse(values);
 
@@ -221,13 +221,10 @@ export async function inviteUser(receiverEmail: string, validate?: boolean) {
   if (!data.success) throw new Error(data.error);
 }
 
-
 /**
  * Fetches preset user info from invite-sign-up flow
  */
-export async function getPresetInfo(userUUID: string | null) {
-  if (!userUUID) return;
-
+export async function getPresetInfo(userUUID: string) {
   const formData = new FormData();
   formData.append('invitee', userUUID);
 
@@ -240,9 +237,7 @@ export async function getPresetInfo(userUUID: string | null) {
     | { success: true; organization: string; email: string }
     | { success: false; error: string };
 
-  if (data.success) {
-    return data;
-  } else {
-    throw new Error(data.error);
-  }
+  if (!data.success) throw new Error(data.error);
+
+  return data;
 }

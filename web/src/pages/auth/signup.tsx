@@ -1,9 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { z } from 'zod';
 
+import { useEffect } from 'react';
+import useSWR from 'swr';
 import Button from '../../components/common/button';
 import Head from '../../components/head';
 import TextInput from '../../components/input/text-input';
@@ -11,8 +13,6 @@ import { ROUTES } from '../../constants/pages';
 import useAuth from '../../hooks/use-auth';
 import * as api from '../../util/api';
 import { getPresetInfo } from '../../util/api';
-import { useEffect } from 'react';
-
 
 const signupSchema = api.signupSchema
   .and(
@@ -29,36 +29,34 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function SignupPage() {
   const { signup } = useAuth();
-  const navigate = useNavigate();  
-  const location = useLocation();
-  const newInviteUUID = new URLSearchParams(location.search).get('invite');
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (newInviteUUID) {
-      console.log(newInviteUUID)
-      getPresetInfo(newInviteUUID)
-        .then(data => {
-          if (data && data.success) {
-            reset({ email: data.email, org_name: data.organization });
-          } else {
-            throw new Error('Failed to fetch preset info');
-          }
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }
-  }, [newInviteUUID]);
+  const [searchParams] = useSearchParams();
+  const newInviteUUID = searchParams.get('invite');
+
+  const { data: presetInfo } = useSWR(
+    newInviteUUID
+      ? `/api/v0/client/whitelabel/getPresetInfo?invite=${newInviteUUID}`
+      : null,
+    () => getPresetInfo(newInviteUUID!)
+  );
 
   const {
     register,
     handleSubmit,
-    reset,
+    setValue,
     formState: { isSubmitting, errors },
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: { email: '', org_name: '' },
   });
+
+  useEffect(() => {
+    if (!presetInfo) return;
+
+    setValue('email', presetInfo.email);
+    setValue('org_name', presetInfo.organization);
+  }, [presetInfo, setValue]);
 
   const onSubmit: SubmitHandler<SignupFormValues> = async ({
     email,
@@ -66,7 +64,7 @@ export default function SignupPage() {
     password,
   }) => {
     try {
-      await signup(email, org_name, password, newInviteUUID ?? "");
+      await signup(email, org_name, password, newInviteUUID ?? '');
       navigate(ROUTES.account, { replace: true });
       toast.success('Check your email to verify your account!');
     } catch (err) {
@@ -99,12 +97,14 @@ export default function SignupPage() {
           label="Email"
           placeholder="johnny@appleseed.com"
           errorMessage={errors.email?.message}
+          disabled={presetInfo !== undefined}
         />
         <TextInput
           {...register('org_name')}
           label="Organization Name"
           placeholder="JohnML LLC"
           errorMessage={errors.org_name?.message}
+          disabled={presetInfo !== undefined}
         />
         <TextInput
           {...register('password')}
