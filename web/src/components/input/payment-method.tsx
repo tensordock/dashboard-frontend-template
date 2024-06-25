@@ -27,7 +27,9 @@ export default forwardRef<
 
   return (
     <label className="inline-flex flex-col">
-      <div className="mb-1 text-sm text-gray-500">Payment Method</div>
+      <div className="mb-1 text-sm text-gray-500 dark:text-neutral-400">
+        Payment Method
+      </div>
       <select
         {...props}
         ref={ref}
