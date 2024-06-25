@@ -65,7 +65,7 @@ export default function BodySection() {
           ))}
         </ul>
       </section>
-      <section className="bg-primary-50/25 px-4 py-16 text-gray-7">
+      <section className="bg-primary-50/25 bg-white px-4 py-16 text-gray-7">
         <h2 className="text-center text-2xl font-400 font-display">
           All the bells and whistles
         </h2>
