@@ -28,7 +28,7 @@ export default function AutomationsPage() {
                   ({
                     threshold,
                     action,
-                    payment_method,
+                    card_last4,
                     charge_amount,
                     message_target,
                     uuid,
@@ -58,7 +58,7 @@ export default function AutomationsPage() {
                               ${charge_amount}
                             </span>{' '}
                             to <span>{message_target}'s</span> card ending in{' '}
-                            <span>{payment_method}</span>
+                            <span>{card_last4}</span>
                           </>
                         )}
                       </div>
