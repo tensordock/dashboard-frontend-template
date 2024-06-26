@@ -52,7 +52,7 @@ export default function ResetPasswordPage() {
         <h1 className="text-2xl font-medium font-display">Reset Password</h1>
         <div className="ml-auto text-sm">
           <Link
-            to={ROUTES.signup}
+            to={ROUTES.login}
             replace
             className="text-primary-500 font-medium"
           >
