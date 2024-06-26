@@ -5,7 +5,7 @@ import axios from '../axios';
  */
 export async function fetchPaymentMethods() {
   const res = await axios.get(
-    `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/paymentmethods`,
+    `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/whitelabel/${import.meta.env.VITE_WHITELABEL_SUBDOMAIN}/paymentmethods`,
     { validateStatus: (status) => status < 500 }
   );
   const data = res.data as

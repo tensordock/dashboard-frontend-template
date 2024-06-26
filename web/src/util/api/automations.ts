@@ -7,8 +7,7 @@ export interface Automation {
   threshold: number;
   charge_amount: number;
   organization: string;
-  payment_method: string;
-  token_id: string;
+  card_last4: string;
   creation_time: string;
   note_private: string;
   action: 'email' | 'charge';

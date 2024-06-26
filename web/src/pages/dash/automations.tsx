@@ -25,14 +25,21 @@ export default function AutomationsPage() {
               When my account reaches...
               <ul className="mt-6 space-y-4">
                 {automations.map(
-                  ({ threshold, action, message_target, uuid }) => (
+                  ({
+                    threshold,
+                    action,
+                    card_last4,
+                    charge_amount,
+                    message_target,
+                    uuid,
+                  }) => (
                     <li key={uuid} className="flex">
                       <div>
                         <div
                           className={`mr-4 text-gray-400 inline-flex text-sm ${
                             {
                               email: 'i-tabler-bell',
-                              charge: 'i-tabler-currency-dollar',
+                              charge: 'i-tabler-credit-card-pay',
                             }[action]
                           }`}
                         />
@@ -42,7 +49,16 @@ export default function AutomationsPage() {
                         : <span>{action} </span>
                         {action === 'email' && (
                           <>
-                            <span>{message_target}</span>
+                            <span>{message_target}</span> a notification
+                          </>
+                        )}
+                        {action === 'charge' && (
+                          <>
+                            <span className="font-semibold font-display">
+                              ${charge_amount}
+                            </span>{' '}
+                            to <span>{message_target}'s</span> card ending in{' '}
+                            <span>{card_last4}</span>
                           </>
                         )}
                       </div>
