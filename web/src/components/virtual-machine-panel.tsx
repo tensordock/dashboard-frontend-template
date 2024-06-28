@@ -54,10 +54,9 @@ export default function VirtualMachinePanel({
     []
   );
 
-  const { isLoading, isValidating, startVM, stopVM, deleteVM } =
-    useVirtualMachines();
+  const { startVM, stopVM, deleteVM } = useVirtualMachines();
 
-  const disableButtons = mutating || isLoading || isValidating;
+  const disableButtons = mutating;
 
   const statusInfo = VM_STATUS_INFO.get(vm.status) || {
     class: '',
@@ -223,8 +222,12 @@ export default function VirtualMachinePanel({
                 <p className="select-none">IP Address</p>
                 <p className="font-mono">{vm.ip_address}</p>
 
-                <p className="select-none">Dedicated IP</p>
-                <p>{vm.dedicated_ip_address || 'N/A'}</p>
+                {vm.dedicated_ip_address && (
+                  <>
+                    <p className="select-none">Dedicated IP</p>
+                    <p className="font-mono">{vm.dedicated_ip_address}</p>
+                  </>
+                )}
 
                 <p className="select-none">Port Forwards</p>
                 <div>
@@ -238,7 +241,7 @@ export default function VirtualMachinePanel({
                 </div>
                 <p className="select-none">Connection Instructions</p>
                 <div>
-                  <pre>{`ssh -p ${Object.entries(vm.port_forwards).find(([, to]) => to === '22')?.[0]} user@${vm.ip_address}`}</pre>{' '}
+                  <pre>{`ssh -p ${vm.dedicated_ip_address ? '22' : Object.entries(vm.port_forwards).find(([, to]) => to === '22')?.[0]} user@${vm.dedicated_ip_address || vm.ip_address}`}</pre>{' '}
                   and log in with the password you set
                 </div>
               </div>

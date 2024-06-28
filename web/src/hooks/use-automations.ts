@@ -19,18 +19,20 @@ export default function useAutomations() {
   );
 
   const addAutomation = useCallback(
-    async (values: z.infer<typeof api.addAutomationSchema>) => {
-      await api.addAutomation(values);
-      return mutate();
-    },
+    (values: z.infer<typeof api.addAutomationSchema>) =>
+      mutate(async () => {
+        await api.addAutomation(values);
+        return api.fetchAutomations();
+      }),
     [mutate]
   );
 
   const deleteAutomation = useCallback(
-    async (automationId: string) => {
-      await api.deleteAutomation(automationId);
-      return mutate();
-    },
+    async (automationId: string) =>
+      mutate(async () => {
+        await api.deleteAutomation(automationId);
+        return api.fetchAutomations();
+      }),
     [mutate]
   );
 
