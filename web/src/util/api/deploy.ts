@@ -406,8 +406,26 @@ export async function deploy(
   );
 
   const data = res.data as
-    | { success: true }
+    | {
+        success: true;
+        cost: {
+          total_price: number;
+          compute_price: number;
+          storage_price: number;
+        };
+        ip: string;
+        /**
+         * Mapping from external network ports to internal ports
+         */
+        port_forwards: Record<string, string>;
+        /**
+         * Resulting virtual machine UUID
+         */
+        server: string;
+      }
     | { success: false; error: string };
 
   if (!data.success) throw new Error(data.error);
+
+  return data;
 }
