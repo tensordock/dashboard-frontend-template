@@ -63,6 +63,11 @@ export default function VirtualMachinePanel({
     text: vm.status,
   };
 
+  const sshPort = vm.dedicated_ip_address
+    ? undefined
+    : Object.entries(vm.port_forwards).find(([, to]) => to === '22')?.[0];
+  const connectCommand = `ssh${sshPort ? ` -p ${sshPort}` : ''} user@${vm.dedicated_ip_address ?? vm.ip_address}`;
+
   return (
     <li className="rounded-card bg-white shadow-lg dark:bg-neutral-700 dark:ring-2 dark:ring-neutral-600">
       <h3 className="block rounded-t-card bg-primary-500 px-8 py-4 text-xl text-white font-display">
@@ -219,30 +224,33 @@ export default function VirtualMachinePanel({
                 <p className="select-none">Operating System</p>
                 <p>{vm.operating_system}</p>
 
-                <p className="select-none">IP Address</p>
-                <p className="font-mono">{vm.ip_address}</p>
-
                 {vm.dedicated_ip_address && (
                   <>
                     <p className="select-none">Dedicated IP</p>
                     <p className="font-mono">{vm.dedicated_ip_address}</p>
                   </>
                 )}
+                {!vm.dedicated_ip_address && (
+                  <>
+                    <p className="select-none">IP Address</p>
+                    <p className="font-mono">{vm.ip_address}</p>
 
-                <p className="select-none">Port Forwards</p>
-                <div>
-                  {Object.entries(vm.port_forwards).map(([from, to]) => (
-                    <p key={`${from}..${to}`} className="font-mono">
-                      {from}{' '}
-                      <span className="i-tabler-arrow-right mr-1 inline-block translate-y-[0.12em]" />{' '}
-                      {to}
-                    </p>
-                  ))}
-                </div>
+                    <p className="select-none">Port Forwards</p>
+                    <div>
+                      {Object.entries(vm.port_forwards).map(([from, to]) => (
+                        <p key={`${from}..${to}`} className="font-mono">
+                          {from}{' '}
+                          <span className="i-tabler-arrow-right mr-1 inline-block translate-y-[0.12em]" />{' '}
+                          {to}
+                        </p>
+                      ))}
+                    </div>
+                  </>
+                )}
                 <p className="select-none">Connection Instructions</p>
                 <div>
-                  <pre>{`ssh -p ${vm.dedicated_ip_address ? '22' : Object.entries(vm.port_forwards).find(([, to]) => to === '22')?.[0]} user@${vm.dedicated_ip_address || vm.ip_address}`}</pre>{' '}
-                  and log in with the password you set
+                  <pre>{connectCommand}</pre> and log in with the password you
+                  set
                 </div>
               </div>
             </m.div>

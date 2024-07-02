@@ -25,6 +25,14 @@ export default function VirtualMachinesPage() {
           </Link>
           .
         </p>
+        <p className="mt-2 text-gray-500 font-400 dark:text-neutral-400">
+          If you release a VM's associated resources, you will only have to pay
+          for{' '}
+          <strong className="text-gray-800 font-medium dark:text-neutral-200">
+            storage costs
+          </strong>
+          .
+        </p>
       </DashBlock>
       {virtualMachineEntries.length > 0 && (
         <ul className="flex flex-col gap-4">

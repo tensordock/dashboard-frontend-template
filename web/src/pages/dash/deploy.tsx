@@ -345,95 +345,95 @@ export default function DeployPage() {
               errorMessage={errors.serverName?.message}
               label="Name"
             />
-            <h4 className="mt-6 text-gray-700 font-display dark:text-white">
-              Configure port forwards
-            </h4>
-            {!hostnode && (
-              <p className="text-gray-500 dark:text-neutral-400">
-                Please select a location first.
-              </p>
-            )}
-            {hostnode && (
-              <>
-                <p className="text-sm text-gray-500 dark:text-neutral-400">
-                  You may forward up to 64 ports. The external port is where
-                  requests will enter; the internal port is where you set the
-                  requests to be forwarded to. We've by default included an SSH
-                  port (a port forwarded to port 22) so that you will be able to
-                  access your instance once created.
-                </p>
-                <div className="mt-2 flex flex-col gap-2">
-                  <div className="grid grid-cols-[1fr_1fr_40px] gap-2 text-sm text-gray-500 dark:text-neutral-400">
-                    <div>External Port</div>
-                    <div>Internal Port</div>
-                  </div>
-                  {portForwardsFieldArray.fields.map((forward, idx) => {
-                    const swappablePorts =
-                      hostnodes?.[hostnode]?.networking.ports ?? [];
-                    return (
-                      <div
-                        key={forward.id}
-                        className="grid grid-cols-[1fr_1fr_40px] gap-2"
-                      >
-                        <label className="flex flex-col">
-                          <select
-                            {...register(`portForwards.${idx}.from`)}
-                            className="rounded-input bg-white px-4 py-2 ring-1 ring-gray-300 dark:bg-neutral-800 dark:ring-0"
-                          >
-                            {swappablePorts.map((externalPort) => (
-                              <option
-                                key={externalPort}
-                                value={externalPort.toFixed(0)}
-                              >
-                                {externalPort}
-                              </option>
-                            ))}
-                          </select>
-                          <AnimatePresence>
-                            {errors.portForwards?.[idx]?.from?.message && (
-                              <m.div
-                                className="overflow-auto"
-                                initial={{ height: 0 }}
-                                animate={{ height: 'auto' }}
-                                exit={{ height: 0 }}
-                              >
-                                <div className="mt-1 text-sm text-red-500 dark:text-red-400">
-                                  {errors.portForwards?.[idx]?.from?.message}.
-                                </div>
-                              </m.div>
-                            )}
-                          </AnimatePresence>
-                        </label>
-                        <TextInput
-                          {...register(`portForwards.${idx}.to`)}
-                          placeholder="To"
-                          errorMessage={errors.portForwards?.[idx]?.to?.message}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => portForwardsFieldArray.remove(idx)}
-                          className="i-tabler-trash my-[10px] h-[20px] w-[40px] text-red-500 opacity-50 transition-opacity disabled:hidden dark:text-red-400 dark:opacity-70 hover:opacity-100"
-                          disabled={idx === 0}
+            {hostnode &&
+              hostnodes &&
+              hostnodes[hostnode] &&
+              !hostnodes[hostnode].networking.dedicated_ip && (
+                <>
+                  <h4 className="mt-6 text-gray-700 font-display dark:text-white">
+                    Configure port forwards
+                  </h4>
+                  <p className="text-sm text-gray-500 dark:text-neutral-400">
+                    You may forward up to 64 ports. The external port is where
+                    requests will enter; the internal port is where you set the
+                    requests to be forwarded to. We've by default included an
+                    SSH port (a port forwarded to port 22) so that you will be
+                    able to access your instance once created.
+                  </p>
+                  <div className="mt-2 flex flex-col gap-2">
+                    <div className="grid grid-cols-[1fr_1fr_40px] gap-2 text-sm text-gray-500 dark:text-neutral-400">
+                      <div>External Port</div>
+                      <div>Internal Port</div>
+                    </div>
+                    {portForwardsFieldArray.fields.map((forward, idx) => {
+                      const swappablePorts =
+                        hostnodes?.[hostnode]?.networking.ports ?? [];
+                      return (
+                        <div
+                          key={forward.id}
+                          className="grid grid-cols-[1fr_1fr_40px] gap-2"
                         >
-                          <div className="sr-only">Delete</div>
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
-                <button
-                  type="button"
-                  onClick={() =>
-                    portForwardsFieldArray.append({ from: '', to: '' })
-                  }
-                  disabled={portForwards.length >= 64}
-                  className="rounded-btn px-4 py-2 ring-1 ring-gray-300 transition-colors hover:bg-gray-100 dark:ring-2 dark:ring-neutral-500 dark:hover:bg-neutral-600"
-                >
-                  <div className="i-tabler-plus mr-2 inline-block translate-y-[2px]" />
-                  Add forwarding
-                </button>
-              </>
-            )}
+                          <label className="flex flex-col">
+                            <select
+                              {...register(`portForwards.${idx}.from`)}
+                              className="rounded-input bg-white px-4 py-2 ring-1 ring-gray-300 dark:bg-neutral-800 dark:ring-0"
+                            >
+                              {swappablePorts.map((externalPort) => (
+                                <option
+                                  key={externalPort}
+                                  value={externalPort.toFixed(0)}
+                                >
+                                  {externalPort}
+                                </option>
+                              ))}
+                            </select>
+                            <AnimatePresence>
+                              {errors.portForwards?.[idx]?.from?.message && (
+                                <m.div
+                                  className="overflow-auto"
+                                  initial={{ height: 0 }}
+                                  animate={{ height: 'auto' }}
+                                  exit={{ height: 0 }}
+                                >
+                                  <div className="mt-1 text-sm text-red-500 dark:text-red-400">
+                                    {errors.portForwards?.[idx]?.from?.message}.
+                                  </div>
+                                </m.div>
+                              )}
+                            </AnimatePresence>
+                          </label>
+                          <TextInput
+                            {...register(`portForwards.${idx}.to`)}
+                            placeholder="To"
+                            errorMessage={
+                              errors.portForwards?.[idx]?.to?.message
+                            }
+                          />
+                          <button
+                            type="button"
+                            onClick={() => portForwardsFieldArray.remove(idx)}
+                            className="i-tabler-trash my-[10px] h-[20px] w-[40px] text-red-500 opacity-50 transition-opacity disabled:hidden dark:text-red-400 dark:opacity-70 hover:opacity-100"
+                            disabled={idx === 0}
+                          >
+                            <div className="sr-only">Delete</div>
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      portForwardsFieldArray.append({ from: '', to: '' })
+                    }
+                    disabled={portForwards.length >= 64}
+                    className="rounded-btn px-4 py-2 ring-1 ring-gray-300 transition-colors hover:bg-gray-100 dark:ring-2 dark:ring-neutral-500 dark:hover:bg-neutral-600"
+                  >
+                    <div className="i-tabler-plus mr-2 inline-block translate-y-[2px]" />
+                    Add forwarding
+                  </button>
+                </>
+              )}
           </div>
           <button
             type="button"

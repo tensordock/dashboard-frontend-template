@@ -12,7 +12,12 @@ export interface HostnodeEntry {
     city: string;
     dc?: { name: string; tier: string };
   };
-  networking: { ports: number[]; receive: number; send: number };
+  networking: {
+    ports: number[];
+    receive: number;
+    send: number;
+    dedicated_ip?: boolean;
+  };
   specs: {
     cpu: { amount: number; type: string; price: number };
     ram: { amount: number; price: number };
