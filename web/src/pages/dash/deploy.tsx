@@ -10,8 +10,9 @@ import {
 } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { z } from 'zod';
 
+import Button from '../../components/common/button';
+import ButtonLink from '../../components/common/button-link';
 import { DashBlock } from '../../components/dash-block';
 import DeploySummary from '../../components/deploy-summary';
 import Head from '../../components/head';
@@ -24,13 +25,21 @@ import useAuth from '../../hooks/use-auth';
 import useHostnodes from '../../hooks/use-hostnodes';
 import useUserInfo from '../../hooks/use-user-info';
 import * as api from '../../util/api';
-import ButtonLink from '../../components/common/button-link';
-import Button from '../../components/common/button';
 
-type DeployFormValues = z.infer<typeof api.deploySchema>;
+type DeployFormValues = api.DeployValues;
 
 export default function DeployPage() {
   const navigate = useNavigate();
+
+  // Fetch available hostnodes
+  const { hostnodes } = useHostnodes({
+    minGPUCount: 1,
+    minRAM: 4,
+    minStorage: 20,
+    minvCPUs: 2,
+    minVRAM: 1,
+    requiresRTX: false,
+  });
 
   const {
     register,
@@ -38,8 +47,9 @@ export default function DeployPage() {
     handleSubmit,
     formState: { errors },
     setValue,
+    trigger,
   } = useForm<DeployFormValues>({
-    resolver: zodResolver(api.deploySchema),
+    resolver: zodResolver(api.deploySchema(hostnodes)),
     defaultValues: {
       adminPassword: '',
       serverName: '',
@@ -57,16 +67,8 @@ export default function DeployPage() {
   // clear hostnode when changing GPUs
   useEffect(() => {
     setValue('hostnode', undefined!);
-  }, [specs.gpu_model, setValue]);
-
-  const { hostnodes } = useHostnodes({
-    minGPUCount: specs.gpu_count,
-    minRAM: specs.ram,
-    minStorage: specs.storage,
-    minvCPUs: specs.vcpu,
-    minVRAM: api.getVRAM(specs.gpu_model),
-    requiresRTX: specs.gpu_model.includes('rtx'),
-  });
+    trigger(['specs']);
+  }, [specs.gpu_model, setValue, trigger]);
 
   // tweak port forwards when changing hostnodes
   useEffect(() => {
@@ -83,6 +85,7 @@ export default function DeployPage() {
           to: internalPort.toFixed(0),
         }))
       );
+      trigger(['portForwards']);
       return;
     }
 
@@ -110,7 +113,7 @@ export default function DeployPage() {
         }
       })
     );
-  }, [hostnode, hostnodes, portForwards, setValue]);
+  }, [hostnode, hostnodes, portForwards, setValue, trigger]);
 
   const { info } = useUserInfo();
   const accountBalanceTooLow = useMemo(
@@ -118,6 +121,7 @@ export default function DeployPage() {
     [info]
   );
 
+  // Generate available locations from hostnodes + specs
   const { locations, suggestedLocations } = useMemo(
     () =>
       hostnodes && specs
@@ -125,6 +129,26 @@ export default function DeployPage() {
         : { locations: undefined, suggestedLocations: undefined },
     [hostnodes, specs]
   );
+
+  // Clear selected location if it's no longer in our list
+  useEffect(() => {
+    if (
+      hostnode &&
+      locations &&
+      !Object.values(locations).find(({ hostnodes }) =>
+        hostnodes.find(({ id }) => id === hostnode)
+      )
+    ) {
+      setValue('hostnode', undefined!);
+      // Reset specs errors
+      trigger(['specs', 'specs.gpu_count']);
+    }
+  }, [locations, hostnode, setValue, trigger]);
+
+  // Validate specs on location or GPU count change
+  useEffect(() => {
+    if (hostnode) trigger('specs');
+  }, [hostnode, specs.gpu_count, trigger]);
 
   const onSubmit = useCallback<SubmitHandler<DeployFormValues>>(
     async (values) => {
@@ -298,12 +322,13 @@ export default function DeployPage() {
             <Controller
               control={control}
               name="hostnode"
-              render={({ field }) => (
+              render={({ field, fieldState: { error } }) => (
                 <DeployLocationInput
                   field={field}
                   locations={locations}
                   suggestedLocations={suggestedLocations}
                   selectedGpuModel={specs.gpu_model}
+                  errorMessage={error?.message}
                 />
               )}
             />

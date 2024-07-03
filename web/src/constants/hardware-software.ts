@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import type * as api from '../util/api';
 
 export const DEFAULT_DEPLOY_SPECS = {
@@ -7,7 +6,7 @@ export const DEFAULT_DEPLOY_SPECS = {
   ram: 4,
   vcpu: 2,
   storage: 20,
-} satisfies Partial<z.infer<typeof api.deploySchema>['specs']>;
+} satisfies Partial<api.DeployValues['specs']>;
 
 // Update this list to match the GPUs you want to rent out.
 export const ALLOWED_GPUS: GpuModel[] = [

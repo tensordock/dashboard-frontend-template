@@ -1,6 +1,5 @@
-import { z } from 'zod';
-import * as api from '../util/api';
 import * as constants from '../constants';
+import * as api from '../util/api';
 
 export default function DeploySummary({
   selectedGPU,
@@ -8,7 +7,7 @@ export default function DeploySummary({
   hostnodeInfo,
 }: {
   selectedGPU: constants.GpuModel;
-  specs: z.infer<typeof api.deploySchema>['specs'];
+  specs: api.DeployValues['specs'];
   hostnodeInfo: api.HostnodeEntry;
 }) {
   const { cpuTotal, gpuTotal, ramTotal, storageTotal, total } =
