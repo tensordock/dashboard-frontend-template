@@ -33,7 +33,7 @@ export interface HostnodeEntry {
         vram: number;
       }
     >;
-    restrictions: Record<
+    restrictions?: Record<
       `${number}`,
       {
         cpu: { min: number; max: number };
@@ -105,7 +105,7 @@ export function calculateVMPrice(
     cpuPrice: number;
     storagePrice: number;
   },
-  selectedSpecs: z.infer<typeof deploySchema>['specs']
+  selectedSpecs: DeployValues['specs']
 ) {
   const resourcePrices = {
     gpuTotal: gpuPrice * selectedSpecs.gpu_count,
@@ -170,7 +170,7 @@ export interface LocationInfo {
  * Step 2: generate location information
  */
 export function generateLocations(
-  selectedSpecs: z.infer<typeof deploySchema>['specs'],
+  selectedSpecs: DeployValues['specs'],
   hostnodes: Record<string, HostnodeEntry>
 ) {
   const locations: Record<string, LocationInfo> = {};
@@ -275,83 +275,187 @@ const portSchema = ({ min, max }: { min?: number; max?: number } = {}) =>
 /**
  * zod validator for deployment parameters
  */
-export const deploySchema = z
-  .object({
-    specs: z.object({
-      gpu_count: z.number().min(1),
-      // @ts-expect-error it's an array we're fiine
-      gpu_model: z.enum([...constants.ALLOWED_GPUS.values()], {
-        message: 'Please select a GPU model',
-      }) as z.ZodSchema<constants.GpuModel>,
-      ram: z.number().min(1),
-      vcpu: z.number().min(1),
-      storage: z.number().min(1),
-    }),
-    hostnode: z.string(),
-    // @ts-expect-error it's an array we're fiine
-    os: z.enum(constants.ALLOWED_OS, {
-      message: 'Please select an operating system',
-    }) as z.ZodSchema<constants.OperatingSystem>,
-    adminPassword: z
-      .string()
-      .min(1, 'Please provide an admin password')
-      .min(8, 'Must be at least 8 characters')
-      .refine(
-        (password) =>
-          /[A-Z]/.test(password) ||
-          /[\W_]/.test(password) ||
-          /\d/.test(password),
-        'Password must contain at least 1 uppercase letter, symbol, or number'
-      ),
-    serverName: z.string().min(1, 'Please name your server'),
-    portForwards: z
-      .array(
-        z.object({
-          from: portSchema(),
-          to: portSchema({ min: 0, max: 65535 }),
-        })
-      )
-      .superRefine((forwards, ctx) => {
-        const externalPortsSet = new Set(forwards.map(({ from }) => from));
-        if (externalPortsSet.size === forwards.length) return;
-
-        forwards.forEach(({ from }, idx) => {
-          if (
-            forwards.find(
-              ({ from: from2 }, idx2) => from === from2 && idx !== idx2
-            )
-          )
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: 'Duplicate external ports not allowed',
-              path: [idx, 'from'],
-            });
-        });
+export const deploySchema = (hostnodes?: Record<string, HostnodeEntry>) =>
+  z
+    .object({
+      specs: z.object({
+        gpu_count: z.number().min(1),
+        // @ts-expect-error it's an array we're fiine
+        gpu_model: z.enum([...constants.ALLOWED_GPUS.values()], {
+          message: 'Please select a GPU model',
+        }) as z.ZodSchema<constants.GpuModel>,
+        ram: z.number().min(1),
+        vcpu: z.number().min(1),
+        storage: z.number().min(1),
       }),
-    cloudinitScript: z.string(),
-  })
-  .superRefine(({ os, specs }, ctx) => {
-    const minStorage = constants.OS_INFO[os].minStorageGB;
-    if (minStorage === undefined || specs?.storage === undefined) return;
+      hostnode: z.string(),
+      // @ts-expect-error it's an array we're fiine
+      os: z.enum(constants.ALLOWED_OS, {
+        message: 'Please select an operating system',
+      }) as z.ZodSchema<constants.OperatingSystem>,
+      adminPassword: z
+        .string()
+        .min(1, 'Please provide an admin password')
+        .min(8, 'Must be at least 8 characters')
+        .refine(
+          (password) =>
+            /[A-Z]/.test(password) ||
+            /[\W_]/.test(password) ||
+            /\d/.test(password),
+          'Password must contain at least 1 uppercase letter, symbol, or number'
+        ),
+      serverName: z.string().min(1, 'Please name your server'),
+      portForwards: z
+        .array(
+          z.object({
+            from: portSchema(),
+            to: portSchema({ min: 0, max: 65535 }),
+          })
+        )
+        .superRefine((forwards, ctx) => {
+          const externalPortsSet = new Set(forwards.map(({ from }) => from));
+          if (externalPortsSet.size === forwards.length) return;
 
-    if (specs.storage < minStorage) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.too_small,
-        minimum: minStorage,
-        type: 'number',
-        inclusive: true,
-        message: `Please ensure you have enough storage space (${minStorage.toFixed(0)} GB) for our ${os} operating system template`,
-        path: ['specs', 'storage'],
-      });
-    }
-  });
+          forwards.forEach(({ from }, idx) => {
+            if (
+              forwards.find(
+                ({ from: from2 }, idx2) => from === from2 && idx !== idx2
+              )
+            )
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: 'Duplicate external ports not allowed',
+                path: [idx, 'from'],
+              });
+          });
+        }),
+      cloudinitScript: z.string(),
+    })
+    .superRefine(({ os, specs }, ctx) => {
+      const minStorage = constants.OS_INFO[os].minStorageGB;
+      if (minStorage === undefined || specs?.storage === undefined) return;
+
+      if (specs.storage < minStorage) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.too_small,
+          minimum: minStorage,
+          type: 'number',
+          inclusive: true,
+          message: `Please ensure you have enough storage space (${minStorage.toFixed(0)} GB) for our ${os} operating system template`,
+          path: ['specs', 'storage'],
+        });
+      }
+    })
+    .superRefine(({ hostnode: hostnodeId, specs }, ctx) => {
+      if (!hostnodes) {
+        return;
+      }
+
+      if (!(hostnodeId in hostnodes)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Please select an available location',
+          path: ['hostnode'],
+        });
+        return;
+      }
+
+      const {
+        gpu: hostnodeGPUs,
+        cpu: hostnodeCPU,
+        ram: hostnodeRam,
+        storage: hostnodeStorage,
+        restrictions,
+      } = hostnodes[hostnodeId].specs;
+
+      // Check that hostnode actually has GPU
+      if (!(specs.gpu_model in hostnodeGPUs)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Location does not have selected GPU',
+          path: ['hostnode'],
+        });
+        return;
+      }
+
+      const gpuCountString = specs.gpu_count.toFixed(0) as `${number}`;
+      (
+        [
+          {
+            totalCount: hostnodeGPUs[specs.gpu_model].amount,
+            customRestrictions: undefined,
+            specsField: 'gpu_count',
+            display: 'GPUs',
+            unit: '',
+          },
+          {
+            totalCount: hostnodeCPU.amount,
+            customRestrictions: restrictions?.[gpuCountString]?.cpu,
+            specsField: 'vcpu',
+            display: 'VCPUs',
+            unit: '',
+          },
+          {
+            totalCount: hostnodeRam.amount,
+            customRestrictions: restrictions?.[gpuCountString]?.ram,
+            specsField: 'ram',
+            display: 'RAM',
+            unit: ' GB',
+          },
+          {
+            totalCount: hostnodeStorage.amount,
+            customRestrictions: restrictions?.[gpuCountString]?.storage,
+            specsField: 'storage',
+            display: 'storage',
+            unit: ' GB',
+          },
+        ] as const
+      ).forEach(
+        ({ totalCount, customRestrictions, specsField, display, unit }) => {
+          if (specs[specsField] > totalCount) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.too_big,
+              maximum: totalCount,
+              type: 'number',
+              inclusive: true,
+              message: `Too large: ${totalCount}${unit} available at location`,
+              path: ['specs', specsField],
+            });
+          }
+
+          if (!customRestrictions) return;
+
+          if (specs[specsField] < customRestrictions.min)
+            ctx.addIssue({
+              code: z.ZodIssueCode.too_small,
+              type: 'number',
+              message: `Not enough ${display} for ${gpuCountString} GPU${specs.gpu_count === 1 ? '' : 's'} at this location. Minimum is ${customRestrictions.min.toFixed(0)}${unit}`,
+              inclusive: true,
+              minimum: customRestrictions.min,
+              path: ['specs', specsField],
+            });
+
+          if (specs[specsField] > customRestrictions.max)
+            ctx.addIssue({
+              code: z.ZodIssueCode.too_big,
+              type: 'number',
+              message: `Too large for ${gpuCountString} GPU${specs.gpu_count === 1 ? '' : 's'} at this location. Maximum is ${customRestrictions.max.toFixed(0)}${unit}`,
+              inclusive: true,
+              maximum: customRestrictions.max,
+              path: ['specs', specsField],
+            });
+        }
+      );
+    });
+
+export type DeployValues = z.infer<ReturnType<typeof deploySchema>>;
 
 export async function deploy(
-  values: z.infer<typeof deploySchema>,
+  values: DeployValues,
   hostnodes: Record<string, HostnodeEntry>,
   validate?: boolean
 ) {
-  if (validate) deploySchema.parse(values);
+  if (validate) deploySchema(hostnodes).parse(values);
 
   const {
     specs,
@@ -406,8 +510,26 @@ export async function deploy(
   );
 
   const data = res.data as
-    | { success: true }
+    | {
+        success: true;
+        cost: {
+          total_price: number;
+          compute_price: number;
+          storage_price: number;
+        };
+        ip: string;
+        /**
+         * Mapping from external network ports to internal ports
+         */
+        port_forwards: Record<string, string>;
+        /**
+         * Resulting virtual machine UUID
+         */
+        server: string;
+      }
     | { success: false; error: string };
 
   if (!data.success) throw new Error(data.error);
+
+  return data;
 }
