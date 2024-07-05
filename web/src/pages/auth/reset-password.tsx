@@ -66,6 +66,7 @@ export default function ResetPasswordPage() {
       >
         <TextInput
           {...register('email')}
+          type="email"
           placeholder="john@appleseed.com"
           label="Registered Email"
           errorMessage={errors.email?.message}

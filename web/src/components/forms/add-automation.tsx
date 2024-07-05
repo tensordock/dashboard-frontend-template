@@ -99,8 +99,8 @@ export default function AddAutomationForm({
       {actionType === 'email' && (
         <>
           <TextInput
-            type="email"
             {...register('emailTarget')}
+            type="email"
             placeholder="johndoe@gmail.com"
             label="Email Recipient"
             // @ts-expect-error - funny discriminated union

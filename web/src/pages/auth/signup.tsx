@@ -92,6 +92,7 @@ export default function SignupPage() {
       >
         <TextInput
           {...register('email')}
+          type="email"
           label="Email"
           placeholder="johnny@appleseed.com"
           errorMessage={errors.email?.message}

@@ -59,6 +59,7 @@ export default function LoginPage() {
       >
         <TextInput
           {...register('email')}
+          type="email"
           label="Email"
           placeholder="johnny@appleseed.com"
           errorMessage={errors.email?.message}

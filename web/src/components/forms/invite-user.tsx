@@ -39,6 +39,7 @@ export default function InviteUserForm() {
     >
       <TextInput
         {...register('email')}
+        type="email"
         label="Email"
         placeholder="johnny@appleseed.com"
         errorMessage={errors.email?.message}
