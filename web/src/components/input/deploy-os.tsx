@@ -1,7 +1,7 @@
 import { AnimatePresence, m } from 'framer-motion';
 import { RefCallBack } from 'react-hook-form';
 
-import * as constants from '../../constants';
+import { ALLOWED_OS, OS_INFO } from '../../constants/hardware-software';
 
 export default function OperatingSystemSelectInput({
   field: { onChange, value, disabled, ref },
@@ -18,10 +18,10 @@ export default function OperatingSystemSelectInput({
   return (
     <>
       <div className="grid overflow-clip rounded-bigbtn md:grid-cols-2">
-        {constants.ALLOWED_OS.map((os, idx) => {
+        {ALLOWED_OS.map((os, idx) => {
           const isSelected = value === os;
 
-          const { features, forAI, minStorageGB } = constants.OS_INFO[os];
+          const { features, forAI, minStorageGB } = OS_INFO[os];
 
           return (
             <button

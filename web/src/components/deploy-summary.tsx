@@ -1,17 +1,21 @@
-import * as constants from '../constants';
-import * as api from '../util/api';
+import { GPU_INFO, GpuModel } from '../constants/hardware-software';
+import {
+  DeployValues,
+  HostnodeEntry,
+  calculateVMPrice,
+} from '../util/api/deploy';
 
 export default function DeploySummary({
   selectedGPU,
   specs,
   hostnodeInfo,
 }: {
-  selectedGPU: constants.GpuModel;
-  specs: api.DeployValues['specs'];
-  hostnodeInfo: api.HostnodeEntry;
+  selectedGPU: GpuModel;
+  specs: DeployValues['specs'];
+  hostnodeInfo: HostnodeEntry;
 }) {
   const { cpuTotal, gpuTotal, ramTotal, storageTotal, total } =
-    api.calculateVMPrice(
+    calculateVMPrice(
       {
         cpuPrice: hostnodeInfo.specs.cpu.price,
         gpuPrice: hostnodeInfo.specs.gpu[selectedGPU]?.price ?? 0,
@@ -29,7 +33,7 @@ export default function DeploySummary({
       </p>
       <p className="mt-4 flex items-center">
         <span className="i-tabler-server mr-2 inline-block" />
-        {specs.gpu_count}x {constants.GPU_INFO[specs.gpu_model].displayName}
+        {specs.gpu_count}x {GPU_INFO[specs.gpu_model].displayName}
         <span className="ml-auto tabular-nums">
           ${gpuTotal.toFixed(4)}
           /hr

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import ButtonLink from '../../components/common/button-link';
 import { DashBlock } from '../../components/dash-block';
 import Head from '../../components/head';
@@ -8,6 +9,10 @@ import useAutomations from '../../hooks/use-automations';
 export default function AutomationsPage() {
   const { automations, error, isLoading, isValidating, deleteAutomation } =
     useAutomations();
+
+  const [mutating, setMutating] = useState(false);
+
+  const disableButtons = mutating || isValidating;
 
   return (
     <>
@@ -64,8 +69,12 @@ export default function AutomationsPage() {
                       </div>
                       <button
                         type="button"
-                        onClick={async () => deleteAutomation(uuid)}
-                        disabled={isValidating}
+                        onClick={async () => {
+                          setMutating(true);
+                          await deleteAutomation(uuid);
+                          setMutating(false);
+                        }}
+                        disabled={disableButtons}
                         className="i-tabler-trash ml-auto text-red-500 disabled:text-red-300"
                       >
                         <div className="sr-only">Delete Automation</div>

@@ -4,8 +4,8 @@ import ButtonLink from '../../components/common/button-link';
 import { DashBlock } from '../../components/dash-block';
 import InviteUserForm from '../../components/forms/invite-user';
 import Head from '../../components/head';
-import { SUPPORT_EMAIL } from '../../constants';
 import { SHORT_COMPANY_NAME } from '../../constants/branding';
+import { SUPPORT_EMAIL } from '../../constants/external';
 import { ROUTES } from '../../constants/pages';
 import useUserInfo from '../../hooks/use-user-info';
 

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import * as constants from '../constants';
+
+import { ROUTES } from '../constants/pages';
 
 export default function NotFoundPage() {
   return (
@@ -8,10 +9,7 @@ export default function NotFoundPage() {
         404
       </h1>
       <p className="mt-2 text-gray-500">Page not found</p>
-      <Link
-        to={constants.ROUTES.home}
-        className="mt-8 text-gray-500 hover:text-gray-600"
-      >
+      <Link to={ROUTES.home} className="mt-8 text-gray-500 hover:text-gray-600">
         <span className="i-tabler-arrow-left mr-2 inline-block translate-y-[.125em]" />
         Back
       </Link>

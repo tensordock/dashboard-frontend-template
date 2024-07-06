@@ -2,9 +2,9 @@ import { AnimatePresence, m } from 'framer-motion';
 import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 
+import { GPU_INFO, GpuModel } from '../constants/hardware-software';
 import useVirtualMachines from '../hooks/use-virtual-machines';
-import { VirtualMachineEntry } from '../util/api';
-import { GPU_INFO, GpuModel } from '../constants';
+import { VirtualMachineEntry } from '../util/api/virtual-machines';
 
 const VM_STATUS_INFO = new Map([
   ['Running', { class: 'text-green-700 dark:text-green-300', text: 'Running' }],

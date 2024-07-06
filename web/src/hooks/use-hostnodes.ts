@@ -1,14 +1,13 @@
 import useSWR from 'swr';
-
-import * as api from '../util/api';
+import { FetchHostnodesParams, fetchHostnodeStock } from '../util/api/deploy';
 
 export default function useHostnodes(
-  params: Omit<api.FetchHostnodesParams, 'subdomain'>
+  params: Omit<FetchHostnodesParams, 'subdomain'>
 ) {
   const { data, error, isLoading, isValidating, mutate } = useSWR(
     [`/api/v0/client/deploy/hostnodes`, params],
-    ([, p]: [string, Omit<api.FetchHostnodesParams, 'subdomain'>]) =>
-      api.fetchHostnodeStock({
+    ([, p]: [string, Omit<FetchHostnodesParams, 'subdomain'>]) =>
+      fetchHostnodeStock({
         ...p,
         subdomain: import.meta.env.VITE_WHITELABEL_SUBDOMAIN as string,
       }),

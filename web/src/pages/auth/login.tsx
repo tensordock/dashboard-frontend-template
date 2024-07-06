@@ -9,9 +9,9 @@ import Head from '../../components/head';
 import TextInput from '../../components/input/text-input';
 import { ROUTES } from '../../constants/pages';
 import useAuth from '../../hooks/use-auth';
-import * as api from '../../util/api';
+import { loginSchema } from '../../util/api/auth';
 
-type LoginFormValues = z.infer<typeof api.loginSchema>;
+type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -21,7 +21,7 @@ export default function LoginPage() {
     handleSubmit,
     formState: { isSubmitting, errors },
   } = useForm<LoginFormValues>({
-    resolver: zodResolver(api.loginSchema),
+    resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '' },
   });
 
@@ -59,6 +59,7 @@ export default function LoginPage() {
       >
         <TextInput
           {...register('email')}
+          type="email"
           label="Email"
           placeholder="johnny@appleseed.com"
           errorMessage={errors.email?.message}

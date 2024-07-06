@@ -2,7 +2,12 @@ import { useCallback, useMemo } from 'react';
 import useSWR from 'swr';
 import { z } from 'zod';
 
-import * as api from '../util/api';
+import {
+  addAutomationSchema,
+  addAutomation as apiAddAutomation,
+  deleteAutomation as apiDeleteAutomation,
+  fetchAutomations as apiFetchAutomations,
+} from '../util/api/automations';
 
 export default function useAutomations() {
   const {
@@ -11,7 +16,7 @@ export default function useAutomations() {
     isLoading,
     isValidating,
     mutate,
-  } = useSWR('/api/v0/client/whitelabel/customactions', api.fetchAutomations);
+  } = useSWR('/api/v0/client/whitelabel/customactions', apiFetchAutomations);
 
   const sortedAutomations = useMemo(
     () => automations?.sort((a, b) => b.threshold - a.threshold),
@@ -19,19 +24,19 @@ export default function useAutomations() {
   );
 
   const addAutomation = useCallback(
-    (values: z.infer<typeof api.addAutomationSchema>) =>
+    (values: z.infer<typeof addAutomationSchema>) =>
       mutate(async () => {
-        await api.addAutomation(values);
-        return api.fetchAutomations();
+        await apiAddAutomation(values);
+        return apiFetchAutomations();
       }),
     [mutate]
   );
 
   const deleteAutomation = useCallback(
-    async (automationId: string) =>
+    (automationId: string) =>
       mutate(async () => {
-        await api.deleteAutomation(automationId);
-        return api.fetchAutomations();
+        await apiDeleteAutomation(automationId);
+        return apiFetchAutomations();
       }),
     [mutate]
   );

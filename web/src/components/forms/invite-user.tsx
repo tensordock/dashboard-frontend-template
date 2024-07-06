@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { z } from 'zod';
 
 import TextInput from '../../components/input/text-input';
-import * as api from '../../util/api';
+import { inviteUser } from '../../util/api/auth';
 
 const inviteSchema = z.object({
   email: z.string().min(1, 'Email is required').email(),
@@ -25,7 +25,7 @@ export default function InviteUserForm() {
   const onSubmit: SubmitHandler<InviteFormValues> = async ({ email }) => {
     const toastId = toast.loading('Sending invite...');
     try {
-      await api.inviteUser(email);
+      await inviteUser(email);
       toast.success(`Successfully invited ${email}!`, { id: toastId });
     } catch (err) {
       if (err instanceof Error) toast.error(`${err.message}.`, { id: toastId });
@@ -39,6 +39,7 @@ export default function InviteUserForm() {
     >
       <TextInput
         {...register('email')}
+        type="email"
         label="Email"
         placeholder="johnny@appleseed.com"
         errorMessage={errors.email?.message}
