@@ -8,7 +8,7 @@ import Button from '../../components/common/button';
 import Head from '../../components/head';
 import TextInput from '../../components/input/text-input';
 import { ROUTES } from '../../constants/pages';
-import * as api from '../../util/api';
+import { resetPassword } from '../../util/api/auth';
 
 const resetPasswordSchema = z.object({
   email: z.string().email(),
@@ -31,7 +31,7 @@ export default function ResetPasswordPage() {
   const onSubmit: SubmitHandler<ResetPasswordInput> = async ({ email }) => {
     const toastId = toast.loading('Sending reset email...');
     try {
-      await api.resetPassword(email);
+      await resetPassword(email);
       toast.success(
         'Reset email sent. Check your inbox for further instructions.',
         { id: toastId }
@@ -66,6 +66,7 @@ export default function ResetPasswordPage() {
       >
         <TextInput
           {...register('email')}
+          type="email"
           placeholder="john@appleseed.com"
           label="Registered Email"
           errorMessage={errors.email?.message}

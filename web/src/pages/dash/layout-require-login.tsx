@@ -1,7 +1,8 @@
-import { Outlet, useNavigate } from 'react-router-dom';
-import useAuth from '../../hooks/use-auth';
 import { useEffect } from 'react';
-import * as constants from '../../constants';
+import { Outlet, useNavigate } from 'react-router-dom';
+
+import { ROUTES } from '../../constants/pages';
+import useAuth from '../../hooks/use-auth';
 
 export default function LayoutRequireLogin() {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ export default function LayoutRequireLogin() {
   // redirect to login page if not logged in
   useEffect(() => {
     if (!isLoading && !loginInfo?.loggedIn)
-      navigate(constants.ROUTES.login, { replace: true });
+      navigate(ROUTES.login, { replace: true });
   }, [isLoading, loginInfo, navigate]);
 
   return <Outlet />;

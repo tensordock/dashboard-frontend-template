@@ -1,6 +1,13 @@
 import { z } from 'zod';
 
-import * as constants from '../../constants';
+import {
+  ALLOWED_GPUS,
+  ALLOWED_OS,
+  GPU_INFO,
+  GpuModel,
+  OperatingSystem,
+  OS_INFO,
+} from '../../constants/hardware-software';
 import axios from '../axios';
 import fetcher from '../fetcher';
 
@@ -97,8 +104,8 @@ export async function fetchInstantVMStock() {
         preconfig_options: {
           cpu_count: number;
           gpu_count: number[];
-          gpu_model: constants.GpuModel[];
-          operating_system: constants.OperatingSystem;
+          gpu_model: GpuModel[];
+          operating_system: OperatingSystem;
           ram: number;
           storage: number;
           uuid: string;
@@ -188,7 +195,7 @@ export function calculateVMPrice(
   };
 }
 
-export function getVRAM(model: constants.GpuModel) {
+export function getVRAM(model: GpuModel) {
   const gpuSplit = model.split('-');
   return Number(gpuSplit[gpuSplit.length - 1].replace('gb', ''));
 }
@@ -214,7 +221,7 @@ export interface LocationInfo {
   availability: string;
   location: string;
   price: number;
-  gpuType: constants.GpuModel;
+  gpuType: GpuModel;
   stock: number;
   cpuType: string;
   hostnodes: [
@@ -264,9 +271,7 @@ export function generateLocations(
         hostnode.specs.gpu[hostnodeGPU].amount < selectedSpecs.gpu_count ||
         hostnode.specs.gpu[hostnodeGPU].vram <
           getVRAM(selectedSpecs.gpu_model) ||
-        (constants.GPU_INFO[selectedSpecs.gpu_model].displayName.includes(
-          'RTX'
-        ) &&
+        (GPU_INFO[selectedSpecs.gpu_model].displayName.includes('RTX') &&
           !hostnode.specs.gpu[hostnodeGPU].rtx)
       )
         continue;
@@ -299,7 +304,7 @@ export function generateLocations(
           ),
           location: `${hostnode.location.city}, ${hostnode.location.region}, ${hostnode.location.country}`,
           price: vmPrice,
-          gpuType: hostnodeGPU as constants.GpuModel,
+          gpuType: hostnodeGPU as GpuModel,
           stock: hostnode.specs.gpu[hostnodeGPU].amount,
           cpuType: hostnode.specs.cpu.type,
           hostnodes: [
@@ -343,18 +348,18 @@ export const deploySchema = (hostnodes?: Record<string, HostnodeEntry>) =>
       specs: z.object({
         gpu_count: z.number().min(1),
         // @ts-expect-error it's an array we're fiine
-        gpu_model: z.enum([...constants.ALLOWED_GPUS.values()], {
+        gpu_model: z.enum(ALLOWED_GPUS, {
           message: 'Please select a GPU model',
-        }) as z.ZodSchema<constants.GpuModel>,
+        }) as z.ZodSchema<GpuModel>,
         ram: z.number().min(1),
         vcpu: z.number().min(1),
         storage: z.number().min(1),
       }),
       hostnode: z.string(),
       // @ts-expect-error it's an array we're fiine
-      os: z.enum(constants.ALLOWED_OS, {
+      os: z.enum(ALLOWED_OS, {
         message: 'Please select an operating system',
-      }) as z.ZodSchema<constants.OperatingSystem>,
+      }) as z.ZodSchema<OperatingSystem>,
       adminPassword: z
         .string()
         .min(8, 'Must be at least 8 characters')
@@ -406,7 +411,7 @@ export const deploySchema = (hostnodes?: Record<string, HostnodeEntry>) =>
     )
     // Check we have enough storage for this OS
     .superRefine(({ os, specs }, ctx) => {
-      const minStorage = constants.OS_INFO[os].minStorageGB;
+      const minStorage = OS_INFO[os].minStorageGB;
       if (minStorage === undefined || specs?.storage === undefined) return;
 
       if (specs.storage < minStorage) {

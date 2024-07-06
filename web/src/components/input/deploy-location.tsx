@@ -1,8 +1,8 @@
 import { AnimatePresence, m } from 'framer-motion';
 import { RefCallBack } from 'react-hook-form';
 
-import * as constants from '../../constants';
-import { LocationInfo } from '../../util/api';
+import { GPU_INFO, GpuModel } from '../../constants/hardware-software';
+import { LocationInfo } from '../../util/api/deploy';
 
 export default function DeployLocationInput({
   field,
@@ -19,12 +19,12 @@ export default function DeployLocationInput({
   errorMessage?: string;
   locations: Record<string, LocationInfo>;
   suggestedLocations: Record<string, LocationInfo>;
-  selectedGpuModel: constants.GpuModel;
+  selectedGpuModel: GpuModel;
 }) {
   return (
     <>
       <h4 className="mt-4 select-none text-lg font-display">
-        Available {constants.GPU_INFO[selectedGpuModel].displayName} servers
+        Available {GPU_INFO[selectedGpuModel].displayName} servers
       </h4>
 
       <div
@@ -102,8 +102,8 @@ export default function DeployLocationInput({
       </div>
       {Object.keys(locations).length === 0 && (
         <div className="select-none rounded-bigbtn bg-primary-500/10 py-12 text-center font-display">
-          All matching {constants.GPU_INFO[selectedGpuModel].shortName} servers
-          are currently busy!
+          All matching {GPU_INFO[selectedGpuModel].shortName} servers are
+          currently busy!
         </div>
       )}
       {/* TODO: suggested locations */}

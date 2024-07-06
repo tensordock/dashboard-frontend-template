@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { ROUTES } from '../constants/pages';
-import * as api from '../util/api';
+import { confirmToken as apiConfirmToken } from '../util/api/auth';
 
 export default function ConfirmAccountPage() {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ export default function ConfirmAccountPage() {
   const confirmToken = useCallback(
     async (token: string, abort: AbortController) => {
       try {
-        await api.confirmToken(token, { abortSignal: abort.signal });
+        await apiConfirmToken(token, { abortSignal: abort.signal });
         toast.success('Confirmed token');
         navigate(ROUTES.login, { replace: true });
       } catch (err) {

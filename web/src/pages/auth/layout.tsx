@@ -2,7 +2,6 @@ import { Suspense, useEffect } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 
 import Loader from '../../components/loader';
-import { INFRASTRUCTURE_URL } from '../../constants';
 import {
   BG_IMAGE_URL,
   HOME_LOGO_IMAGE,
@@ -10,6 +9,7 @@ import {
   SHORT_COMPANY_NAME,
   USE_LOGO_IMAGE,
 } from '../../constants/branding';
+import { INFRASTRUCTURE_URL } from '../../constants/external';
 import { ROUTES } from '../../constants/pages';
 import useAuth from '../../hooks/use-auth';
 

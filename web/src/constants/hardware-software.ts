@@ -1,4 +1,4 @@
-import type * as api from '../util/api';
+import type { DeployValues } from '../util/api/deploy';
 
 export const DEFAULT_DEPLOY_SPECS = {
   gpu_model: 'geforcertx4090-pcie-24gb',
@@ -6,7 +6,7 @@ export const DEFAULT_DEPLOY_SPECS = {
   ram: 4,
   vcpu: 2,
   storage: 20,
-} satisfies Partial<api.DeployValues['specs']>;
+} satisfies Partial<DeployValues['specs']>;
 
 // Update this list to match the GPUs you want to rent out.
 export const ALLOWED_GPUS: GpuModel[] = [

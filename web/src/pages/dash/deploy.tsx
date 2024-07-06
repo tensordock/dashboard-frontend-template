@@ -20,13 +20,36 @@ import DeployLocationInput from '../../components/input/deploy-location';
 import OperatingSystemSelectInput from '../../components/input/deploy-os';
 import DeploySpecInput from '../../components/input/deploy-spec';
 import TextInput from '../../components/input/text-input';
-import * as constants from '../../constants';
+import { SHORT_COMPANY_NAME } from '../../constants/branding';
+import {
+  CONTACT_EMAIL,
+  INFRASTRUCTURE_URL,
+  SALES_EMAIL,
+} from '../../constants/external';
+import {
+  ALLOWED_GPU_COUNT,
+  ALLOWED_GPUS,
+  ALLOWED_RAM_GB,
+  ALLOWED_STORAGE_GB,
+  ALLOWED_VCPU_COUNT,
+  DEFAULT_DEPLOY_SPECS,
+  GPU_INFO,
+  GPU_SWITCHING_ALLOWED,
+  SINGLE_LOCATION,
+} from '../../constants/hardware-software';
+import { ROUTES } from '../../constants/pages';
 import useAuth from '../../hooks/use-auth';
 import useHostnodes from '../../hooks/use-hostnodes';
 import useUserInfo from '../../hooks/use-user-info';
-import * as api from '../../util/api';
+import {
+  deploy,
+  deploySchema,
+  DeployValues,
+  generateLocations,
+  getVRAM,
+} from '../../util/api/deploy';
 
-type DeployFormValues = api.DeployValues;
+type DeployFormValues = DeployValues;
 
 export default function DeployPage() {
   const navigate = useNavigate();
@@ -49,13 +72,13 @@ export default function DeployPage() {
     setValue,
     trigger,
   } = useForm<DeployFormValues>({
-    resolver: zodResolver(api.deploySchema(hostnodes)),
+    resolver: zodResolver(deploySchema(hostnodes)),
     defaultValues: {
       adminPassword: '',
       serverName: '',
       portForwards: [],
       cloudinitScript: '',
-      specs: constants.DEFAULT_DEPLOY_SPECS,
+      specs: DEFAULT_DEPLOY_SPECS,
       is_instant: false,
     },
   });
@@ -126,7 +149,7 @@ export default function DeployPage() {
   const { locations, suggestedLocations } = useMemo(
     () =>
       hostnodes && specs
-        ? api.generateLocations(specs, hostnodes)
+        ? generateLocations(specs, hostnodes)
         : { locations: undefined, suggestedLocations: undefined },
     [hostnodes, specs]
   );
@@ -156,9 +179,9 @@ export default function DeployPage() {
       if (!hostnodes) return;
       const toastId = toast.loading('Deploying...');
       try {
-        await api.deploy(values, hostnodes);
+        await deploy(values, hostnodes);
         toast.success('Successfully deployed!', { id: toastId });
-        navigate(constants.ROUTES.list);
+        navigate(ROUTES.list);
       } catch (err) {
         if (err instanceof Error)
           toast.error(`${err.message}.`, { id: toastId });
@@ -192,7 +215,7 @@ export default function DeployPage() {
           <div className="mt-4 text-gray-500 font-400 dark:text-neutral-400">
             <p>Customize your own server, fully a la carte.</p>
             <ButtonLink
-              to={constants.INFRASTRUCTURE_URL}
+              to={INFRASTRUCTURE_URL}
               variant="secondary"
               scaleUp={false}
               target="_blank"
@@ -204,7 +227,7 @@ export default function DeployPage() {
         </DashBlock>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="relative space-y-4">
-        {constants.GPU_SWITCHING_ALLOWED && (
+        {GPU_SWITCHING_ALLOWED && (
           <DashBlock>
             <h3 className="text-xl font-display">Select an available GPU</h3>
             <div className="mb-4 mt-2 space-y-2">
@@ -212,7 +235,7 @@ export default function DeployPage() {
                 Need InfiniBand or custom deployments?
               </span>
               <ButtonLink
-                to={`mailto:${constants.CONTACT_EMAIL}`}
+                to={`mailto:${CONTACT_EMAIL}`}
                 target="_blank"
                 variant="secondary"
                 scaleUp={false}
@@ -226,7 +249,7 @@ export default function DeployPage() {
               name="specs.gpu_model"
               render={({ field: { value, onChange } }) => (
                 <div className="flex flex-wrap items-stretch gap-4">
-                  {constants.ALLOWED_GPUS.map((gpu) => {
+                  {ALLOWED_GPUS.map((gpu) => {
                     const isSelected = gpu === value;
                     return (
                       <button
@@ -235,12 +258,12 @@ export default function DeployPage() {
                         className={`min-w-48 flex flex-grow-1 flex-col items-start px-4 text-lg font-display py-8 rounded-bigbtn transition-colors text-left ${isSelected ? 'bg-primary-500 text-white ring-primary-300' : 'bg-primary-500/10'}`}
                         onClick={() => onChange(gpu)}
                       >
-                        {constants.GPU_INFO[gpu].shortName}
+                        {GPU_INFO[gpu].shortName}
                         <div className="mt-auto pt-2">
                           <div
                             className={`px-3 py-1 bg-primary-500/20 rounded-btn text-base ${isSelected ? 'text-white ring-1 ring-white/30' : 'text-primary-500 dark:text-primary-300'}`}
                           >
-                            {api.getVRAM(gpu)}GB
+                            {getVRAM(gpu)}GB
                           </div>
                         </div>
                       </button>
@@ -260,8 +283,8 @@ export default function DeployPage() {
                 field={field}
                 label="GPU Count"
                 errorMessage={errors.specs?.gpu_count?.message}
-                options={constants.ALLOWED_GPU_COUNT}
-                disabled={constants.ALLOWED_GPU_COUNT.length === 1}
+                options={ALLOWED_GPU_COUNT}
+                disabled={ALLOWED_GPU_COUNT.length === 1}
               />
             )}
           />
@@ -273,8 +296,8 @@ export default function DeployPage() {
                 field={field}
                 label="RAM"
                 errorMessage={errors.specs?.ram?.message}
-                options={constants.ALLOWED_RAM_GB}
-                disabled={constants.ALLOWED_RAM_GB.length === 1}
+                options={ALLOWED_RAM_GB}
+                disabled={ALLOWED_RAM_GB.length === 1}
                 transformValues={(ram) => `${ram} GB`}
               />
             )}
@@ -287,8 +310,8 @@ export default function DeployPage() {
                 field={field}
                 label="vCPU Count"
                 errorMessage={errors.specs?.vcpu?.message}
-                options={constants.ALLOWED_VCPU_COUNT}
-                disabled={constants.ALLOWED_VCPU_COUNT.length === 1}
+                options={ALLOWED_VCPU_COUNT}
+                disabled={ALLOWED_VCPU_COUNT.length === 1}
               />
             )}
           />
@@ -300,8 +323,8 @@ export default function DeployPage() {
                 field={field}
                 label="NVMe SSD"
                 errorMessage={errors.specs?.storage?.message}
-                options={constants.ALLOWED_STORAGE_GB}
-                disabled={constants.ALLOWED_STORAGE_GB.length === 1}
+                options={ALLOWED_STORAGE_GB}
+                disabled={ALLOWED_STORAGE_GB.length === 1}
                 transformValues={(ram) => `${ram} GB`}
               />
             )}
@@ -309,7 +332,7 @@ export default function DeployPage() {
         </div>
         <DashBlock>
           <h3 className="select-none text-xl font-display">
-            {constants.SINGLE_LOCATION
+            {SINGLE_LOCATION
               ? 'Confirm server availability'
               : 'Select a location'}
           </h3>
@@ -374,7 +397,7 @@ export default function DeployPage() {
             />
             <TextInput
               {...register('serverName')}
-              placeholder={`My ${constants.SHORT_COMPANY_NAME} Server`}
+              placeholder={`My ${SHORT_COMPANY_NAME} Server`}
               errorMessage={errors.serverName?.message}
               label="Name"
             />
@@ -537,7 +560,7 @@ runcmd:
               <p className="mt-1 text-sm text-gray-500 dark:text-neutral-400">
                 Deposit more funds{' '}
                 <Link
-                  to={constants.ROUTES.accountDeposit}
+                  to={ROUTES.accountDeposit}
                   className="font-medium underline hover:text-gray-500 dark:hover:text-neutral-300"
                 >
                   here
@@ -545,10 +568,7 @@ runcmd:
                 .
               </p>
               <p className="mt-6 text-sm text-gray-500 dark:text-neutral-400">
-                Email us at{' '}
-                <a href={`mailto:${constants.SALES_EMAIL}`}>
-                  {constants.SALES_EMAIL}
-                </a>{' '}
+                Email us at <a href={`mailto:${SALES_EMAIL}`}>{SALES_EMAIL}</a>{' '}
                 if you are interested in committing to a monthly or longer
                 contract. Save up to 30%.
               </p>
@@ -565,10 +585,7 @@ runcmd:
                 </Button>
               )}
               {loginInfo?.loggedIn === false && (
-                <ButtonLink
-                  to={constants.ROUTES.login}
-                  className="mt-8 text-center"
-                >
+                <ButtonLink to={ROUTES.login} className="mt-8 text-center">
                   Log In to Deploy
                 </ButtonLink>
               )}
