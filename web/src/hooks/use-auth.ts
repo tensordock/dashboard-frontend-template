@@ -1,10 +1,14 @@
 import { useCallback } from 'react';
 import useSWR from 'swr';
 
-import * as api from '../util/api';
+import {
+  fetchAuth as apiFetchAuth,
+  login as apiLogin,
+  logout as apiLogout,
+  signup as apiSignup,
+} from '../util/api/auth';
 
-const fetchAuth = () =>
-  api.fetchAuth(import.meta.env.VITE_WHITELABEL_SUBDOMAIN);
+const fetchAuth = () => apiFetchAuth(import.meta.env.VITE_WHITELABEL_SUBDOMAIN);
 
 export default function useAuth() {
   const {
@@ -18,7 +22,7 @@ export default function useAuth() {
   const login = useCallback(
     (email: string, password: string) =>
       mutate(async () => {
-        await api.login({ email, password });
+        await apiLogin({ email, password });
         return fetchAuth();
       }),
     [mutate]
@@ -27,7 +31,7 @@ export default function useAuth() {
   const signup = useCallback(
     (email: string, org_name: string, password: string, inviteUUID?: string) =>
       mutate(async () => {
-        await api.signup({ email, org_name, password, inviteUUID });
+        await apiSignup({ email, org_name, password, inviteUUID });
         return fetchAuth();
       }),
     [mutate]
@@ -36,7 +40,7 @@ export default function useAuth() {
   const logout = useCallback(
     () =>
       mutate(() => {
-        api.logout();
+        apiLogout();
         return fetchAuth();
       }),
     [mutate]

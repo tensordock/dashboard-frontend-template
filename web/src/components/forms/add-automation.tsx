@@ -6,10 +6,10 @@ import { z } from 'zod';
 import PaymentMethodSelector from '../../components/input/payment-method';
 import TextInput from '../../components/input/text-input';
 import useAutomations from '../../hooks/use-automations';
-import * as api from '../../util/api';
+import { addAutomationSchema } from '../../util/api/automations';
 import Button from '../common/button';
 
-type AddAutomationFormValues = z.infer<typeof api.addAutomationSchema>;
+type AddAutomationFormValues = z.infer<typeof addAutomationSchema>;
 
 export default function AddAutomationForm({
   onSuccess,
@@ -24,7 +24,7 @@ export default function AddAutomationForm({
     handleSubmit,
     formState: { isSubmitting, errors },
   } = useForm<AddAutomationFormValues>({
-    resolver: zodResolver(api.addAutomationSchema),
+    resolver: zodResolver(addAutomationSchema),
     defaultValues: {
       actionType: undefined,
       threshold: '$10.00',

@@ -11,10 +11,12 @@ import Head from '../../components/head';
 import TextInput from '../../components/input/text-input';
 import { ROUTES } from '../../constants/pages';
 import useAuth from '../../hooks/use-auth';
-import * as api from '../../util/api';
-import { getInviteTokenInfo } from '../../util/api';
+import {
+  signupSchema as apiSignupSchema,
+  getInviteTokenInfo,
+} from '../../util/api/auth';
 
-const signupSchema = api.signupSchema
+const signupSchema = apiSignupSchema
   .and(
     z.object({
       confirm_password: z.string().min(1, 'Please confirm your password'),

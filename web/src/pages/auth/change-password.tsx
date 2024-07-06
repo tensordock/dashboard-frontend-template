@@ -8,12 +8,12 @@ import Button from '../../components/common/button';
 import Head from '../../components/head';
 import TextInput from '../../components/input/text-input';
 import { ROUTES } from '../../constants/pages';
-import * as api from '../../util/api';
+import { changePassword, passwordSchema } from '../../util/api/auth';
 
 const changePasswordSchema = z
   .object({
-    password: api.passwordSchema,
-    confirmPassword: api.passwordSchema,
+    password: passwordSchema,
+    confirmPassword: passwordSchema,
   })
   .refine(({ password, confirmPassword }) => password === confirmPassword, {
     message: 'Passwords do not match',
@@ -47,7 +47,7 @@ export default function ChangePasswordPage() {
 
     const toastId = toast.loading('Changing password...');
     try {
-      await api.changePassword(email, password, token);
+      await changePassword(email, password, token);
       toast.success('Password changed successfully.', { id: toastId });
       navigate(ROUTES.login, { replace: true });
     } catch (err) {
