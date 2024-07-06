@@ -116,6 +116,10 @@ export async function fetchInstantVMStock() {
             gpu_model: string[];
             hostnode: string;
             location: string;
+            /**
+             * Points to `uuid` of an element of `preconfig_options`.
+             */
+            preconfig_id: string;
             price: {
               compute_price: string;
               gpu_price: string;
