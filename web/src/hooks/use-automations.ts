@@ -33,7 +33,7 @@ export default function useAutomations() {
   );
 
   const deleteAutomation = useCallback(
-    async (automationId: string) =>
+    (automationId: string) =>
       mutate(async () => {
         await apiDeleteAutomation(automationId);
         return apiFetchAutomations();

@@ -16,7 +16,7 @@ export default function useVirtualMachines() {
   );
 
   const stopVM = useCallback(
-    async (machineId: string, releaseGPU: boolean) =>
+    (machineId: string, releaseGPU: boolean) =>
       mutate(async () => {
         await apiStopVM(machineId, releaseGPU);
         return fetchVMList();
@@ -25,7 +25,7 @@ export default function useVirtualMachines() {
   );
 
   const startVM = useCallback(
-    async (machineId: string) =>
+    (machineId: string) =>
       mutate(async () => {
         await apiStartVM(machineId);
         return fetchVMList();
@@ -34,7 +34,7 @@ export default function useVirtualMachines() {
   );
 
   const deleteVM = useCallback(
-    async (machineId: string) =>
+    (machineId: string) =>
       mutate(async () => {
         await apiDeleteVM(machineId);
         return fetchVMList();
