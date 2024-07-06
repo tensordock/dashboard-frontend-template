@@ -56,6 +56,7 @@ export default function DeployPage() {
       portForwards: [],
       cloudinitScript: '',
       specs: constants.DEFAULT_DEPLOY_SPECS,
+      is_instant: false,
     },
   });
 
@@ -363,6 +364,13 @@ export default function DeployPage() {
               placeholder="••••••••"
               errorMessage={errors.adminPassword?.message}
               label="Admin Password"
+            />
+            <TextInput
+              {...register('sshKey')}
+              type="text"
+              placeholder="ssh-rsa AAAXB3NzaC1yc2EAAAADAQABAAABAQDFtMHOaiM9LlNlG6lrtrF+...."
+              errorMessage={errors.sshKey?.message}
+              label="SSH Key"
             />
             <TextInput
               {...register('serverName')}

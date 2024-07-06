@@ -80,6 +80,64 @@ export async function fetchHostnodeStock(params: FetchHostnodesParams) {
   }>(`/api/v0/client/deploy/hostnodes?${stockRequestParams}`);
 }
 
+/**
+ * Fetches information about preconfigured options, as well as a list of all available instant VMs.
+ *
+ * To deploy an instant VM, call `deploy` with `is_instant: true` and provide a `instance_uuid`.
+ */
+export async function fetchInstantVMStock() {
+  const res = await axios.get(
+    `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/deploy/instantvms`,
+    { validateStatus: (status) => status < 500 }
+  );
+
+  const data = res.data as
+    | {
+        success: true;
+        preconfig_options: {
+          cpu_count: number;
+          gpu_count: number[];
+          gpu_model: constants.GpuModel[];
+          operating_system: constants.OperatingSystem;
+          ram: number;
+          storage: number;
+          uuid: string;
+        }[];
+        virtual_machines: Record<
+          string,
+          {
+            city: string;
+            country: string;
+            cpu_count: number;
+            cpu_model: string;
+            dc_name: string;
+            dc_tier: number;
+            gpu_count: number[];
+            gpu_model: string[];
+            hostnode: string;
+            location: string;
+            price: {
+              compute_price: string;
+              gpu_price: string;
+              price: string;
+              ram_price: string;
+              storage_price: string;
+              vcpus_price: string;
+            };
+            ram: number;
+            stateprovince: string;
+            storage: number;
+            uptime: string;
+            uuid: string;
+          }
+        >;
+      }
+    | { success: false; error: string };
+
+  if (!data.success) throw new Error(data.error);
+  else return data;
+}
+
 function formatLocationAvailability(stock: number) {
   if (stock >= 8) return 'High Stock';
   if (stock >= 4 && stock < 8) return 'Medium Stock';
@@ -295,7 +353,6 @@ export const deploySchema = (hostnodes?: Record<string, HostnodeEntry>) =>
       }) as z.ZodSchema<constants.OperatingSystem>,
       adminPassword: z
         .string()
-        .min(1, 'Please provide an admin password')
         .min(8, 'Must be at least 8 characters')
         .refine(
           (password) =>
@@ -303,7 +360,10 @@ export const deploySchema = (hostnodes?: Record<string, HostnodeEntry>) =>
             /[\W_]/.test(password) ||
             /\d/.test(password),
           'Password must contain at least 1 uppercase letter, symbol, or number'
-        ),
+        )
+        .or(z.literal(''))
+        .optional(),
+      sshKey: z.string().or(z.literal('')).optional(),
       serverName: z.string().min(1, 'Please name your server'),
       portForwards: z
         .array(
@@ -331,6 +391,16 @@ export const deploySchema = (hostnodes?: Record<string, HostnodeEntry>) =>
         }),
       cloudinitScript: z.string(),
     })
+    .and(
+      z.discriminatedUnion('is_instant', [
+        z.object({ is_instant: z.literal(false) }),
+        z.object({
+          is_instant: z.literal(true),
+          instance_uuid: z.string(),
+        }),
+      ])
+    )
+    // Check we have enough storage for this OS
     .superRefine(({ os, specs }, ctx) => {
       const minStorage = constants.OS_INFO[os].minStorageGB;
       if (minStorage === undefined || specs?.storage === undefined) return;
@@ -346,7 +416,7 @@ export const deploySchema = (hostnodes?: Record<string, HostnodeEntry>) =>
         });
       }
     })
-    .superRefine(({ hostnode: hostnodeId, specs }, ctx) => {
+    .superRefine(({ hostnode: hostnodeId, specs, portForwards }, ctx) => {
       if (!hostnodes) {
         return;
       }
@@ -358,6 +428,17 @@ export const deploySchema = (hostnodes?: Record<string, HostnodeEntry>) =>
           path: ['hostnode'],
         });
         return;
+      }
+
+      // validate that we use only available ports
+      for (const [idx, { from }] of portForwards.entries()) {
+        if (!hostnodes[hostnodeId].networking.ports.includes(parseInt(from)))
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            fatal: true,
+            message: `Port ${from} is unavailable`,
+            path: ['portForwards', idx, 'from'],
+          });
       }
 
       const {
@@ -457,42 +538,29 @@ export async function deploy(
 ) {
   if (validate) deploySchema(hostnodes).parse(values);
 
-  const {
-    specs,
-    hostnode,
-    os,
-    adminPassword,
-    serverName,
-    portForwards,
-    cloudinitScript,
-  } = values;
+  const { specs, portForwards } = values;
 
   const externalPorts = portForwards.map(({ from }) => from);
   const internalPorts = portForwards.map(({ to }) => to);
 
-  // validate that this hostnode is available
-  if (!(hostnode in hostnodes)) throw new Error('Selected hostnode not listed');
-
-  // validate that we use only available ports
-  for (const { from } of portForwards) {
-    if (!hostnodes[hostnode].networking.ports.includes(parseInt(from)))
-      throw new Error(`Port ${from} is unavailable`);
-  }
-
   const body = {
     deployment_type: 'local',
-    password: adminPassword,
-    name: serverName,
+    ...(!!values.adminPassword && { password: values.adminPassword }),
+    ...(!!values.sshKey && { ssh_key: values.sshKey }),
+    name: values.serverName,
     vcpus: specs.vcpu,
     storage: specs.storage,
     ram: specs.ram,
     gpu_count: specs.gpu_count,
     gpu_model: specs.gpu_model,
-    operating_system: os,
-    hostnode: hostnode,
+    operating_system: values.os,
+    hostnode: values.hostnode,
+    ...(values.is_instant && { instance_uuid: values.instance_uuid }),
     external_ports: `[${externalPorts.join(', ')}]`,
     internal_ports: `[${internalPorts.join(', ')}]`,
-    ...(!!cloudinitScript && { cloudinit_script: cloudinitScript }),
+    ...(!!values.cloudinitScript && {
+      cloudinit_script: values.cloudinitScript,
+    }),
   };
 
   const formData = new FormData();
@@ -504,7 +572,7 @@ export async function deploy(
   });
 
   const res = await axios.post(
-    `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/deploy/single`,
+    `${import.meta.env.VITE_API_BASE_URL}/api/v0/client/${values.is_instant ? 'deployinstant' : 'deploy'}/single`,
     formData,
     { validateStatus: (status) => status < 500 }
   );
