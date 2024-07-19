@@ -12,7 +12,7 @@ export default function useVirtualMachines() {
   const { data, error, isLoading, isValidating, mutate } = useSWR(
     '/api/v0/client/list',
     fetchVMList,
-    { refreshInterval: 2000 }
+    { refreshInterval: 10000 }
   );
 
   const stopVM = useCallback(
