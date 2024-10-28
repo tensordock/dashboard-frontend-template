@@ -58,6 +58,20 @@ Sent when an automated charge based on low threshold fails (user-configured).
 - `${{ charge }}`: Amount that would have been charged.
 - `${{ threshold }}`: Threshold for auto charge set by user.
 
+### `deploy_failure`
+
+Sent when a deploy fails unexpectedly.
+
+- `{{ deploy_resources }}`: requested VM deploy resources in the shape of the `resources` field found [here](https://dashboard.tensordock.com/api/v1/docs#/Virtual%20Machines/get_virtual_machine_details_list_virtual_machines__get)
+- `{{ vm_id }}`: Virtual machine ID
+
+### `deploy_success`
+
+Sent when a deploy succeeds.
+
+- `{{ deploy_resources }}`: requested VM deploy resources in the shape of the `resources` field found [here](https://dashboard.tensordock.com/api/v1/docs#/Virtual%20Machines/get_virtual_machine_details_list_virtual_machines__get)
+- `{{ vm_id }}`: Virtual machine ID
+
 ### `alert_servers_stopped`
 
 Sent when an org's balance hits $1, and their servers are stopped.

@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+      }
+      .container {
+        width: 80%;
+        margin: auto;
+        background: white;
+        padding: 20px;
+      }
+      .header {
+        color: #444;
+      }
+      .content {
+        margin-top: 20px;
+      }
+      .footer {
+        margin-top: 40px;
+        font-size: 12px;
+        color: #666;
+      }
+      a {
+        color: #1a0dab;
+        text-decoration: none;
+      }
+      .button {
+        background-color: #39467f;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+      }
+      .discord-link {
+        background-color: #7289da;
+      }
+
+      .specs-table thead {
+        color: #555;
+      }
+      .specs-table tbody tr:nth-child(2n) {
+        background-color: rgb(100, 100, 200, 0.1);
+      }
+      .specs-table tbody tr:nth-child(2n + 1) {
+        background-color: rgb(0, 0, 0, 0.03);
+      }
+      .specs-table td {
+        padding: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="header">Virtual machine deployed successfully</h1>
+      <p class="content">
+        Your {{ org_title }} virtual machine has successfully deployed.
+      </p>
+      <p class="content">ID: {{ vm_id }}</p>
+      <br />
+      <table class="specs-table">
+        <thead>
+          <tr>
+            <td></td>
+            <td>Deployment specs</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>GPU(s)</td>
+            <td>
+              {% for gpu_model, gpu_res in deploy_resources.gpus.items() %}
+              <span>{{ gpu_res.count }}x {{ gpu_model }}</span>
+              {% endfor %}
+            </td>
+          </tr>
+          <tr>
+            <td>CPU</td>
+            <td>{{ deploy_resources.vcpu_count }} vCPUs</td>
+          </tr>
+          <tr>
+            <td>Memory</td>
+            <td>{{ deploy_resources.ram_gb }} GB RAM</td>
+          </tr>
+          <tr>
+            <td>Storage</td>
+            <td>{{ deploy_resources.storage_gb }} GB SSD</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="content">
+        Please find management tools as well as connection instructions at the
+        link below.
+      </p>
+      <a href="{{ app_base_url }}/list?vm={{ vm_id }}" class="button"
+        >Manage VM</a
+      >
+      <p>Thanks for computing with us!</p>
+      <br />
+      <p class="footer">
+        Beep boop, I'm a bot. But reply to me, and I'll connect you to a real
+        person :)<br />
+        <a href="{{ app_base_url }}">{{ app_base_url }}</a>
+      </p>
+    </div>
+  </body>
+</html>
