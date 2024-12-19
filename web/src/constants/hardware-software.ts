@@ -177,6 +177,31 @@ export const OS_INFO = {
     minStorageGB: 40,
     forAI: false,
   },
+  'Ubuntu 24.04 LTS': {
+    displayName: 'Ubuntu 24.04 LTS',
+    features: 'Docker',
+    minStorageGB: 20,
+    forAI: false,
+  },
+  'TensorML 24 TensorFlow': {
+    displayName: 'TensorML 24.04 LTS TensorFlow',
+    features: 'Docker, Jupyter, TensorFlow, Keras, CUDA',
+    minStorageGB: 40,
+    forAI: true,
+  },
+  'TensorML 24 PyTorch': {
+    displayName: 'TensorML 24.04 LTS PyTorch',
+    features: 'Docker, Jupyter, PyTorch, CUDA',
+    minStorageGB: 40,
+    forAI: true,
+  },
+  'TensorML 24 Everything': {
+    displayName: 'TensorML 24.04 LTS Everything',
+    features:
+      'Docker, Jupyter, RAPIDS, TensorFlow, PyTorch, Keras, fastai, CUDA',
+    minStorageGB: 60,
+    forAI: true,
+  },
   'Windows 10': {
     displayName: 'Windows 10',
     features: 'NVIDIA drivers preinstalled. Bring Your Own License.',
